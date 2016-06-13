@@ -16,7 +16,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: app_menu; Type: TABLE; Schema: public; Owner: optima; Tablespace:
+-- Name: app_menu; Type: TABLE; Schema: public; Owner: optima; Tablespace: 
 --
 
 CREATE TABLE app_menu (
@@ -34,7 +34,7 @@ CREATE TABLE app_menu (
 ALTER TABLE public.app_menu OWNER TO optima;
 
 --
--- Name: app_menu_groups; Type: TABLE; Schema: public; Owner: optima; Tablespace:
+-- Name: app_menu_groups; Type: TABLE; Schema: public; Owner: optima; Tablespace: 
 --
 
 CREATE TABLE app_menu_groups (
@@ -104,7 +104,7 @@ SELECT pg_catalog.setval('app_menu_menu_id_seq', 7, true);
 
 
 --
--- Name: groups; Type: TABLE; Schema: public; Owner: optima; Tablespace:
+-- Name: groups; Type: TABLE; Schema: public; Owner: optima; Tablespace: 
 --
 
 CREATE TABLE groups (
@@ -142,11 +142,11 @@ ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 -- Name: groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: optima
 --
 
-SELECT pg_catalog.setval('groups_id_seq', 8, true);
+SELECT pg_catalog.setval('groups_id_seq', 9, true);
 
 
 --
--- Name: groups_permissions; Type: TABLE; Schema: public; Owner: optima; Tablespace:
+-- Name: groups_permissions; Type: TABLE; Schema: public; Owner: optima; Tablespace: 
 --
 
 CREATE TABLE groups_permissions (
@@ -188,7 +188,7 @@ SELECT pg_catalog.setval('groups_permissions_id_seq', 18, true);
 
 
 --
--- Name: login_attempts; Type: TABLE; Schema: public; Owner: optima; Tablespace:
+-- Name: login_attempts; Type: TABLE; Schema: public; Owner: optima; Tablespace: 
 --
 
 CREATE TABLE login_attempts (
@@ -231,7 +231,7 @@ SELECT pg_catalog.setval('login_attempts_id_seq', 1, false);
 
 
 --
--- Name: permissions; Type: TABLE; Schema: public; Owner: optima; Tablespace:
+-- Name: permissions; Type: TABLE; Schema: public; Owner: optima; Tablespace: 
 --
 
 CREATE TABLE permissions (
@@ -272,7 +272,7 @@ SELECT pg_catalog.setval('permissions_permission_id_seq', 39, true);
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: optima; Tablespace:
+-- Name: users; Type: TABLE; Schema: public; Owner: optima; Tablespace: 
 --
 
 CREATE TABLE users (
@@ -301,7 +301,7 @@ CREATE TABLE users (
 ALTER TABLE public.users OWNER TO optima;
 
 --
--- Name: users_groups; Type: TABLE; Schema: public; Owner: optima; Tablespace:
+-- Name: users_groups; Type: TABLE; Schema: public; Owner: optima; Tablespace: 
 --
 
 CREATE TABLE users_groups (
@@ -341,7 +341,7 @@ ALTER SEQUENCE users_groups_id_seq OWNED BY users_groups.id;
 -- Name: users_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: optima
 --
 
-SELECT pg_catalog.setval('users_groups_id_seq', 3, true);
+SELECT pg_catalog.setval('users_groups_id_seq', 4, true);
 
 
 --
@@ -533,8 +533,8 @@ COPY permissions (permission_id, permission_name, permission_description) FROM s
 --
 
 COPY users (id, ip_address, username, password, salt, email, activation_code, forgotten_password_code, forgotten_password_time, remember_code, created_on, last_login, active, first_name, last_name, company, phone) FROM stdin;
-2	\N	operator	$2y$08$9eWSfva.QOw2YZNyo8IOlOmOXTG3qAx3mOIuKyLTBvFT0/SLrNR02	\N	operator@gmail.com	\N	\N	\N	\N	1464147806	1464152213	1	\N	\N	\N
-1	127.0.0.1	admin	$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36		admin@admin.com		\N	\N	\N	1268889823	1464252428	1	Admin	istrator	ADMIN	0
+2	\N	operator	$2y$08$9eWSfva.QOw2YZNyo8IOlOmOXTG3qAx3mOIuKyLTBvFT0/SLrNR02	\N	operator@gmail.com	\N	\N	\N	\N	1464147806	1464152213	1	\N	\N	\N	
+1	127.0.0.1	admin	$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36		admin@admin.com		\N	\N	\N	1268889823	1465667112	1	Admin	istrator	ADMIN	0
 \.
 
 
@@ -550,7 +550,7 @@ COPY users_groups (id, user_id, group_id) FROM stdin;
 
 
 --
--- Name: app_menu_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace:
+-- Name: app_menu_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace: 
 --
 
 ALTER TABLE ONLY app_menu_groups
@@ -558,7 +558,7 @@ ALTER TABLE ONLY app_menu_groups
 
 
 --
--- Name: app_menu_groups_uq; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace:
+-- Name: app_menu_groups_uq; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace: 
 --
 
 ALTER TABLE ONLY app_menu_groups
@@ -566,7 +566,7 @@ ALTER TABLE ONLY app_menu_groups
 
 
 --
--- Name: app_menu_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace:
+-- Name: app_menu_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace: 
 --
 
 ALTER TABLE ONLY app_menu
@@ -574,7 +574,7 @@ ALTER TABLE ONLY app_menu
 
 
 --
--- Name: groups_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace:
+-- Name: groups_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace: 
 --
 
 ALTER TABLE ONLY groups_permissions
@@ -582,7 +582,7 @@ ALTER TABLE ONLY groups_permissions
 
 
 --
--- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace:
+-- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace: 
 --
 
 ALTER TABLE ONLY groups
@@ -590,7 +590,7 @@ ALTER TABLE ONLY groups
 
 
 --
--- Name: login_attempts_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace:
+-- Name: login_attempts_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace: 
 --
 
 ALTER TABLE ONLY login_attempts
@@ -598,7 +598,7 @@ ALTER TABLE ONLY login_attempts
 
 
 --
--- Name: permission_id_pk; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace:
+-- Name: permission_id_pk; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace: 
 --
 
 ALTER TABLE ONLY permissions
@@ -606,7 +606,7 @@ ALTER TABLE ONLY permissions
 
 
 --
--- Name: uc_users_groups; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace:
+-- Name: uc_users_groups; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace: 
 --
 
 ALTER TABLE ONLY users_groups
@@ -614,7 +614,7 @@ ALTER TABLE ONLY users_groups
 
 
 --
--- Name: users_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace:
+-- Name: users_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace: 
 --
 
 ALTER TABLE ONLY users_groups
@@ -622,7 +622,7 @@ ALTER TABLE ONLY users_groups
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace:
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace: 
 --
 
 ALTER TABLE ONLY users
