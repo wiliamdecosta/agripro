@@ -36,6 +36,7 @@
 <script src="<?php echo base_url(); ?>assets/global/plugins/bootstrap-wizard/jquery.bootstrap.wizard.min.js" type="text/javascript"></script>
 
 <script src="<?php echo base_url(); ?>assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
+<script src="<?php echo base_url(); ?>assets/js/jqgrid.function.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function () {

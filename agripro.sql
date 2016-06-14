@@ -72,7 +72,7 @@ ALTER SEQUENCE app_menu_groups_app_menu_group_id_seq OWNED BY app_menu_groups.ap
 -- Name: app_menu_groups_app_menu_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: optima
 --
 
-SELECT pg_catalog.setval('app_menu_groups_app_menu_group_id_seq', 19, true);
+SELECT pg_catalog.setval('app_menu_groups_app_menu_group_id_seq', 23, true);
 
 
 --
@@ -100,7 +100,7 @@ ALTER SEQUENCE app_menu_menu_id_seq OWNED BY app_menu.menu_id;
 -- Name: app_menu_menu_id_seq; Type: SEQUENCE SET; Schema: public; Owner: optima
 --
 
-SELECT pg_catalog.setval('app_menu_menu_id_seq', 7, true);
+SELECT pg_catalog.setval('app_menu_menu_id_seq', 11, true);
 
 
 --
@@ -198,7 +198,7 @@ ALTER SEQUENCE farmer_fm_id_seq OWNED BY farmer.fm_id;
 -- Name: farmer_fm_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
 --
 
-SELECT pg_catalog.setval('farmer_fm_id_seq', 1, false);
+SELECT pg_catalog.setval('farmer_fm_id_seq', 2, true);
 
 
 --
@@ -282,7 +282,7 @@ ALTER SEQUENCE groups_permissions_id_seq OWNED BY groups_permissions.id;
 -- Name: groups_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: optima
 --
 
-SELECT pg_catalog.setval('groups_permissions_id_seq', 18, true);
+SELECT pg_catalog.setval('groups_permissions_id_seq', 22, true);
 
 
 --
@@ -327,7 +327,7 @@ ALTER SEQUENCE kota_kota_id_seq OWNED BY kota.kota_id;
 -- Name: kota_kota_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
 --
 
-SELECT pg_catalog.setval('kota_kota_id_seq', 1, false);
+SELECT pg_catalog.setval('kota_kota_id_seq', 4, true);
 
 
 --
@@ -458,7 +458,7 @@ ALTER SEQUENCE permissions_permission_id_seq OWNED BY permissions.permission_id;
 -- Name: permissions_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: optima
 --
 
-SELECT pg_catalog.setval('permissions_permission_id_seq', 39, true);
+SELECT pg_catalog.setval('permissions_permission_id_seq', 43, true);
 
 
 --
@@ -478,7 +478,11 @@ CREATE TABLE plantation (
     plt_date_contract timestamp without time zone,
     plt_date_registration timestamp without time zone,
     plt_coordinate character varying(255),
-    plt_nama_pemilik character varying(255)
+    plt_nama_pemilik character varying(255),
+    created_date timestamp without time zone,
+    created_by character varying(25),
+    updated_date timestamp without time zone,
+    updated_by character varying(25)
 );
 
 
@@ -509,7 +513,7 @@ ALTER SEQUENCE plantation_plt_id_seq OWNED BY plantation.plt_id;
 -- Name: plantation_plt_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
 --
 
-SELECT pg_catalog.setval('plantation_plt_id_seq', 1, false);
+SELECT pg_catalog.setval('plantation_plt_id_seq', 3, true);
 
 
 --
@@ -554,7 +558,7 @@ ALTER SEQUENCE product_prod_id_seq OWNED BY product.prod_id;
 -- Name: product_prod_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
 --
 
-SELECT pg_catalog.setval('product_prod_id_seq', 1, false);
+SELECT pg_catalog.setval('product_prod_id_seq', 1, true);
 
 
 --
@@ -598,7 +602,7 @@ ALTER SEQUENCE provinsi_prov_id_seq OWNED BY provinsi.prov_id;
 -- Name: provinsi_prov_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
 --
 
-SELECT pg_catalog.setval('provinsi_prov_id_seq', 1, false);
+SELECT pg_catalog.setval('provinsi_prov_id_seq', 1, true);
 
 
 --
@@ -643,7 +647,7 @@ ALTER SEQUENCE raw_material_rm_id_seq OWNED BY raw_material.rm_id;
 -- Name: raw_material_rm_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
 --
 
-SELECT pg_catalog.setval('raw_material_rm_id_seq', 1, false);
+SELECT pg_catalog.setval('raw_material_rm_id_seq', 2, true);
 
 
 --
@@ -889,7 +893,7 @@ ALTER SEQUENCE warehouse_wh_id_seq OWNED BY warehouse.wh_id;
 -- Name: warehouse_wh_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
 --
 
-SELECT pg_catalog.setval('warehouse_wh_id_seq', 1, false);
+SELECT pg_catalog.setval('warehouse_wh_id_seq', 2, true);
 
 
 --
@@ -1031,12 +1035,16 @@ ALTER TABLE warehouse ALTER COLUMN wh_id SET DEFAULT nextval('warehouse_wh_id_se
 
 COPY app_menu (menu_id, menu_parent, menu_name, menu_icon, menu_desc, menu_link, file_name, listing_no) FROM stdin;
 1	0	Administration	icon-user		#	\N	1
-6	0	Parameters			#	\N	2
 3	1	User	\N	\N	\N	administration.users	1
 4	1	Role	\N	\N	\N	administration.groups	2
 5	1	Permission	\N	\N	\N	administration.permissions	3
 2	1	Menu	\N	\N	\N	administration.menus	4
 7	1	Role Menu	\N	\N	\N	administration.group_menus	5
+8	6	Warehouse	\N	\N	\N	agripro.warehouse	1
+9	6	Farmer	\N	\N	\N	agripro.farmer	2
+10	6	Raw Material	\N	\N	\N	agripro.raw_material	3
+6	0	Tracking			#	\N	2
+11	6	Product	\N	\N	\N	agripro.product	4
 \.
 
 
@@ -1056,6 +1064,10 @@ COPY app_menu_groups (app_menu_group_id, menu_id, group_id, description) FROM st
 17	5	1	\N
 18	7	1	\N
 19	4	2	\N
+20	8	1	\N
+21	9	1	\N
+22	10	1	\N
+23	11	1	\N
 \.
 
 
@@ -1072,6 +1084,7 @@ COPY detail_packaging (dp_id, smd_id, pkg_id, dp_qty, created_date, created_by, 
 --
 
 COPY farmer (fm_id, wh_id, fm_code, fm_name, fm_jk, fm_address, fm_no_sertifikasi, fm_no_hp, fm_email, fm_tgl_lahir, created_date, created_by, updated_date, updated_by) FROM stdin;
+2	2	FM001	Budiman	L	Jl. Batik kumeli no 21	STF001	087182371112	budiman@gmail.com	1986-06-14 00:00:00	2016-06-14 00:00:00	admin	2016-06-14 00:00:00	admin
 \.
 
 
@@ -1081,7 +1094,7 @@ COPY farmer (fm_id, wh_id, fm_code, fm_name, fm_jk, fm_address, fm_no_sertifikas
 
 COPY groups (id, name, description) FROM stdin;
 1	admin	Administrator
-2	members	General User
+2	customer	ATN Customer
 \.
 
 
@@ -1106,6 +1119,10 @@ COPY groups_permissions (id, group_id, permission_id, status) FROM stdin;
 15	1	38	Y
 16	1	39	Y
 1	1	1	Y
+19	1	43	Y
+20	1	42	Y
+21	1	41	Y
+22	1	40	Y
 \.
 
 
@@ -1114,6 +1131,10 @@ COPY groups_permissions (id, group_id, permission_id, status) FROM stdin;
 --
 
 COPY kota (kota_id, prov_id, kota_name, created_date, created_by, updated_date, updated_by) FROM stdin;
+1	1	KOTA BANDUNG	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
+2	1	KOTA BOGOR	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
+3	2	JAKARTA UTARA	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
+4	2	JAKARTA SELATAN	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
 \.
 
 
@@ -1154,6 +1175,10 @@ COPY permissions (permission_id, permission_name, permission_description) FROM s
 1	view-user	View User Permission
 23	edit-user	Edit User Permission
 25	delete-user	Delete User Permission
+40	add-tracking	Add Tracking Permission
+41	edit-tracking	Edit Tracking Permission
+42	delete-tracking	Delete Tracking Permission
+43	view-tracking	View Tracking Permission
 \.
 
 
@@ -1161,7 +1186,8 @@ COPY permissions (permission_id, permission_name, permission_description) FROM s
 -- Data for Name: plantation; Type: TABLE DATA; Schema: public; Owner: agripro
 --
 
-COPY plantation (plt_id, fm_id, kota_id, prov_id, plt_code, plt_luas_lahan, plt_status, plt_plot, plt_year_planted, plt_date_contract, plt_date_registration, plt_coordinate, plt_nama_pemilik) FROM stdin;
+COPY plantation (plt_id, fm_id, kota_id, prov_id, plt_code, plt_luas_lahan, plt_status, plt_plot, plt_year_planted, plt_date_contract, plt_date_registration, plt_coordinate, plt_nama_pemilik, created_date, created_by, updated_date, updated_by) FROM stdin;
+3	2	1	1	PLT001	12000Ha	Milik	10	2016	2016-06-01 00:00:00	2016-06-15 00:00:00	-1.3213,9.3213	Wiliam Decosta	2016-06-14 00:00:00	admin	2016-06-14 00:00:00	admin
 \.
 
 
@@ -1170,6 +1196,7 @@ COPY plantation (plt_id, fm_id, kota_id, prov_id, plt_code, plt_luas_lahan, plt_
 --
 
 COPY product (prod_id, prod_code, prod_name, created_date, created_by, updated_date, updated_by) FROM stdin;
+1	PROD-001	TAHUBULAT	2016-06-14 00:00:00	admin	2016-06-14 00:00:00	admin
 \.
 
 
@@ -1178,6 +1205,8 @@ COPY product (prod_id, prod_code, prod_name, created_date, created_by, updated_d
 --
 
 COPY provinsi (prov_id, prov_code, created_date, created_by, updated_date, updated_by) FROM stdin;
+1	JAWA BARAT	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
+2	DKI JAKARTA	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
 \.
 
 
@@ -1186,6 +1215,8 @@ COPY provinsi (prov_id, prov_code, created_date, created_by, updated_date, updat
 --
 
 COPY raw_material (rm_id, rm_code, rm_name, created_date, created_by, updated_date, updated_by) FROM stdin;
+1	KM001	Kayu Manis	2016-06-14 00:00:00	admin	2016-06-14 00:00:00	admin
+2	CK001	Cengkeh	2016-06-14 00:00:00	admin	2016-06-14 00:00:00	admin
 \.
 
 
@@ -1210,8 +1241,8 @@ COPY stock_material_detail (smd_id, sm_id, rm_id, smd_qty, smd_harga, smd_batch_
 --
 
 COPY users (id, ip_address, username, password, salt, email, activation_code, forgotten_password_code, forgotten_password_time, remember_code, created_on, last_login, active, first_name, last_name, company, phone) FROM stdin;
-2	\N	operator	$2y$08$9eWSfva.QOw2YZNyo8IOlOmOXTG3qAx3mOIuKyLTBvFT0/SLrNR02	\N	operator@gmail.com	\N	\N	\N	\N	1464147806	1464152213	1	\N	\N	\N	
-1	127.0.0.1	admin	$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36		admin@admin.com		\N	\N	\N	1268889823	1465790061	1	Admin	istrator	ADMIN	0
+1	127.0.0.1	admin	$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36		admin@admin.com		\N	\N	\N	1268889823	1465915394	1	Admin	istrator	ADMIN	0
+2	\N	customer	$2y$08$9eWSfva.QOw2YZNyo8IOlOmOXTG3qAx3mOIuKyLTBvFT0/SLrNR02	\N	customer@gmail.com	\N	\N	\N	\N	1464147806	1464152213	1	\N	\N	\N	
 \.
 
 
@@ -1231,6 +1262,8 @@ COPY users_groups (id, user_id, group_id) FROM stdin;
 --
 
 COPY warehouse (wh_id, wh_code, wh_name, wh_location, created_date, created_by, updated_date, updated_by) FROM stdin;
+2	WH-002	Warehouse 02	Jl. abc no 02	2016-06-14 00:00:00	admin	2016-06-14 00:00:00	admin
+1	WH-001	Warehouse 01	Jl. abc no 01	2016-06-14 00:00:00	admin	2016-06-14 00:00:00	admin
 \.
 
 

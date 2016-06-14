@@ -191,7 +191,7 @@
                     /*form.css({"height": 0.50*screen.height+"px"});
                     form.css({"width": 0.60*screen.width+"px"});*/
 
-                    $("#username").prop("readonly", true);
+                    $("#username").prop("readonly", false);
 
                 },
                 afterShowForm: function(form) {

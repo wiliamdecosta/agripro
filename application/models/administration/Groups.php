@@ -78,7 +78,7 @@ class Groups extends Abstract_model {
                     $cek = $this->getMenuGroup($menu_id[$i], $group_id);
                     if($cek == 0){
                         $data = array(
-                            "app_menu_group_id" => $this->menus->generate_id('app_menu_groups'),
+                            //"app_menu_group_id" => $this->menus->generate_id('app_menu_groups'),
                             "menu_id" => $menu_id[$i],
                             "group_id" => $group_id
                         );
