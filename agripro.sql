@@ -104,6 +104,104 @@ SELECT pg_catalog.setval('app_menu_menu_id_seq', 7, true);
 
 
 --
+-- Name: detail_packaging; Type: TABLE; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE TABLE detail_packaging (
+    dp_id integer NOT NULL,
+    smd_id integer,
+    pkg_id integer,
+    dp_qty double precision,
+    created_date timestamp without time zone,
+    created_by character varying(25),
+    updated_date timestamp without time zone,
+    updated_by character varying(25)
+);
+
+
+ALTER TABLE public.detail_packaging OWNER TO agripro;
+
+--
+-- Name: detail_packaging_dp_id_seq; Type: SEQUENCE; Schema: public; Owner: agripro
+--
+
+CREATE SEQUENCE detail_packaging_dp_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.detail_packaging_dp_id_seq OWNER TO agripro;
+
+--
+-- Name: detail_packaging_dp_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: agripro
+--
+
+ALTER SEQUENCE detail_packaging_dp_id_seq OWNED BY detail_packaging.dp_id;
+
+
+--
+-- Name: detail_packaging_dp_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
+--
+
+SELECT pg_catalog.setval('detail_packaging_dp_id_seq', 1, false);
+
+
+--
+-- Name: farmer; Type: TABLE; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE TABLE farmer (
+    fm_id integer NOT NULL,
+    wh_id integer,
+    fm_code character varying(255),
+    fm_name character varying(255) NOT NULL,
+    fm_jk character varying(1),
+    fm_address character varying(255),
+    fm_no_sertifikasi character varying(255),
+    fm_no_hp character varying(25),
+    fm_email character varying(100),
+    fm_tgl_lahir timestamp without time zone,
+    created_date timestamp without time zone,
+    created_by character varying(25),
+    updated_date timestamp without time zone,
+    updated_by character varying(25)
+);
+
+
+ALTER TABLE public.farmer OWNER TO agripro;
+
+--
+-- Name: farmer_fm_id_seq; Type: SEQUENCE; Schema: public; Owner: agripro
+--
+
+CREATE SEQUENCE farmer_fm_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.farmer_fm_id_seq OWNER TO agripro;
+
+--
+-- Name: farmer_fm_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: agripro
+--
+
+ALTER SEQUENCE farmer_fm_id_seq OWNED BY farmer.fm_id;
+
+
+--
+-- Name: farmer_fm_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
+--
+
+SELECT pg_catalog.setval('farmer_fm_id_seq', 1, false);
+
+
+--
 -- Name: groups; Type: TABLE; Schema: public; Owner: optima; Tablespace: 
 --
 
@@ -188,6 +286,51 @@ SELECT pg_catalog.setval('groups_permissions_id_seq', 18, true);
 
 
 --
+-- Name: kota; Type: TABLE; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE TABLE kota (
+    kota_id integer NOT NULL,
+    prov_id integer,
+    kota_name character varying(255),
+    created_date timestamp without time zone,
+    created_by character varying(25),
+    updated_date timestamp without time zone,
+    updated_by character varying(25)
+);
+
+
+ALTER TABLE public.kota OWNER TO agripro;
+
+--
+-- Name: kota_kota_id_seq; Type: SEQUENCE; Schema: public; Owner: agripro
+--
+
+CREATE SEQUENCE kota_kota_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.kota_kota_id_seq OWNER TO agripro;
+
+--
+-- Name: kota_kota_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: agripro
+--
+
+ALTER SEQUENCE kota_kota_id_seq OWNED BY kota.kota_id;
+
+
+--
+-- Name: kota_kota_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
+--
+
+SELECT pg_catalog.setval('kota_kota_id_seq', 1, false);
+
+
+--
 -- Name: login_attempts; Type: TABLE; Schema: public; Owner: optima; Tablespace: 
 --
 
@@ -231,6 +374,53 @@ SELECT pg_catalog.setval('login_attempts_id_seq', 1, false);
 
 
 --
+-- Name: packaging; Type: TABLE; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE TABLE packaging (
+    pkg_id integer NOT NULL,
+    prod_id integer,
+    pkg_date timestamp without time zone,
+    pkg_serial_number character varying(255),
+    pkg_batch_number character varying(100),
+    created_date timestamp without time zone,
+    created_by character varying(25),
+    updated_date timestamp without time zone,
+    updated_by character varying(25)
+);
+
+
+ALTER TABLE public.packaging OWNER TO agripro;
+
+--
+-- Name: packaging_pkg_id_seq; Type: SEQUENCE; Schema: public; Owner: agripro
+--
+
+CREATE SEQUENCE packaging_pkg_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.packaging_pkg_id_seq OWNER TO agripro;
+
+--
+-- Name: packaging_pkg_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: agripro
+--
+
+ALTER SEQUENCE packaging_pkg_id_seq OWNED BY packaging.pkg_id;
+
+
+--
+-- Name: packaging_pkg_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
+--
+
+SELECT pg_catalog.setval('packaging_pkg_id_seq', 1, false);
+
+
+--
 -- Name: permissions; Type: TABLE; Schema: public; Owner: optima; Tablespace: 
 --
 
@@ -269,6 +459,290 @@ ALTER SEQUENCE permissions_permission_id_seq OWNED BY permissions.permission_id;
 --
 
 SELECT pg_catalog.setval('permissions_permission_id_seq', 39, true);
+
+
+--
+-- Name: plantation; Type: TABLE; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE TABLE plantation (
+    plt_id integer NOT NULL,
+    fm_id integer,
+    kota_id integer,
+    prov_id integer,
+    plt_code character varying(255) NOT NULL,
+    plt_luas_lahan character varying(50) NOT NULL,
+    plt_status character varying(100),
+    plt_plot integer,
+    plt_year_planted character varying(10),
+    plt_date_contract timestamp without time zone,
+    plt_date_registration timestamp without time zone,
+    plt_coordinate character varying(255),
+    plt_nama_pemilik character varying(255)
+);
+
+
+ALTER TABLE public.plantation OWNER TO agripro;
+
+--
+-- Name: plantation_plt_id_seq; Type: SEQUENCE; Schema: public; Owner: agripro
+--
+
+CREATE SEQUENCE plantation_plt_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.plantation_plt_id_seq OWNER TO agripro;
+
+--
+-- Name: plantation_plt_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: agripro
+--
+
+ALTER SEQUENCE plantation_plt_id_seq OWNED BY plantation.plt_id;
+
+
+--
+-- Name: plantation_plt_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
+--
+
+SELECT pg_catalog.setval('plantation_plt_id_seq', 1, false);
+
+
+--
+-- Name: product; Type: TABLE; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE TABLE product (
+    prod_id integer NOT NULL,
+    prod_code character varying(100),
+    prod_name character varying(255),
+    created_date timestamp without time zone,
+    created_by character varying(25),
+    updated_date timestamp without time zone,
+    updated_by character varying(25)
+);
+
+
+ALTER TABLE public.product OWNER TO agripro;
+
+--
+-- Name: product_prod_id_seq; Type: SEQUENCE; Schema: public; Owner: agripro
+--
+
+CREATE SEQUENCE product_prod_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.product_prod_id_seq OWNER TO agripro;
+
+--
+-- Name: product_prod_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: agripro
+--
+
+ALTER SEQUENCE product_prod_id_seq OWNED BY product.prod_id;
+
+
+--
+-- Name: product_prod_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
+--
+
+SELECT pg_catalog.setval('product_prod_id_seq', 1, false);
+
+
+--
+-- Name: provinsi; Type: TABLE; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE TABLE provinsi (
+    prov_id integer NOT NULL,
+    prov_code character varying(255) NOT NULL,
+    created_date timestamp without time zone,
+    created_by character varying(25),
+    updated_date timestamp without time zone,
+    updated_by character varying(25)
+);
+
+
+ALTER TABLE public.provinsi OWNER TO agripro;
+
+--
+-- Name: provinsi_prov_id_seq; Type: SEQUENCE; Schema: public; Owner: agripro
+--
+
+CREATE SEQUENCE provinsi_prov_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.provinsi_prov_id_seq OWNER TO agripro;
+
+--
+-- Name: provinsi_prov_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: agripro
+--
+
+ALTER SEQUENCE provinsi_prov_id_seq OWNED BY provinsi.prov_id;
+
+
+--
+-- Name: provinsi_prov_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
+--
+
+SELECT pg_catalog.setval('provinsi_prov_id_seq', 1, false);
+
+
+--
+-- Name: raw_material; Type: TABLE; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE TABLE raw_material (
+    rm_id integer NOT NULL,
+    rm_code character varying(255),
+    rm_name character varying(255) NOT NULL,
+    created_date timestamp without time zone,
+    created_by character varying(25),
+    updated_date timestamp without time zone,
+    updated_by character varying(25)
+);
+
+
+ALTER TABLE public.raw_material OWNER TO agripro;
+
+--
+-- Name: raw_material_rm_id_seq; Type: SEQUENCE; Schema: public; Owner: agripro
+--
+
+CREATE SEQUENCE raw_material_rm_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.raw_material_rm_id_seq OWNER TO agripro;
+
+--
+-- Name: raw_material_rm_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: agripro
+--
+
+ALTER SEQUENCE raw_material_rm_id_seq OWNED BY raw_material.rm_id;
+
+
+--
+-- Name: raw_material_rm_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
+--
+
+SELECT pg_catalog.setval('raw_material_rm_id_seq', 1, false);
+
+
+--
+-- Name: stock_material; Type: TABLE; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE TABLE stock_material (
+    sm_id integer NOT NULL,
+    fm_id integer,
+    sm_tgl_masuk timestamp without time zone NOT NULL,
+    sm_serial_number character varying(255),
+    sm_jenis_pembayaran character varying(50),
+    sm_no_po character varying(255),
+    created_date timestamp without time zone,
+    created_by character varying(25),
+    updated_date timestamp without time zone,
+    updated_by character varying(25)
+);
+
+
+ALTER TABLE public.stock_material OWNER TO agripro;
+
+--
+-- Name: stock_material_detail; Type: TABLE; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE TABLE stock_material_detail (
+    smd_id integer NOT NULL,
+    sm_id integer,
+    rm_id integer,
+    smd_qty double precision,
+    smd_harga double precision,
+    smd_batch_number character varying(100),
+    smd_plt_id integer,
+    smd_tgl_panen timestamp without time zone,
+    smd_tgl_pengeringan timestamp without time zone,
+    created_date timestamp without time zone,
+    created_by character varying(25),
+    updated_date timestamp without time zone,
+    updated_by character varying(25)
+);
+
+
+ALTER TABLE public.stock_material_detail OWNER TO agripro;
+
+--
+-- Name: stock_material_detail_smd_id_seq; Type: SEQUENCE; Schema: public; Owner: agripro
+--
+
+CREATE SEQUENCE stock_material_detail_smd_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.stock_material_detail_smd_id_seq OWNER TO agripro;
+
+--
+-- Name: stock_material_detail_smd_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: agripro
+--
+
+ALTER SEQUENCE stock_material_detail_smd_id_seq OWNED BY stock_material_detail.smd_id;
+
+
+--
+-- Name: stock_material_detail_smd_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
+--
+
+SELECT pg_catalog.setval('stock_material_detail_smd_id_seq', 1, false);
+
+
+--
+-- Name: stock_material_sm_id_seq; Type: SEQUENCE; Schema: public; Owner: agripro
+--
+
+CREATE SEQUENCE stock_material_sm_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.stock_material_sm_id_seq OWNER TO agripro;
+
+--
+-- Name: stock_material_sm_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: agripro
+--
+
+ALTER SEQUENCE stock_material_sm_id_seq OWNED BY stock_material.sm_id;
+
+
+--
+-- Name: stock_material_sm_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
+--
+
+SELECT pg_catalog.setval('stock_material_sm_id_seq', 1, false);
 
 
 --
@@ -373,6 +847,52 @@ SELECT pg_catalog.setval('users_id_seq', 2, true);
 
 
 --
+-- Name: warehouse; Type: TABLE; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE TABLE warehouse (
+    wh_id integer NOT NULL,
+    wh_code character varying(255),
+    wh_name character varying(255) NOT NULL,
+    wh_location character varying(255),
+    created_date timestamp without time zone,
+    created_by character varying(25),
+    updated_date timestamp without time zone,
+    updated_by character varying(25)
+);
+
+
+ALTER TABLE public.warehouse OWNER TO agripro;
+
+--
+-- Name: warehouse_wh_id_seq; Type: SEQUENCE; Schema: public; Owner: agripro
+--
+
+CREATE SEQUENCE warehouse_wh_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.warehouse_wh_id_seq OWNER TO agripro;
+
+--
+-- Name: warehouse_wh_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: agripro
+--
+
+ALTER SEQUENCE warehouse_wh_id_seq OWNED BY warehouse.wh_id;
+
+
+--
+-- Name: warehouse_wh_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
+--
+
+SELECT pg_catalog.setval('warehouse_wh_id_seq', 1, false);
+
+
+--
 -- Name: menu_id; Type: DEFAULT; Schema: public; Owner: optima
 --
 
@@ -384,6 +904,20 @@ ALTER TABLE app_menu ALTER COLUMN menu_id SET DEFAULT nextval('app_menu_menu_id_
 --
 
 ALTER TABLE app_menu_groups ALTER COLUMN app_menu_group_id SET DEFAULT nextval('app_menu_groups_app_menu_group_id_seq'::regclass);
+
+
+--
+-- Name: dp_id; Type: DEFAULT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE detail_packaging ALTER COLUMN dp_id SET DEFAULT nextval('detail_packaging_dp_id_seq'::regclass);
+
+
+--
+-- Name: fm_id; Type: DEFAULT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE farmer ALTER COLUMN fm_id SET DEFAULT nextval('farmer_fm_id_seq'::regclass);
 
 
 --
@@ -401,6 +935,13 @@ ALTER TABLE groups_permissions ALTER COLUMN id SET DEFAULT nextval('groups_permi
 
 
 --
+-- Name: kota_id; Type: DEFAULT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE kota ALTER COLUMN kota_id SET DEFAULT nextval('kota_kota_id_seq'::regclass);
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: optima
 --
 
@@ -408,10 +949,59 @@ ALTER TABLE login_attempts ALTER COLUMN id SET DEFAULT nextval('login_attempts_i
 
 
 --
+-- Name: pkg_id; Type: DEFAULT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE packaging ALTER COLUMN pkg_id SET DEFAULT nextval('packaging_pkg_id_seq'::regclass);
+
+
+--
 -- Name: permission_id; Type: DEFAULT; Schema: public; Owner: optima
 --
 
 ALTER TABLE permissions ALTER COLUMN permission_id SET DEFAULT nextval('permissions_permission_id_seq'::regclass);
+
+
+--
+-- Name: plt_id; Type: DEFAULT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE plantation ALTER COLUMN plt_id SET DEFAULT nextval('plantation_plt_id_seq'::regclass);
+
+
+--
+-- Name: prod_id; Type: DEFAULT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE product ALTER COLUMN prod_id SET DEFAULT nextval('product_prod_id_seq'::regclass);
+
+
+--
+-- Name: prov_id; Type: DEFAULT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE provinsi ALTER COLUMN prov_id SET DEFAULT nextval('provinsi_prov_id_seq'::regclass);
+
+
+--
+-- Name: rm_id; Type: DEFAULT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE raw_material ALTER COLUMN rm_id SET DEFAULT nextval('raw_material_rm_id_seq'::regclass);
+
+
+--
+-- Name: sm_id; Type: DEFAULT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE stock_material ALTER COLUMN sm_id SET DEFAULT nextval('stock_material_sm_id_seq'::regclass);
+
+
+--
+-- Name: smd_id; Type: DEFAULT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE stock_material_detail ALTER COLUMN smd_id SET DEFAULT nextval('stock_material_detail_smd_id_seq'::regclass);
 
 
 --
@@ -426,6 +1016,13 @@ ALTER TABLE users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 --
 
 ALTER TABLE users_groups ALTER COLUMN id SET DEFAULT nextval('users_groups_id_seq'::regclass);
+
+
+--
+-- Name: wh_id; Type: DEFAULT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE warehouse ALTER COLUMN wh_id SET DEFAULT nextval('warehouse_wh_id_seq'::regclass);
 
 
 --
@@ -459,6 +1056,22 @@ COPY app_menu_groups (app_menu_group_id, menu_id, group_id, description) FROM st
 17	5	1	\N
 18	7	1	\N
 19	4	2	\N
+\.
+
+
+--
+-- Data for Name: detail_packaging; Type: TABLE DATA; Schema: public; Owner: agripro
+--
+
+COPY detail_packaging (dp_id, smd_id, pkg_id, dp_qty, created_date, created_by, updated_date, updated_by) FROM stdin;
+\.
+
+
+--
+-- Data for Name: farmer; Type: TABLE DATA; Schema: public; Owner: agripro
+--
+
+COPY farmer (fm_id, wh_id, fm_code, fm_name, fm_jk, fm_address, fm_no_sertifikasi, fm_no_hp, fm_email, fm_tgl_lahir, created_date, created_by, updated_date, updated_by) FROM stdin;
 \.
 
 
@@ -497,10 +1110,26 @@ COPY groups_permissions (id, group_id, permission_id, status) FROM stdin;
 
 
 --
+-- Data for Name: kota; Type: TABLE DATA; Schema: public; Owner: agripro
+--
+
+COPY kota (kota_id, prov_id, kota_name, created_date, created_by, updated_date, updated_by) FROM stdin;
+\.
+
+
+--
 -- Data for Name: login_attempts; Type: TABLE DATA; Schema: public; Owner: optima
 --
 
 COPY login_attempts (id, ip_address, login, "time") FROM stdin;
+\.
+
+
+--
+-- Data for Name: packaging; Type: TABLE DATA; Schema: public; Owner: agripro
+--
+
+COPY packaging (pkg_id, prod_id, pkg_date, pkg_serial_number, pkg_batch_number, created_date, created_by, updated_date, updated_by) FROM stdin;
 \.
 
 
@@ -529,12 +1158,60 @@ COPY permissions (permission_id, permission_name, permission_description) FROM s
 
 
 --
+-- Data for Name: plantation; Type: TABLE DATA; Schema: public; Owner: agripro
+--
+
+COPY plantation (plt_id, fm_id, kota_id, prov_id, plt_code, plt_luas_lahan, plt_status, plt_plot, plt_year_planted, plt_date_contract, plt_date_registration, plt_coordinate, plt_nama_pemilik) FROM stdin;
+\.
+
+
+--
+-- Data for Name: product; Type: TABLE DATA; Schema: public; Owner: agripro
+--
+
+COPY product (prod_id, prod_code, prod_name, created_date, created_by, updated_date, updated_by) FROM stdin;
+\.
+
+
+--
+-- Data for Name: provinsi; Type: TABLE DATA; Schema: public; Owner: agripro
+--
+
+COPY provinsi (prov_id, prov_code, created_date, created_by, updated_date, updated_by) FROM stdin;
+\.
+
+
+--
+-- Data for Name: raw_material; Type: TABLE DATA; Schema: public; Owner: agripro
+--
+
+COPY raw_material (rm_id, rm_code, rm_name, created_date, created_by, updated_date, updated_by) FROM stdin;
+\.
+
+
+--
+-- Data for Name: stock_material; Type: TABLE DATA; Schema: public; Owner: agripro
+--
+
+COPY stock_material (sm_id, fm_id, sm_tgl_masuk, sm_serial_number, sm_jenis_pembayaran, sm_no_po, created_date, created_by, updated_date, updated_by) FROM stdin;
+\.
+
+
+--
+-- Data for Name: stock_material_detail; Type: TABLE DATA; Schema: public; Owner: agripro
+--
+
+COPY stock_material_detail (smd_id, sm_id, rm_id, smd_qty, smd_harga, smd_batch_number, smd_plt_id, smd_tgl_panen, smd_tgl_pengeringan, created_date, created_by, updated_date, updated_by) FROM stdin;
+\.
+
+
+--
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: optima
 --
 
 COPY users (id, ip_address, username, password, salt, email, activation_code, forgotten_password_code, forgotten_password_time, remember_code, created_on, last_login, active, first_name, last_name, company, phone) FROM stdin;
 2	\N	operator	$2y$08$9eWSfva.QOw2YZNyo8IOlOmOXTG3qAx3mOIuKyLTBvFT0/SLrNR02	\N	operator@gmail.com	\N	\N	\N	\N	1464147806	1464152213	1	\N	\N	\N	
-1	127.0.0.1	admin	$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36		admin@admin.com		\N	\N	\N	1268889823	1465667112	1	Admin	istrator	ADMIN	0
+1	127.0.0.1	admin	$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36		admin@admin.com		\N	\N	\N	1268889823	1465790061	1	Admin	istrator	ADMIN	0
 \.
 
 
@@ -546,6 +1223,14 @@ COPY users_groups (id, user_id, group_id) FROM stdin;
 1	1	1
 2	1	2
 3	2	2
+\.
+
+
+--
+-- Data for Name: warehouse; Type: TABLE DATA; Schema: public; Owner: agripro
+--
+
+COPY warehouse (wh_id, wh_code, wh_name, wh_location, created_date, created_by, updated_date, updated_by) FROM stdin;
 \.
 
 
@@ -606,6 +1291,94 @@ ALTER TABLE ONLY permissions
 
 
 --
+-- Name: pk_detail_packaging; Type: CONSTRAINT; Schema: public; Owner: agripro; Tablespace: 
+--
+
+ALTER TABLE ONLY detail_packaging
+    ADD CONSTRAINT pk_detail_packaging PRIMARY KEY (dp_id);
+
+
+--
+-- Name: pk_farmer; Type: CONSTRAINT; Schema: public; Owner: agripro; Tablespace: 
+--
+
+ALTER TABLE ONLY farmer
+    ADD CONSTRAINT pk_farmer PRIMARY KEY (fm_id);
+
+
+--
+-- Name: pk_kota; Type: CONSTRAINT; Schema: public; Owner: agripro; Tablespace: 
+--
+
+ALTER TABLE ONLY kota
+    ADD CONSTRAINT pk_kota PRIMARY KEY (kota_id);
+
+
+--
+-- Name: pk_packaging; Type: CONSTRAINT; Schema: public; Owner: agripro; Tablespace: 
+--
+
+ALTER TABLE ONLY packaging
+    ADD CONSTRAINT pk_packaging PRIMARY KEY (pkg_id);
+
+
+--
+-- Name: pk_plantation; Type: CONSTRAINT; Schema: public; Owner: agripro; Tablespace: 
+--
+
+ALTER TABLE ONLY plantation
+    ADD CONSTRAINT pk_plantation PRIMARY KEY (plt_id);
+
+
+--
+-- Name: pk_product; Type: CONSTRAINT; Schema: public; Owner: agripro; Tablespace: 
+--
+
+ALTER TABLE ONLY product
+    ADD CONSTRAINT pk_product PRIMARY KEY (prod_id);
+
+
+--
+-- Name: pk_provinsi; Type: CONSTRAINT; Schema: public; Owner: agripro; Tablespace: 
+--
+
+ALTER TABLE ONLY provinsi
+    ADD CONSTRAINT pk_provinsi PRIMARY KEY (prov_id);
+
+
+--
+-- Name: pk_raw_material; Type: CONSTRAINT; Schema: public; Owner: agripro; Tablespace: 
+--
+
+ALTER TABLE ONLY raw_material
+    ADD CONSTRAINT pk_raw_material PRIMARY KEY (rm_id);
+
+
+--
+-- Name: pk_stock_material; Type: CONSTRAINT; Schema: public; Owner: agripro; Tablespace: 
+--
+
+ALTER TABLE ONLY stock_material
+    ADD CONSTRAINT pk_stock_material PRIMARY KEY (sm_id);
+
+
+--
+-- Name: pk_stock_material_detail; Type: CONSTRAINT; Schema: public; Owner: agripro; Tablespace: 
+--
+
+ALTER TABLE ONLY stock_material_detail
+    ADD CONSTRAINT pk_stock_material_detail PRIMARY KEY (smd_id);
+
+
+--
+-- Name: pk_warehouse; Type: CONSTRAINT; Schema: public; Owner: agripro; Tablespace: 
+--
+
+ALTER TABLE ONLY warehouse
+    ADD CONSTRAINT pk_warehouse PRIMARY KEY (wh_id);
+
+
+--
 -- Name: uc_users_groups; Type: CONSTRAINT; Schema: public; Owner: optima; Tablespace: 
 --
 
@@ -627,6 +1400,248 @@ ALTER TABLE ONLY users_groups
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: detail_packaging_pk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE UNIQUE INDEX detail_packaging_pk ON detail_packaging USING btree (dp_id);
+
+
+--
+-- Name: farmer_pk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE UNIQUE INDEX farmer_pk ON farmer USING btree (fm_id);
+
+
+--
+-- Name: kota_pk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE UNIQUE INDEX kota_pk ON kota USING btree (kota_id);
+
+
+--
+-- Name: packaging_pk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE UNIQUE INDEX packaging_pk ON packaging USING btree (pkg_id);
+
+
+--
+-- Name: plantation_pk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE UNIQUE INDEX plantation_pk ON plantation USING btree (plt_id);
+
+
+--
+-- Name: product_pk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE UNIQUE INDEX product_pk ON product USING btree (prod_id);
+
+
+--
+-- Name: provinsi_pk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE UNIQUE INDEX provinsi_pk ON provinsi USING btree (prov_id);
+
+
+--
+-- Name: r10_fk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE INDEX r10_fk ON stock_material_detail USING btree (rm_id);
+
+
+--
+-- Name: r11_fk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE INDEX r11_fk ON packaging USING btree (prod_id);
+
+
+--
+-- Name: r12_fk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE INDEX r12_fk ON detail_packaging USING btree (smd_id);
+
+
+--
+-- Name: r13_fk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE INDEX r13_fk ON plantation USING btree (kota_id);
+
+
+--
+-- Name: r14_fk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE INDEX r14_fk ON plantation USING btree (prov_id);
+
+
+--
+-- Name: r1_fk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE INDEX r1_fk ON farmer USING btree (wh_id);
+
+
+--
+-- Name: r5_fk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE INDEX r5_fk ON detail_packaging USING btree (pkg_id);
+
+
+--
+-- Name: r6_fk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE INDEX r6_fk ON plantation USING btree (fm_id);
+
+
+--
+-- Name: r7_fk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE INDEX r7_fk ON kota USING btree (prov_id);
+
+
+--
+-- Name: r8_fk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE INDEX r8_fk ON stock_material USING btree (fm_id);
+
+
+--
+-- Name: r9_fk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE INDEX r9_fk ON stock_material_detail USING btree (sm_id);
+
+
+--
+-- Name: raw_material_pk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE UNIQUE INDEX raw_material_pk ON raw_material USING btree (rm_id);
+
+
+--
+-- Name: stock_material_detail_pk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE UNIQUE INDEX stock_material_detail_pk ON stock_material_detail USING btree (smd_id);
+
+
+--
+-- Name: stock_material_pk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE UNIQUE INDEX stock_material_pk ON stock_material USING btree (sm_id);
+
+
+--
+-- Name: warehouse_pk; Type: INDEX; Schema: public; Owner: agripro; Tablespace: 
+--
+
+CREATE UNIQUE INDEX warehouse_pk ON warehouse USING btree (wh_id);
+
+
+--
+-- Name: fk_detail_p_r12_stock_ma; Type: FK CONSTRAINT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE ONLY detail_packaging
+    ADD CONSTRAINT fk_detail_p_r12_stock_ma FOREIGN KEY (smd_id) REFERENCES stock_material_detail(smd_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: fk_detail_p_r5_packagin; Type: FK CONSTRAINT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE ONLY detail_packaging
+    ADD CONSTRAINT fk_detail_p_r5_packagin FOREIGN KEY (pkg_id) REFERENCES packaging(pkg_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: fk_farmer_r1_warehous; Type: FK CONSTRAINT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE ONLY farmer
+    ADD CONSTRAINT fk_farmer_r1_warehous FOREIGN KEY (wh_id) REFERENCES warehouse(wh_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: fk_kota_r7_provinsi; Type: FK CONSTRAINT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE ONLY kota
+    ADD CONSTRAINT fk_kota_r7_provinsi FOREIGN KEY (prov_id) REFERENCES provinsi(prov_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: fk_packagin_r11_product; Type: FK CONSTRAINT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE ONLY packaging
+    ADD CONSTRAINT fk_packagin_r11_product FOREIGN KEY (prod_id) REFERENCES product(prod_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: fk_plantati_r13_kota; Type: FK CONSTRAINT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE ONLY plantation
+    ADD CONSTRAINT fk_plantati_r13_kota FOREIGN KEY (kota_id) REFERENCES kota(kota_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: fk_plantati_r14_provinsi; Type: FK CONSTRAINT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE ONLY plantation
+    ADD CONSTRAINT fk_plantati_r14_provinsi FOREIGN KEY (prov_id) REFERENCES provinsi(prov_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: fk_plantati_r6_farmer; Type: FK CONSTRAINT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE ONLY plantation
+    ADD CONSTRAINT fk_plantati_r6_farmer FOREIGN KEY (fm_id) REFERENCES farmer(fm_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: fk_stock_ma_r10_raw_mate; Type: FK CONSTRAINT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE ONLY stock_material_detail
+    ADD CONSTRAINT fk_stock_ma_r10_raw_mate FOREIGN KEY (rm_id) REFERENCES raw_material(rm_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: fk_stock_ma_r8_farmer; Type: FK CONSTRAINT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE ONLY stock_material
+    ADD CONSTRAINT fk_stock_ma_r8_farmer FOREIGN KEY (fm_id) REFERENCES farmer(fm_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- Name: fk_stock_ma_r9_stock_ma; Type: FK CONSTRAINT; Schema: public; Owner: agripro
+--
+
+ALTER TABLE ONLY stock_material_detail
+    ADD CONSTRAINT fk_stock_ma_r9_stock_ma FOREIGN KEY (sm_id) REFERENCES stock_material(sm_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 
 --
