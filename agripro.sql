@@ -72,7 +72,7 @@ ALTER SEQUENCE app_menu_groups_app_menu_group_id_seq OWNED BY app_menu_groups.ap
 -- Name: app_menu_groups_app_menu_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: optima
 --
 
-SELECT pg_catalog.setval('app_menu_groups_app_menu_group_id_seq', 23, true);
+SELECT pg_catalog.setval('app_menu_groups_app_menu_group_id_seq', 26, true);
 
 
 --
@@ -100,7 +100,7 @@ ALTER SEQUENCE app_menu_menu_id_seq OWNED BY app_menu.menu_id;
 -- Name: app_menu_menu_id_seq; Type: SEQUENCE SET; Schema: public; Owner: optima
 --
 
-SELECT pg_catalog.setval('app_menu_menu_id_seq', 11, true);
+SELECT pg_catalog.setval('app_menu_menu_id_seq', 14, true);
 
 
 --
@@ -198,7 +198,7 @@ ALTER SEQUENCE farmer_fm_id_seq OWNED BY farmer.fm_id;
 -- Name: farmer_fm_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
 --
 
-SELECT pg_catalog.setval('farmer_fm_id_seq', 2, true);
+SELECT pg_catalog.setval('farmer_fm_id_seq', 3, true);
 
 
 --
@@ -513,7 +513,7 @@ ALTER SEQUENCE plantation_plt_id_seq OWNED BY plantation.plt_id;
 -- Name: plantation_plt_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
 --
 
-SELECT pg_catalog.setval('plantation_plt_id_seq', 3, true);
+SELECT pg_catalog.setval('plantation_plt_id_seq', 4, true);
 
 
 --
@@ -718,7 +718,7 @@ ALTER SEQUENCE stock_material_detail_smd_id_seq OWNED BY stock_material_detail.s
 -- Name: stock_material_detail_smd_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
 --
 
-SELECT pg_catalog.setval('stock_material_detail_smd_id_seq', 1, false);
+SELECT pg_catalog.setval('stock_material_detail_smd_id_seq', 8, true);
 
 
 --
@@ -746,7 +746,7 @@ ALTER SEQUENCE stock_material_sm_id_seq OWNED BY stock_material.sm_id;
 -- Name: stock_material_sm_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
 --
 
-SELECT pg_catalog.setval('stock_material_sm_id_seq', 1, false);
+SELECT pg_catalog.setval('stock_material_sm_id_seq', 6, true);
 
 
 --
@@ -1045,6 +1045,9 @@ COPY app_menu (menu_id, menu_parent, menu_name, menu_icon, menu_desc, menu_link,
 10	6	Raw Material	\N	\N	\N	agripro.raw_material	3
 6	0	Tracking			#	\N	2
 11	6	Product	\N	\N	\N	agripro.product	4
+12	6	Input Material Stock	\N	\N	\N	agripro.stock_material	5
+13	6	Input Packaging	\N	\N	\N	agripro.packaging	6
+14	6	Tracking Serial Number	\N	\N	\N	agripro.tracking_serial_number	7
 \.
 
 
@@ -1068,6 +1071,9 @@ COPY app_menu_groups (app_menu_group_id, menu_id, group_id, description) FROM st
 21	9	1	\N
 22	10	1	\N
 23	11	1	\N
+24	12	1	\N
+25	13	1	\N
+26	14	1	\N
 \.
 
 
@@ -1085,6 +1091,7 @@ COPY detail_packaging (dp_id, smd_id, pkg_id, dp_qty, created_date, created_by, 
 
 COPY farmer (fm_id, wh_id, fm_code, fm_name, fm_jk, fm_address, fm_no_sertifikasi, fm_no_hp, fm_email, fm_tgl_lahir, created_date, created_by, updated_date, updated_by) FROM stdin;
 2	2	FM001	Budiman	L	Jl. Batik kumeli no 21	STF001	087182371112	budiman@gmail.com	1986-06-14 00:00:00	2016-06-14 00:00:00	admin	2016-06-14 00:00:00	admin
+3	1	FM002	Kodir	L	jl.abc no 21				1977-08-23 00:00:00	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
 \.
 
 
@@ -1187,7 +1194,8 @@ COPY permissions (permission_id, permission_name, permission_description) FROM s
 --
 
 COPY plantation (plt_id, fm_id, kota_id, prov_id, plt_code, plt_luas_lahan, plt_status, plt_plot, plt_year_planted, plt_date_contract, plt_date_registration, plt_coordinate, plt_nama_pemilik, created_date, created_by, updated_date, updated_by) FROM stdin;
-3	2	1	1	PLT001	12000Ha	Milik	10	2016	2016-06-01 00:00:00	2016-06-15 00:00:00	-1.3213,9.3213	Wiliam Decosta	2016-06-14 00:00:00	admin	2016-06-14 00:00:00	admin
+3	2	1	1	PLT001-01	12000Ha	Milik	10	2016	2016-06-01 00:00:00	2016-06-15 00:00:00	-1.3213,9.3213	Wiliam Decosta	2016-06-14 00:00:00	admin	2016-06-15 00:00:00	admin
+4	3	4	2	PLT002-01	1000Ha	Milik	0		\N	\N		Kodirun	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
 \.
 
 
@@ -1225,6 +1233,7 @@ COPY raw_material (rm_id, rm_code, rm_name, created_date, created_by, updated_da
 --
 
 COPY stock_material (sm_id, fm_id, sm_tgl_masuk, sm_serial_number, sm_jenis_pembayaran, sm_no_po, created_date, created_by, updated_date, updated_by) FROM stdin;
+6	2	2016-06-15 00:00:00	ATN-FM001-20160615-0001	\N		2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
 \.
 
 
@@ -1233,6 +1242,7 @@ COPY stock_material (sm_id, fm_id, sm_tgl_masuk, sm_serial_number, sm_jenis_pemb
 --
 
 COPY stock_material_detail (smd_id, sm_id, rm_id, smd_qty, smd_harga, smd_batch_number, smd_plt_id, smd_tgl_panen, smd_tgl_pengeringan, created_date, created_by, updated_date, updated_by) FROM stdin;
+8	6	1	4.5	150000	ATN-FM001-20160615-0001/0001	3	2016-06-15 00:00:00	2016-06-30 00:00:00	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
 \.
 
 
