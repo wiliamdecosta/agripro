@@ -18,7 +18,7 @@
 <!-- END THEME GLOBAL STYLES -->
 <!-- BEGIN THEME LAYOUT STYLES -->
 <link href="<?php echo base_url(); ?>assets/layouts/layout/css/layout.min.css" rel="stylesheet" type="text/css"/>
-<link href="<?php echo base_url(); ?>assets/layouts/layout/css/themes/light2.css" rel="stylesheet" type="text/css"
+<link href="<?php echo base_url(); ?>assets/layouts/layout/css/themes/light.css" rel="stylesheet" type="text/css"
       id="style_color"/>
 <link href="<?php echo base_url(); ?>assets/layouts/layout/css/custom.min.css" rel="stylesheet" type="text/css"/>
 <!-- END THEME LAYOUT STYLES -->
