@@ -4,7 +4,7 @@
             <!-- modal title -->
             <div class="modal-header no-padding">
                 <div class="table-header">
-                    <span class="form-add-edit-title"> Data provinsi</span>
+                    <span class="form-add-edit-title"> Data Provinsi</span>
                 </div>
             </div>
             <input type="hidden" id="modal_lov_provinsi_id_val" value="" />

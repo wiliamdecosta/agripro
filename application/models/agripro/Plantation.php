@@ -58,12 +58,20 @@ class Plantation extends Abstract_model {
             $this->record['updated_date'] = date('Y-m-d');
             $this->record['updated_by'] = $userdata->username;
 
+            if(empty($this->record['plt_date_contract']))
+                unset($this->record['plt_date_contract']);
+            if(empty($this->record['plt_date_registration']))
+                unset($this->record['plt_date_registration']);
         }else {
             //do something
             //example:
             $this->record['updated_date'] = date('Y-m-d');
             $this->record['updated_by'] = $userdata->username;
             //if false please throw new Exception
+            if(empty($this->record['plt_date_contract']))
+                unset($this->record['plt_date_contract']);
+            if(empty($this->record['plt_date_registration']))
+                unset($this->record['plt_date_registration']);
         }
         return true;
     }

@@ -1,30 +1,29 @@
-<div id="modal_lov_nipnas" class="modal fade" tabindex="-1" style="overflow-y: scroll;">
+<div id="modal_lov_farmer" class="modal fade" tabindex="-1" style="overflow-y: scroll;">
     <div class="modal-dialog" style="width:700px;">
         <div class="modal-content">
             <!-- modal title -->
             <div class="modal-header no-padding">
                 <div class="table-header">
-                    <span class="form-add-edit-title"> Data Nipnas</span>
+                    <span class="form-add-edit-title"> Data Farmer</span>
                 </div>
             </div>
-            <input type="hidden" id="modal_lov_nipnas_id_val" value="" />
-            <input type="hidden" id="modal_lov_nipnas_code_val" value="" />
+            <input type="hidden" id="modal_lov_farmer_id_val" value="" />
+            <input type="hidden" id="modal_lov_farmer_code_val" value="" />
 
             <!-- modal body -->
             <div class="modal-body">
                 <div>
-                  <button type="button" class="btn btn-sm btn-success" id="modal_lov_nipnas_btn_blank">
+                  <button type="button" class="btn btn-sm btn-success" id="modal_lov_farmer_btn_blank">
                     <span class="fa fa-pencil-square-o" aria-hidden="true"></span> BLANK
                   </button>
                 </div>
-                <table id="modal_lov_nipnas_grid_selection" class="table table-striped table-bordered table-hover">
+                <table id="modal_lov_farmer_grid_selection" class="table table-striped table-bordered table-hover">
                 <thead>
                   <tr>
-                     <th data-column-id="customer_ref" data-sortable="false" data-visible="false">ID nipnas</th>
+                     <th data-column-id="fm_id" data-sortable="false" data-visible="false">ID Farmer</th>
                      <th data-header-align="center" data-align="center" data-formatter="opt-edit" data-sortable="false" data-width="100">Options</th>
-                     <th data-column-id="customer_ref">NIPNAS</th>
-                     <th data-column-id="first_name">Customer Name</th>
-                     <th data-column-id="account_num">Account Number</th>
+                     <th data-column-id="fm_code">Kode Petani</th>
+                     <th data-column-id="fm_name">Nama Petani</th>
                   </tr>
                 </thead>
                 </table>
@@ -35,7 +34,7 @@
                 <div class="bootstrap-dialog-footer">
                     <div class="bootstrap-dialog-footer-buttons">
                         <button class="btn btn-danger btn-xs radius-4" data-dismiss="modal">
-                            <i class="ace-icon fa fa-times"></i>
+                            <i class="fa fa-times"></i>
                             Close
                         </button>
                     </div>
@@ -48,38 +47,39 @@
 <script>
 
     jQuery(function($) {
-        $("#modal_lov_nipnas_btn_blank").on('click', function() {
-            $("#"+ $("#modal_lov_nipnas_id_val").val()).val("");
-            $("#"+ $("#modal_lov_nipnas_code_val").val()).val("");
-            $("#modal_lov_nipnas").modal("toggle");
+        $("#modal_lov_farmer_btn_blank").on('click', function() {
+            $("#"+ $("#modal_lov_farmer_id_val").val()).val("");
+            $("#"+ $("#modal_lov_farmer_code_val").val()).val("");
+            $("#modal_lov_farmer").modal("toggle");
         });
     });
 
-    function modal_lov_nipnas_show(the_id_field, the_code_field) {
-        modal_lov_nipnas_set_field_value(the_id_field, the_code_field);
-        $("#modal_lov_nipnas").modal({backdrop: 'static'});
-        modal_lov_nipnas_prepare_table();
+    function modal_lov_farmer_show(the_id_field, the_code_field) {
+        modal_lov_farmer_set_field_value(the_id_field, the_code_field);
+        $("#modal_lov_farmer").modal({backdrop: 'static'});
+        modal_lov_farmer_prepare_table();
     }
 
 
-    function modal_lov_nipnas_set_field_value(the_id_field, the_code_field) {
-         $("#modal_lov_nipnas_id_val").val(the_id_field);
-         $("#modal_lov_nipnas_code_val").val(the_code_field);
+    function modal_lov_farmer_set_field_value(the_id_field, the_code_field) {
+         $("#modal_lov_farmer_id_val").val(the_id_field);
+         $("#modal_lov_farmer_code_val").val(the_code_field);
     }
 
-    function modal_lov_nipnas_set_value(the_id_val, the_code_val) {
-         $("#"+ $("#modal_lov_nipnas_id_val").val()).val(the_id_val);
-         $("#"+ $("#modal_lov_nipnas_code_val").val()).val(the_code_val);
-         $("#modal_lov_nipnas").modal("toggle");
+    function modal_lov_farmer_set_value(the_id_val, the_code_val) {
+         $("#"+ $("#modal_lov_farmer_id_val").val()).val(the_id_val);
+         $("#"+ $("#modal_lov_farmer_code_val").val()).val(the_code_val);
+         $("#modal_lov_farmer").modal("toggle");
 
-         $("#"+ $("#modal_lov_nipnas_id_val").val()).change();
+         $("#"+ $("#modal_lov_farmer_id_val").val()).change();
+         $("#"+ $("#modal_lov_farmer_code_val").val()).change();
     }
 
-    function modal_lov_nipnas_prepare_table() {
-        $("#modal_lov_nipnas_grid_selection").bootgrid({
+    function modal_lov_farmer_prepare_table() {
+        $("#modal_lov_farmer_grid_selection").bootgrid({
              formatters: {
                 "opt-edit" : function(col, row) {
-                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_nipnas_set_value(\''+ row.customer_ref +'\', \''+ row.first_name +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
+                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_farmer_set_value(\''+ row.fm_id +'\', \''+ row.fm_code +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
                 }
              },
              rowCount:[5,10],
@@ -100,7 +100,7 @@
                 }
                 return response;
              },
-             url: '<?php echo WS_URL."customer.customer_controller/readLov"; ?>',
+             url: '<?php echo WS_BOOTGRID."agripro.farmer_controller/readLov"; ?>',
              selection: true,
              sorting:true
         });

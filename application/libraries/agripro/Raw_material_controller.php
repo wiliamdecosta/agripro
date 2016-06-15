@@ -70,6 +70,45 @@ class Raw_material_controller {
         return $data;
     }
 
+
+    function readLov() {
+        permission_check('view-tracking');
+
+        $start = getVarClean('current','int',0);
+        $limit = getVarClean('rowCount','int',5);
+
+        $sort = getVarClean('sort','str','rm_id');
+        $dir  = getVarClean('dir','str','asc');
+
+        $searchPhrase = getVarClean('searchPhrase', 'str', '');
+
+        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/raw_material');
+            $table = $ci->raw_material;
+
+            if(!empty($searchPhrase)) {
+                $table->setCriteria("(rm_code ilike '%".$searchPhrase."%' or rm_name ilike '%".$searchPhrase."%')");
+            }
+
+            $start = ($start-1) * $limit;
+            $items = $table->getAll($start, $limit, $sort, $dir);
+            $totalcount = $table->countAll();
+
+            $data['rows'] = $items;
+            $data['success'] = true;
+            $data['total'] = $totalcount;
+
+        }catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+
+        return $data;
+    }
+
     function crud() {
 
         $data = array();

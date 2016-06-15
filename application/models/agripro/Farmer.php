@@ -15,7 +15,7 @@ class Farmer extends Abstract_model {
                                 'wh_id'             => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Warehouse'),
                                 'fm_code'           => array('nullable' => true, 'type' => 'str', 'unique' => true, 'display' => 'Kode'),
                                 'fm_name'           => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Nama'),
-                                'fm_jk'             => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Jenis Kelamin'),
+                                'fm_jk'             => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'Jenis Kelamin'),
                                 'fm_address'        => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Alamat'),
                                 'fm_no_sertifikasi' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Nomor Sertifikasi'),
                                 'fm_no_hp'          => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Nomor HP'),

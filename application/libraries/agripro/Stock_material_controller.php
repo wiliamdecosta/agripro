@@ -1,25 +1,25 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
 * Json library
-* @class Provinsi_controller
+* @class Stock_material_controller
 * @version 07/05/2015 12:18:00
 */
-class Provinsi_controller {
+class Stock_material_controller {
 
     function read() {
 
         $page = getVarClean('page','int',1);
         $limit = getVarClean('rows','int',5);
-        $sidx = getVarClean('sidx','str','prov_id');
-        $sord = getVarClean('sord','str','asc');
+        $sidx = getVarClean('sidx','str','sm_id');
+        $sord = getVarClean('sord','str','desc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
         try {
 
             $ci = & get_instance();
-            $ci->load->model('agripro/provinsi');
-            $table = $ci->provinsi;
+            $ci->load->model('agripro/stock_material');
+            $table = $ci->stock_material;
 
             $req_param = array(
                 "sort_by" => $sidx,
@@ -71,44 +71,6 @@ class Provinsi_controller {
     }
 
 
-    function readLov() {
-        permission_check('view-tracking');
-
-        $start = getVarClean('current','int',0);
-        $limit = getVarClean('rowCount','int',5);
-
-        $sort = getVarClean('sort','str','prov_id');
-        $dir  = getVarClean('dir','str','asc');
-
-        $searchPhrase = getVarClean('searchPhrase', 'str', '');
-
-        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
-
-        try {
-
-            $ci = & get_instance();
-            $ci->load->model('agripro/provinsi');
-            $table = $ci->provinsi;
-
-            if(!empty($searchPhrase)) {
-                $table->setCriteria("prov_code ilike '%".$searchPhrase."%'");
-            }
-
-            $start = ($start-1) * $limit;
-            $items = $table->getAll($start, $limit, $sort, $dir);
-            $totalcount = $table->countAll();
-
-            $data['rows'] = $items;
-            $data['success'] = true;
-            $data['total'] = $totalcount;
-
-        }catch (Exception $e) {
-            $data['message'] = $e->getMessage();
-        }
-
-        return $data;
-    }
-
     function crud() {
 
         $data = array();
@@ -142,8 +104,8 @@ class Provinsi_controller {
     function create() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/provinsi');
-        $table = $ci->provinsi;
+        $ci->load->model('agripro/stock_material');
+        $table = $ci->stock_material;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -213,8 +175,8 @@ class Provinsi_controller {
     function update() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/provinsi');
-        $table = $ci->provinsi;
+        $ci->load->model('agripro/stock_material');
+        $table = $ci->stock_material;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -284,8 +246,8 @@ class Provinsi_controller {
 
     function destroy() {
         $ci = & get_instance();
-        $ci->load->model('agripro/provinsi');
-        $table = $ci->provinsi;
+        $ci->load->model('agripro/stock_material');
+        $table = $ci->stock_material;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 

@@ -1,28 +1,29 @@
-<div id="modal_lov_kota" class="modal fade" tabindex="-1" style="overflow-y: scroll;">
+<div id="modal_lov_plantation" class="modal fade" tabindex="-1" style="overflow-y: scroll;">
     <div class="modal-dialog" style="width:700px;">
         <div class="modal-content">
             <!-- modal title -->
             <div class="modal-header no-padding">
                 <div class="table-header">
-                    <span class="form-add-edit-title"> Data Kota</span>
+                    <span class="form-add-edit-title"> Data Plantation</span>
                 </div>
             </div>
-            <input type="hidden" id="modal_lov_kota_id_val" value="" />
-            <input type="hidden" id="modal_lov_kota_name_val" value="" />
+            <input type="hidden" id="modal_lov_plantation_id_val" value="" />
+            <input type="hidden" id="modal_lov_plantation_code_val" value="" />
 
             <!-- modal body -->
             <div class="modal-body">
                 <div>
-                  <button type="button" class="btn btn-sm btn-success" id="modal_lov_kota_btn_blank">
+                  <button type="button" class="btn btn-sm btn-success" id="modal_lov_plantation_btn_blank">
                     <span class="fa fa-pencil-square-o" aria-hidden="true"></span> BLANK
                   </button>
                 </div>
-                <table id="modal_lov_kota_grid_selection" class="table table-striped table-bordered table-hover">
+                <table id="modal_lov_plantation_grid_selection" class="table table-striped table-bordered table-hover">
                 <thead>
                   <tr>
-                     <th data-column-id="kota_id" data-sortable="false" data-visible="false">ID Kota</th>
+                     <th data-column-id="plt_id" data-sortable="false" data-visible="false">ID Plantation</th>
                      <th data-header-align="center" data-align="center" data-formatter="opt-edit" data-sortable="false" data-width="100">Options</th>
-                     <th data-column-id="kota_name">Nama Kota</th>
+                     <th data-column-id="plt_code">Kode Lahan</th>
+                     <th data-column-id="plt_nama_pemilik">Nama Pemilik</th>
                   </tr>
                 </thead>
                 </table>
@@ -46,39 +47,41 @@
 <script>
 
     jQuery(function($) {
-        $("#modal_lov_kota_btn_blank").on('click', function() {
-            $("#"+ $("#modal_lov_kota_id_val").val()).val("");
-            $("#"+ $("#modal_lov_kota_name_val").val()).val("");
-            $("#modal_lov_kota").modal("toggle");
+        $("#modal_lov_plantation_btn_blank").on('click', function() {
+            $("#"+ $("#modal_lov_plantation_id_val").val()).val("");
+            $("#"+ $("#modal_lov_plantation_code_val").val()).val("");
+            $("#modal_lov_plantation").modal("toggle");
         });
     });
 
-    function modal_lov_kota_show(the_id_field, the_code_field, prov_id) {
-        modal_lov_kota_set_field_value(the_id_field, the_code_field);
-        $("#modal_lov_kota").modal({backdrop: 'static'});
-        modal_lov_kota_prepare_table(prov_id);
+    function modal_lov_plantation_show(the_id_field, the_code_field, fm_id) {
+        modal_lov_plantation_set_field_value(the_id_field, the_code_field);
+        $("#modal_lov_plantation").modal({backdrop: 'static'});
+        modal_lov_plantation_prepare_table(fm_id);
     }
 
-    function modal_lov_kota_set_field_value(the_id_field, the_code_field) {
-         $("#modal_lov_kota_id_val").val(the_id_field);
-         $("#modal_lov_kota_name_val").val(the_code_field);
+
+    function modal_lov_plantation_set_field_value(the_id_field, the_code_field) {
+         $("#modal_lov_plantation_id_val").val(the_id_field);
+         $("#modal_lov_plantation_code_val").val(the_code_field);
     }
 
-    function modal_lov_kota_set_value(the_id_val, the_code_val) {
-         $("#"+ $("#modal_lov_kota_id_val").val()).val(the_id_val);
-         $("#"+ $("#modal_lov_kota_name_val").val()).val(the_code_val);
-         $("#modal_lov_kota").modal("toggle");
+    function modal_lov_plantation_set_value(the_id_val, the_code_val) {
+         $("#"+ $("#modal_lov_plantation_id_val").val()).val(the_id_val);
+         $("#"+ $("#modal_lov_plantation_code_val").val()).val(the_code_val);
+         $("#modal_lov_plantation").modal("toggle");
 
-         $("#"+ $("#modal_lov_kota_id_val").val()).change();
+         $("#"+ $("#modal_lov_plantation_id_val").val()).change();
+         $("#"+ $("#modal_lov_plantation_code_val").val()).change();
     }
 
-    function modal_lov_kota_prepare_table(prov_id) {
+    function modal_lov_plantation_prepare_table(fm_id) {
 
-        $("#modal_lov_kota_grid_selection").bootgrid("destroy");
-        $("#modal_lov_kota_grid_selection").bootgrid({
+        $("#modal_lov_plantation_grid_selection").bootgrid("destroy");
+        $("#modal_lov_plantation_grid_selection").bootgrid({
              formatters: {
                 "opt-edit" : function(col, row) {
-                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_kota_set_value(\''+ row.kota_id +'\', \''+ row.kota_name +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
+                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_plantation_set_value(\''+ row.plt_id +'\', \''+ row.plt_code +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
                 }
              },
              rowCount:[5,10],
@@ -99,10 +102,10 @@
                 }
                 return response;
              },
-             url: '<?php echo WS_BOOTGRID."agripro.kota_controller/readLov"; ?>',
+             url: '<?php echo WS_BOOTGRID."agripro.plantation_controller/readLov"; ?>',
              post: function(){
                 return {
-                    prov_id:prov_id
+                    fm_id:fm_id
                 };
              },
              selection: true,

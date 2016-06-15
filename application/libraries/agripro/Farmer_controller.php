@@ -70,6 +70,45 @@ class Farmer_controller {
         return $data;
     }
 
+    function readLov() {
+        permission_check('view-tracking');
+
+        $start = getVarClean('current','int',0);
+        $limit = getVarClean('rowCount','int',5);
+
+        $sort = getVarClean('sort','str','fm_id');
+        $dir  = getVarClean('dir','str','asc');
+
+        $searchPhrase = getVarClean('searchPhrase', 'str', '');
+        $prov_id = getVarClean('prov_id','int',0);
+
+        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/farmer');
+            $table = $ci->farmer;
+
+            if(!empty($searchPhrase)) {
+                $table->setCriteria("(fm_code ilike '%".$searchPhrase."%' OR fm_name ilike '%".$searchPhrase."%')");
+            }
+
+            $start = ($start-1) * $limit;
+            $items = $table->getAll($start, $limit, $sort, $dir);
+            $totalcount = $table->countAll();
+
+            $data['rows'] = $items;
+            $data['success'] = true;
+            $data['total'] = $totalcount;
+
+        }catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+
+        return $data;
+    }
+
     function crud() {
 
         $data = array();
