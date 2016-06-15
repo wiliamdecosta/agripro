@@ -359,7 +359,7 @@
                             setTimeout( function() {
                                 elm.append('<input id="form_prov_id" type="text"  style="display:none;" onchange="clearLovKota();">'+
                                         '<input id="form_prov_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Pilih Propinsi">'+
-                                        '<button class="btn btn-warning" type="button" onclick="showLovProvinsi(\'form_prov_id\',\'form_prov_code\')">'+
+                                        '<button class="btn btn-success" type="button" onclick="showLovProvinsi(\'form_prov_id\',\'form_prov_code\')">'+
                                         '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
                                         '</button>');
                                 $("#form_prov_id").val(value);
@@ -404,7 +404,7 @@
                             setTimeout( function() {
                                 elm.append('<input id="form_kota_id" type="text"  style="display:none;">'+
                                         '<input id="form_kota_name" disabled type="text" class="FormElement jqgrid-required" placeholder="Pilih Kota">'+
-                                        '<button class="btn btn-warning" type="button" onclick="showLovKota(\'form_kota_id\',\'form_kota_name\')">'+
+                                        '<button class="btn btn-success" type="button" onclick="showLovKota(\'form_kota_id\',\'form_kota_name\')">'+
                                         '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
                                         '</button>');
                                 $("#form_kota_id").val(value);
