@@ -23,8 +23,8 @@
             <div class="page-header-inner ">
                 <!-- BEGIN LOGO -->
                 <div class="page-logo">
-                    <a href="index.html">
-                        <img src="<?php echo base_url(); ?>assets/layouts/layout/img/logo.png" alt="logo" class="logo-default" /> </a>
+                    <a href="<?php base_url();?>">
+                        <img src="<?php echo base_url(); ?>assets/image/agp_font.png" alt="logo" class="logo-default" /> </a>
                     <div class="menu-toggler sidebar-toggler">
                         <span></span>
                     </div>

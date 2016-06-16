@@ -40,12 +40,11 @@
 <div class="user-login-5">
     <div class="row bs-reset">
         <div class="col-md-6 login-container bs-reset">
-            <img class="login-logo login-6" src="<?php echo base_url(); ?>assets/image/agripro.gif" width="200px"
-                 height=""/>
+<!--            <img class="login-logo login-6" src="--><?php //echo base_url(); ?><!--assets/image/login_logo.png" height=""/>-->
             <div class="login-content">
                 <h1>Login Area</h1>
-                <p>  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam </p>
+                <img class="" src="<?php echo base_url(); ?>assets/image/login_logo.png" height=""/>
+                <h4> Supply Chain Management - AGRIPRO TRIDAYA NUSANTARA </h4>
                 <?php //echo form_open("auth/login", array('class' => 'login-form')); ?>
                 <form class="login-form" name="login_form" id="login_form" method="post">
                     <div id="infoMessage"></div>
@@ -178,9 +177,8 @@
     });
 
     $('.login-bg').backstretch([
-            "<?php echo base_url();?>assets/pages/img/login/gmp.jpg",
-            "<?php echo base_url();?>assets/pages/img/login/bg2.jpg",
-            "<?php echo base_url();?>assets/pages/img/login/bg3.jpg"
+            "<?php echo base_url();?>assets/pages/img/login/spice1.jpg",
+            "<?php echo base_url();?>assets/pages/img/login/spicess2.jpg"
         ], {
             fade: 1000,
             duration: 8000
