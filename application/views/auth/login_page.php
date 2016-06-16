@@ -31,7 +31,7 @@
 
     <link href="<?php echo base_url(); ?>assets/pages/css/login-5.css" rel="stylesheet" type="text/css"/>
 
-    <link rel="shortcut icon" href="<?php echo base_url(); ?>favicon.png"/>
+    <link rel="shortcut icon" href="<?php echo base_url(); ?>favicon.ico"/>
 </head>
 
 

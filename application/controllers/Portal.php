@@ -9,7 +9,13 @@ class Portal extends CI_Controller
     }
 
     function index() {
-       echo "form tracking";
+        $this->load->view('portal/template/header');
+        $this->load->view('portal/tracking');
+        $this->load->view('portal/template/footer');
+    }
+
+    public function submitTracking(){
+        
     }
 
 
