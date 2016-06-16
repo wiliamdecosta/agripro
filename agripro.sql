@@ -746,7 +746,7 @@ ALTER SEQUENCE stock_material_sm_id_seq OWNED BY stock_material.sm_id;
 -- Name: stock_material_sm_id_seq; Type: SEQUENCE SET; Schema: public; Owner: agripro
 --
 
-SELECT pg_catalog.setval('stock_material_sm_id_seq', 6, true);
+SELECT pg_catalog.setval('stock_material_sm_id_seq', 7, true);
 
 
 --
@@ -1138,10 +1138,465 @@ COPY groups_permissions (id, group_id, permission_id, status) FROM stdin;
 --
 
 COPY kota (kota_id, prov_id, kota_name, created_date, created_by, updated_date, updated_by) FROM stdin;
-1	1	KOTA BANDUNG	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
-2	1	KOTA BOGOR	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
-3	2	JAKARTA UTARA	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
-4	2	JAKARTA SELATAN	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
+1	25	Kab Luwu Utara 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+2	14	Kab Tana Tidung	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+3	1	Kab. Aceh Barat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+4	1	Kab. Aceh Barat Daya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+5	1	Kab. Aceh Besar	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+6	1	Kab. Aceh Jaya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+7	1	Kab. Aceh Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+8	1	Kab. Aceh Singkil	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+9	1	Kab. Aceh Tamiang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+10	1	Kab. Aceh Tengah	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+11	1	Kab. Aceh Tenggara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+12	1	Kab. Aceh Timur	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+13	1	Kab. Aceh Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+14	7	Kab. Administrasi Kepulauan Seribu	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+15	29	Kab. Agam	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+16	20	Kab. Alor	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+17	31	Kab. Asahan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+18	22	Kab. Asmat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+19	2	Kab. Badung 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+20	12	Kab. Balangan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+21	8	Kab. Bandung 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+22	8	Kab. Bandung Barat 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+23	26	Kab. Banggai	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+24	26	Kab. Banggai Kepulauan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+25	15	Kab. Bangka 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+26	15	Kab. Bangka Barat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+27	15	Kab. Bangka Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+28	15	Kab. Bangka Tengah	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+29	10	Kab. Bangkalan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+30	2	Kab. Bangli 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+31	12	Kab. Banjar	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+32	9	Kab. Banjarnegara 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+33	25	Kab. Bantaeng	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+34	5	Kab. Bantul 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+35	30	Kab. Banyuasin 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+36	9	Kab. Banyumas 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+37	10	Kab. Banyuwangi 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+38	12	Kab. Barito Kuala	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+39	12	Kab. Barito Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+40	12	Kab. Barito Timur	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+41	12	Kab. Barito Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+42	25	Kab. Barru	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+43	9	Kab. Batang 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+44	4	Kab. Batang Hari	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+45	31	Kab. Batubara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+46	8	Kab. Bekasi 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+47	15	Kab. Belitung 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+48	15	Kab. Belitung Timur 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+49	20	Kab. Belu	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+50	1	Kab. Bener Meriah	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+51	23	Kab. Bengkalis 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+52	11	Kab. Bengkayang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+53	4	Kab. Bengkulu Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+54	4	Kab. Bengkulu Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+55	14	Kab. Berau	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+56	21	Kab. Biak Numfor	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+57	19	Kab. Bima 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+58	15	Kab. Bintan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+59	1	Kab. Bireuen	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+60	10	Kab. Blitar 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+61	9	Kab. Blora 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+62	6	Kab. Boalemo	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+63	8	Kab. Bogor 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+64	10	Kab. Bojonegoro 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+65	28	Kab. Bolaang Mongondow	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+66	28	Kab. Bolaang Mongondow Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+67	25	Kab. Bombana	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+68	10	Kab. Bondowoso 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+69	25	Kab. Bone	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+70	6	Kab. Bone Bolango	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+71	21	Kab. Boven Digoel	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+72	9	Kab. Boyolali 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+73	9	Kab. Brebes 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+74	2	Kab. Buleleng 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+75	25	Kab. Bulukumba	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+76	14	Kab. Bulungan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+77	4	Kab. Bungo	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+78	26	Kab. Buol	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+79	17	Kab. Buru	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+80	27	Kab. Buton & Buton Utara 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+81	8	Kab. Ciamis 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+82	8	Kab. Cianjur 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+83	9	Kab. Cilacap 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+84	8	Kab. Cirebon 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+85	31	Kab. Dairi	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+86	31	Kab. Deli Serdang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+87	9	Kab. Demak 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+88	29	Kab. Dharmasraya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+89	19	Kab. Dompu 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+90	26	Kab. Donggala	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+91	30	Kab. Empat Lawang 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+92	20	Kab. Ende	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+93	25	Kab. Enrekang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+94	22	Kab. Fak-Fak	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+95	20	Kab. Flores Timur	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+96	8	Kab. Garut 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+97	1	Kab. Gayo Lues	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+98	2	Kab. Gianyar 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+99	6	Kab. Gorontalo	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+100	6	Kab. Gorontalo Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+101	25	Kab. Gowa	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+102	10	Kab. Gresik 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+103	9	Kab. Grobogan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+104	5	Kab. Gunung Kidul 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+105	13	Kab. Gunung Mas	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+106	18	Kab. Halmahera Barat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+107	18	Kab. Halmahera Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+108	18	Kab. Halmahera Tengah	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+109	18	Kab. Halmahera Timur	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+110	18	Kab. Halmahera Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+111	12	Kab. Hulu Sungai Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+112	12	Kab. Hulu Sungai Tengah	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+113	12	Kab. Hulu Sungai Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+114	31	Kab. Humbang Hasudutan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+115	23	Kab. Indragiri Hilir 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+116	23	Kab. Indragiri Hulu 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+117	8	Kab. Indramayu 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+118	21	Kab. Jayapura	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+119	21	Kab. Jayawijaya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+120	10	Kab. Jember 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+121	2	Kab. Jembrana 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+122	25	Kab. Jeneponto	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+123	9	Kab. Jepara 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+124	10	Kab. Jombang 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+125	22	Kab. Kaimana	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+126	23	Kab. Kampar 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+127	13	Kab. Kapuas	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+128	11	Kab. Kapuas Hulu	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+129	9	Kab. Karanganyar 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+130	2	Kab. Karangasem 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+131	8	Kab. Karawang 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+132	15	Kab. Karimun	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+133	31	Kab. Karo	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+134	13	Kab. Katingan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+135	4	Kab. Kaur	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+136	11	Kab. Kayong Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+137	9	Kab. Kebumen 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+138	10	Kab. Kediri 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+139	21	Kab. Keerom	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+140	9	Kab. Kendal 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+141	4	Kab. Kepahiang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+142	17	Kab. Kepulauan Aru	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+143	28	Kab. Kepulauan Sangihe	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+144	18	Kab. Kepulauan Sula	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+145	28	Kab. Kepulauan Talaud	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+146	29	Kab. Kepulaun Mentawai 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+147	4	Kab. Kerinci	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+148	11	Kab. Ketapang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+149	9	kab. Klaten 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+150	2	Kab. Klungkung 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+151	27	Kab. Kolaka	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+152	27	Kab. Kolaka Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+153	27	Kab. Konawe	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+154	27	Kab. Konawe Utara/Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+155	12	Kab. Kota Baru	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+156	13	Kab. Kotawaringin Barat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+157	13	Kab. Kotawaringin Timur	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+158	23	Kab. Kuantan Singingi	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+159	11	Kab. Kubu Raya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+160	9	Kab. Kudus 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+161	5	Kab. Kulon Progo 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+162	8	Kab. Kuningan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+163	20	Kab. Kupang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+164	14	Kab. Kutai Barat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+165	14	Kab. Kutai Kartanegara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+166	14	Kab. Kutai Timur	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+167	31	Kab. Labuhan Batu	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+168	30	Kab. Lahat 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+169	13	Kab. Lamandau	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+170	10	Kab. Lamongan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+171	16	Kab. Lampung Barat 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+172	16	Kab. Lampung Selatan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+173	16	kab. Lampung Tengah 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+174	16	Kab. Lampung Timur 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+175	16	Kab. Lampung Utara 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+176	11	Kab. Landak	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+177	31	Kab. Langkat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+178	3	Kab. Lebak	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+179	4	Kab. Lebong	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+180	20	Kab. Lembata	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+181	29	Kab. Lima Puluh Kota 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+182	15	Kab. Lingga 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+183	19	Kab. Lombok Barat 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+184	19	Kab. Lombok Tengah 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+185	19	Kab. Lombok Timur 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+186	10	Kab. Lumajang 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+187	25	Kab. Luwu Timur	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+188	25	Kab. Luwu Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+189	21	Kab. Maapi	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+190	10	Kab. Madiun 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+191	9	Kab. Magelang 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+192	10	Kab. Magetan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+193	8	Kab. Majalengka 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+194	24	Kab. Majene	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+195	10	Kab. Malang 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+196	14	Kab. Malinau	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+197	17	Kab. Maluku Tengah	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+198	17	Kab. Maluku Tenggara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+199	17	Kab. Maluku Tenggara Barat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+200	24	Kab. Mamasa	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+201	21	Kab. Mamberamo Raya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+202	24	Kab. Mamuju	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+203	24	Kab. Mamuju Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+204	31	Kab. Mandailing Natal	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+205	20	Kab. Manggarai   	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+206	20	Kab. Manggarai Barat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+207	20	Kab. Manggarai timur	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+208	21	Kab. Manokwari	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+209	25	Kab. Maros	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+210	11	Kab. Melawi	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+211	4	Kab. Merangin	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+212	21	Kab. Merauke	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+213	21	Kab. Mimika	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+214	28	Kab. Minahasa	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+215	28	Kab. Minahasa Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+216	28	Kab. Minahasa Tenggara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+217	28	Kab. Minahasa Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+218	10	Kab. Mojokerto 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+219	26	Kab. Morowali	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+220	30	Kab. Muara Enim 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+221	4	Kab. Muaro Jambi 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+222	4	Kab. Muko-muko	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+223	27	Kab. Muna	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+224	12	Kab. Murung Raya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+225	30	Kab. Musi Banyuasin 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+226	30	Kab. Musi Rawas 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+227	21	Kab. Nabire	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+228	1	Kab. Nagan Raya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+229	20	Kab. Nagekeo	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+230	15	Kab. Natuna 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+231	20	Kab. Ngada	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+232	10	Kab. Nganjuk 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+233	10	Kab. Ngawi 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+234	31	Kab. Nias	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+235	31	Kab. Nias Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+236	14	Kab. Nunukan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+237	30	Kab. Ogan Ilir 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+238	30	Kab. Ogan Komering Ilir 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+239	30	Kab. Ogan Komering Ulu 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+240	30	Kab. Ogan Komering Ulu Timur 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+241	30	Kab. Organ Komering Ulu Selatan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+242	10	Kab. Pacitan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+243	31	Kab. Padang Lawas	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+244	31	Kab. Padang Lawas Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+245	29	Kab. Padang Pariaman 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+246	6	Kab. Pahuwato	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+247	31	Kab. Pakpak Bharat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+248	23	Kab. Palalawan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+249	10	Kab. Pamekasan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+250	3	Kab. Pandeglang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+251	25	Kab. Pangkajene Kepulauan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+252	21	Kab. Paniai	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+253	26	Kab. Parigi Moutong	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+254	29	Kab. Pasaman 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+255	14	Kab. Paser	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+256	10	Kab. Pasuruan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+257	9	Kab. Pati 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+258	21	Kab. Pegunungan Bintang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+259	9	Kab. Pekalongan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+260	9	Kab. Pemalang 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+261	14	Kab. Penajam Paser Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+262	16	Kab. Pesawaran 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+263	29	Kab. Pesisir Selatan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+264	1	Kab. Pidie	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+265	1	Kab. Pidie Jaya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+266	25	Kab. Pinrang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+267	24	Kab. Polewali Mandar	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+268	10	Kab. Ponorogo 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+269	11	Kab. Pontianak	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+270	26	Kab. Poso	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+271	10	Kab. Probolinggo	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+272	12	Kab. Pulang Pisau	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+273	21	Kab. Puncak Jaya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+274	9	Kab. Purbalingga 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+275	8	Kab. Purwakarta 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+276	9	Kab. Purworejo 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+277	22	Kab. Raja Ampat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+278	4	Kab. Rejang Lebong	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+279	9	Kab. Rembang 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+280	23	Kab. Rokan Hilir 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+281	23	Kab. Rokan Hulu 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+282	20	Kab. Rote Ndao	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+283	11	Kab. Sambas	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+284	31	Kab. Samosir	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+285	10	Kab. Sampang 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+286	11	Kab. Sanggau	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+287	21	Kab. Sarmi	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+288	4	Kab. Sarolangun 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+289	11	Kab. Sekadau	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+290	25	Kab. Selayar	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+291	4	Kab. Seluma	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+292	9	Kab. Semarang 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+293	17	Kab. Seram Bagian Barat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+294	17	Kab. Seram Bagian Timur	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+295	3	Kab. Serang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+296	31	Kab. Serdang Bedagai	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+297	12	Kab. Seruyan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+298	23	Kab. Siak 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+299	25	Kab. Sidenreng Rappang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+300	10	Kab. Sidoarjo 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+301	29	Kab. Sijunjung 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+302	20	Kab. Sikka	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+303	31	Kab. Simalungun	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+304	1	Kab. Simeulue	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+305	25	Kab. Sinjai	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+306	11	Kab. Sintang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+307	10	Kab. Situbondo 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+308	5	Kab. Sleman 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+309	29	Kab. Solok 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+310	29	Kab. Solok Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+311	25	Kab. Soppeng	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+312	22	Kab. Sorong	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+313	22	Kab. Sorong Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+314	9	Kab. Sragen 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+315	8	Kab. Subang 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+316	8	Kab. Sukabumi 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+317	12	Kab. Sukamara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+318	9	Kab. Sukoharjo 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+319	20	Kab. Sumba Barat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+320	20	Kab. Sumba Barat Daya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+321	20	Kab. Sumba Tengah	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+322	20	Kab. Sumba Timur	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+323	19	Kab. Sumbawa 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+324	19	Kab. Sumbawa Barat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+325	8	Kab. Sumedang 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+326	10	Kab. Sumenep 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+327	21	Kab. Supiori	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+328	12	Kab. Tabalong	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+329	2	Kab. Tabanan 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+330	25	Kab. Takalar	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+331	25	Kab. Tana Toraja	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+332	12	Kab. Tanah Bambu	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+333	29	Kab. Tanah Datar 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+334	12	Kab. Tanah Laut	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+335	3	Kab. Tangerang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+336	16	Kab. Tanggamus 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+337	4	Kab. Tanjung Jabung Barat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+338	4	Kab. Tanjung Jabung Timur 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+339	31	Kab. Tapanuli Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+340	31	Kab. Tapanuli Tengah	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+341	31	Kab. Tapanuli Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+342	12	Kab. Tapin	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+343	8	Kab. Tasikmalaya 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+344	4	Kab. Tebo	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+345	9	Kab. Tegal 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+346	22	Kab. Teluk Bintuni	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+347	22	Kab. Teluk Wondama	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+348	9	Kab. Temanggung 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+349	20	Kab. Timor Tengah Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+350	31	Kab. Toba Samosir	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+351	26	Kab. Tojo Una-Una	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+352	21	Kab. Tolikora	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+353	26	Kab. Toli-Toli	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+354	10	Kab. Trenggalek 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+355	10	Kab. Tuban 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+356	16	kab. Tulang Bawang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+357	10	Kab. Tulungagung 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+358	25	Kab. Wajo	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+359	27	Kab. Wakatobi	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+360	21	Kab. Waropen	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+361	16	Kab. Way Kanan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+362	9	Kab. Wonogiri 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+363	9	Kab. Wonosobo 	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+364	21	Kab. Yahukimo	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+365	21	Kab. Yapen Waropen	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+366	20	Kab.TimorTengah Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+367	7	Kota Administrasi Jakarta Barat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+368	7	Kota Administrasi Jakarta Pusat	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+369	7	Kota Administrasi Jakarta Selatan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+370	7	Kota Administrasi Jakarta Timur	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+371	7	Kota Administrasi Jakarta Utara	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+372	17	Kota Ambon	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+373	14	Kota Balikpapan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+374	1	Kota Banda Aceh	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+375	16	Kota Bandar Lampung	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+376	8	Kota Bandung	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+377	8	Kota Banjar	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+378	12	Kota Banjarbaru	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+379	12	Kota Banjarmasin	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+380	15	Kota Batam	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+381	10	Kota Batu	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+382	27	Kota Bau-Bau	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+383	8	Kota Bekasi	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+384	4	Kota Bengkulu	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+385	19	Kota Bima	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+386	31	Kota Binjai	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+387	28	Kota Bitung	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+388	10	Kota Blitar	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+389	8	Kota Bogor	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+390	14	Kota Bontang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+391	29	Kota Bukittinggi	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+392	3	Kota Cilegon	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+393	8	Kota Cimahi	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+394	8	Kota Cirebon	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+395	2	Kota Denpasar	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+396	8	Kota Depok	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+397	23	Kota Dumai	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+398	6	Kota Gorontalo	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+399	4	Kota Jambi	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+400	21	Kota Jayapura	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+401	10	Kota Kediri	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+402	27	Kota Kendari	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+403	20	Kota Kupang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+404	1	Kota Langsa	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+405	1	Kota Lhokseumawe	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+406	30	Kota Lubuk Linggau	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+407	10	Kota Madiun	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+408	9	Kota Magelang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+409	25	Kota Makassar	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+410	10	Kota Malang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+411	28	Kota Manado	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+412	19	Kota Mataram	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+413	31	Kota Medan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+414	16	Kota Metro	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+415	10	Kota Mojokerto	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+416	29	Kota Padang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+417	29	Kota Padang Panjang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+418	31	Kota Padang Sidempuan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+419	30	Kota Pagar Alam	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+420	12	Kota Palangka Raya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+421	30	Kota Palembang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+422	25	Kota Palopo	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+423	26	Kota Palu	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+424	15	Kota Pangkal Pinang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+425	25	Kota Pare-Pare	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+426	29	Kota Pariaman	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+427	10	Kota Pasuruan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+428	29	Kota Payakumbuh	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+429	9	Kota Pekalongan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+430	23	Kota Pekanbaru	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+431	31	Kota Pematangsiantar	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+432	11	Kota Pontianak	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+433	30	Kota Prabumulih	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+434	10	Kota Probolinggo	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+435	1	Kota Sabang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+436	9	Kota Salatiga	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+437	14	Kota Samarinda	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+438	29	Kota Sawahlunto	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+439	9	Kota Semarang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+440	3	Kota Serang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+441	31	Kota Sibolga	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+442	11	Kota Singkawang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+443	29	Kota Solok	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+444	22	Kota Sorong	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+445	1	Kota Subulussalam	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+446	8	Kota Sukabumi	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+447	10	Kota Surabaya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+448	9	Kota Surakarta	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+449	3	Kota Tangerang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+450	31	Kota Tanjung Balai	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+451	15	Kota Tanjung Pinang	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+452	14	Kota Tarakan	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+453	8	Kota Tasikmalaya	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+454	31	Kota Tebing Tinggi	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+455	9	Kota Tegal	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+456	18	Kota Ternate	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+457	18	Kota Tidore	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+458	28	Kota Tomohon	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
+459	5	Kota Yogyakarta	2016-06-16 18:53:48	admin	2016-06-16 18:53:48	admin
 \.
 
 
@@ -1194,8 +1649,6 @@ COPY permissions (permission_id, permission_name, permission_description) FROM s
 --
 
 COPY plantation (plt_id, fm_id, kota_id, prov_id, plt_code, plt_luas_lahan, plt_status, plt_plot, plt_year_planted, plt_date_contract, plt_date_registration, plt_coordinate, plt_nama_pemilik, created_date, created_by, updated_date, updated_by) FROM stdin;
-3	2	1	1	PLT001-01	12000Ha	Milik	10	2016	2016-06-01 00:00:00	2016-06-15 00:00:00	-1.3213,9.3213	Wiliam Decosta	2016-06-14 00:00:00	admin	2016-06-15 00:00:00	admin
-4	3	4	2	PLT002-01	1000Ha	Milik	0		\N	\N		Kodirun	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
 \.
 
 
@@ -1213,8 +1666,37 @@ COPY product (prod_id, prod_code, prod_name, created_date, created_by, updated_d
 --
 
 COPY provinsi (prov_id, prov_code, created_date, created_by, updated_date, updated_by) FROM stdin;
-1	JAWA BARAT	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
-2	DKI JAKARTA	2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
+1	ACEH	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+2	BALI	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+3	BANTEN	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+4	BENGKULU	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+5	D.I. YOGYAKARTA	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+6	GORONTALO	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+7	JAKARTA	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+8	JAWA BARAT	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+9	JAWA TENGAH	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+10	JAWA TIMUR	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+11	KALIMANTAN BARAT	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+12	KALIMANTAN SELATAN	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+13	KALIMANTAN TENGAH	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+14	KALIMANTAN TIMUR	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+15	KEPULAUAN BANGKA BELITUNG	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+16	LAMPUNG	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+17	MALUKU	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+18	MALUKU UTARA	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+19	NTB	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+20	NTT	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+21	PAPUA	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+22	PAPUA BARAT	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+23	RIAU	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+24	SULAWESI BARAT	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+25	SULAWESI SELATAN	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+26	SULAWESI TENGAH	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+27	SULAWESI TENGGARA	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+28	SULAWESI UTARA	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+29	SUMATERA BARAT	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+30	SUMATERA SELATAN	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
+31	SUMATERA UTARA	2016-06-16 18:52:21	admin	2016-06-16 18:52:21	admin
 \.
 
 
@@ -1234,6 +1716,7 @@ COPY raw_material (rm_id, rm_code, rm_name, created_date, created_by, updated_da
 
 COPY stock_material (sm_id, fm_id, sm_tgl_masuk, sm_serial_number, sm_jenis_pembayaran, sm_no_po, created_date, created_by, updated_date, updated_by) FROM stdin;
 6	2	2016-06-15 00:00:00	ATN-FM001-20160615-0001	\N		2016-06-15 00:00:00	admin	2016-06-15 00:00:00	admin
+7	2	2016-06-16 00:00:00	ATN-FM001-20160616-0001	\N		2016-06-16 00:00:00	admin	2016-06-16 00:00:00	admin
 \.
 
 
@@ -1251,8 +1734,8 @@ COPY stock_material_detail (smd_id, sm_id, rm_id, smd_qty, smd_harga, smd_batch_
 --
 
 COPY users (id, ip_address, username, password, salt, email, activation_code, forgotten_password_code, forgotten_password_time, remember_code, created_on, last_login, active, first_name, last_name, company, phone) FROM stdin;
-1	127.0.0.1	admin	$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36		admin@admin.com		\N	\N	\N	1268889823	1465915394	1	Admin	istrator	ADMIN	0
 2	\N	customer	$2y$08$9eWSfva.QOw2YZNyo8IOlOmOXTG3qAx3mOIuKyLTBvFT0/SLrNR02	\N	customer@gmail.com	\N	\N	\N	\N	1464147806	1464152213	1	\N	\N	\N	
+1	127.0.0.1	admin	$2a$07$SeBknntpZror9uyftVopmu61qg0ms8Qv1yV6FG.kQOSM.9QhmTo36		admin@admin.com		\N	\N	\N	1268889823	1466077567	1	Admin	istrator	ADMIN	0
 \.
 
 

@@ -36,6 +36,16 @@
 
 <script>
 
+    function showLovFarmer(id, code) {
+        modal_lov_farmer_show(id, code);
+    }
+
+    function clearLovFarmer() {
+        $('#form_fm_id').val('');
+        $('#form_fm_code').val('');
+    }
+
+
     function showLovRawMaterial(id, code) {
         modal_lov_raw_material_show(id, code);
     }
@@ -269,6 +279,9 @@
                     style_edit_form(form);
 
                     $("#sm_serial_number").prop("readonly", true);
+                    setTimeout(function() {
+                        clearLovFarmer();
+                    },100);
                 },
                 afterShowForm: function(form) {
                     form.closest('.ui-jqdialog').center();
