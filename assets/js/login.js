@@ -1,6 +1,8 @@
 var host 	= jQuery("#host").val(),
     assets	= host+'assets/',
+    url =  jQuery("#url").val()
     site = host+"index.php/";
+
 
 var token = jQuery('#token'),
     token_val = token.val(),
@@ -51,7 +53,7 @@ $(document).ready(function() {
 
         jQuery.ajax({
             type: "POST",
-            url: site+"auth/login_act",
+            url: url,
             dataType: 'json',
             data: {username: username, password: password, csrf_token:token_val},
             cache :false,

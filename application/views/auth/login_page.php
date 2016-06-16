@@ -76,7 +76,8 @@
                             <a class="btn blue" type="button" id="login">Login</a>
                         </div>
                     </div>
-                    <input type="hidden" value="<?= site_url();?>" id="host">
+                    <input type="hidden" value="<?php echo site_url('admin');?>" id="host">
+                    <input type="hidden" value="<?php echo site_url('auth/login_act');?>" id="url">
 
                 </form>
                 <?php //echo form_close(); ?>
