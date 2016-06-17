@@ -13,7 +13,7 @@ class Stock_material extends Abstract_model {
     public $fields          = array(
                                 'sm_id'             => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Stock Material'),
                                 'fm_id'             => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Warehouse'),
-                                'sm_tgl_masuk'      => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Tgl Masuk'),
+                                'sm_tgl_masuk'      => array('nullable' => false, 'type' => 'date', 'unique' => false, 'display' => 'Tgl Masuk'),
                                 'sm_serial_number'  => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Serial Number'),
                                 'sm_jenis_pembayaran' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Jenis Pembayaran'),
                                 'sm_no_po'          => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Nomor PO'),

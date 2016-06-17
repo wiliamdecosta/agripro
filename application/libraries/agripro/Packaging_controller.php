@@ -1,26 +1,25 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
 * Json library
-* @class Stock_material_detail_controller
-* @version 07/05/2015 12:18:00
+* @class Packaging_controller
+* @version 17/06/2016 05:29:00
 */
-class Stock_material_detail_controller {
+class Packaging_controller {
 
     function read() {
 
         $page = getVarClean('page','int',1);
         $limit = getVarClean('rows','int',5);
-        $sidx = getVarClean('sidx','str','smd_id');
-        $sord = getVarClean('sord','str','asc');
+        $sidx = getVarClean('sidx','str','pkg_id');
+        $sord = getVarClean('sord','str','desc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
-        $sm_id = getVarClean('sm_id','int',0);
 
         try {
 
             $ci = & get_instance();
-            $ci->load->model('agripro/stock_material_detail');
-            $table = $ci->stock_material_detail;
+            $ci->load->model('agripro/packaging');
+            $table = $ci->packaging;
 
             $req_param = array(
                 "sort_by" => $sidx,
@@ -37,7 +36,7 @@ class Stock_material_detail_controller {
             );
 
             // Filter Table
-            $req_param['where'] = array('smd.sm_id = '.$sm_id);
+            $req_param['where'] = array();
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
@@ -70,29 +69,29 @@ class Stock_material_detail_controller {
 
         return $data;
     }
-    
-     function readLov() {
+
+
+    function readLov() {
         permission_check('view-tracking');
 
         $start = getVarClean('current','int',0);
         $limit = getVarClean('rowCount','int',5);
 
-        $sort = getVarClean('sort','str','smd_id');
+        $sort = getVarClean('sort','str','pkg_id');
         $dir  = getVarClean('dir','str','asc');
 
         $searchPhrase = getVarClean('searchPhrase', 'str', '');
-        $prov_id = getVarClean('prov_id','int',0);
 
         $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
 
         try {
 
             $ci = & get_instance();
-            $ci->load->model('agripro/stock_material_detail');
-            $table = $ci->stock_material_detail;
+            $ci->load->model('agripro/packaging');
+            $table = $ci->packaging;
 
             if(!empty($searchPhrase)) {
-                $table->setCriteria("(smd_batch_number ilike '%".$searchPhrase."%' OR rm.rm_name ilike '%".$searchPhrase."%')");
+                $table->setCriteria("(pkg_serial_number ilike '%".$searchPhrase."%' or pkg_batch_number ilike '%".$searchPhrase."%')");
             }
 
             $start = ($start-1) * $limit;
@@ -143,8 +142,8 @@ class Stock_material_detail_controller {
     function create() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/stock_material_detail');
-        $table = $ci->stock_material_detail;
+        $ci->load->model('agripro/packaging');
+        $table = $ci->packaging;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -214,8 +213,8 @@ class Stock_material_detail_controller {
     function update() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/stock_material_detail');
-        $table = $ci->stock_material_detail;
+        $ci->load->model('agripro/packaging');
+        $table = $ci->packaging;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -285,8 +284,8 @@ class Stock_material_detail_controller {
 
     function destroy() {
         $ci = & get_instance();
-        $ci->load->model('agripro/stock_material_detail');
-        $table = $ci->stock_material_detail;
+        $ci->load->model('agripro/packaging');
+        $table = $ci->packaging;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
