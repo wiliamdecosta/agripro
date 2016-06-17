@@ -70,7 +70,7 @@
                     name: 'prod_id',
                     width: 200,
                     sortable: true,
-                    editable: false,
+                    editable: true,
                     hidden: true,
                     editrules: {edithidden: true, number:true, required:true},
                     edittype: 'custom',
@@ -376,7 +376,7 @@
                         }
                     }
                 },
-                {label: 'Qty(Kg)', name: 'dp_qty', width: 120, align: "right", editable: true, formatter:'number',
+                {label: 'Qty(Kg)', name: 'dp_qty', width: 120, align: "left", editable: true, formatter:'number',
                     edittype: 'text',
                     editrules: {edithidden: true, required: true},
                     formatoptions: { decimalSeparator: ".", thousandsSeparator: " "}
