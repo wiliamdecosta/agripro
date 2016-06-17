@@ -69,7 +69,7 @@ class Stock_material extends Abstract_model {
 
         $format_serial = 'ATN-FMCODE-DATE-XXXX';
 
-        $sql = "select substr(sm_serial_number, length(sm_serial_number)-4 + 1 )::integer as total from stock_material
+        $sql = "select max(substr(sm_serial_number, length(sm_serial_number)-4 + 1 )::integer) as total from stock_material
                     where to_char(sm_tgl_masuk,'yyyymmdd') = '".str_replace('-','',$this->record['sm_tgl_masuk'])."'";
         $query = $this->db->query($sql);
         $row = $query->row_array();
