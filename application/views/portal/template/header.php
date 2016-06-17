@@ -6,8 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <title>Portal Recruitment</title>
-
+    <title>Portal Agripro</title>
     <meta name="keywords" content="HTML5 Template"/>
     <meta name="description" content="Porto - Responsive HTML5 Template">
     <meta name="author" content="PDAM">
@@ -126,7 +125,7 @@
     <div role="main" class="main">
         <br>
         <div class="container">
-            <div id="mid_content" style="min-height: 350px">
+            <div id="mid_content" style="min-height: 320px">
 
                 <!--See footer next -->
 
