@@ -15,12 +15,17 @@
 
         </div>
     </div>
+</div>
+<br>
+<!--ATN-TES-SN-0001-->
+<div class="row">
     <div class="col-md-12">
-        <div class="show_tracking">
+        <div id="show_tracking">
 
         </div>
     </div>
 </div>
+
 <script src="<?php echo base_url();?>assets/vendor/jquery/jquery.min.js"></script>
 <script type="text/javascript">
     $("#search").click(function(){

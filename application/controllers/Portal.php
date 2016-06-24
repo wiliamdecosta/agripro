@@ -6,6 +6,7 @@ class Portal extends CI_Controller
     function __construct() {
         parent::__construct();
         $this->load->helper(array('url', 'language'));
+        $this->load->model('agripro/MPortal','Portal');
     }
 
     function index() {
@@ -15,8 +16,17 @@ class Portal extends CI_Controller
     }
 
     public function submitTracking(){
-        
+        $row = $this->Portal->getTracking();
+        if($row->num_rows() > 0){
+            $data['packaging'] = $row->row();
+            $data['detail_packing'] = $this->Portal->getDetailPackaging($row->row()->pkg_id);
+            $this->load->view('portal/detail_tracking',$data);
+        }else{
+            echo json_encode('Data tidak ditemukan');
+        }
     }
+
+
 
 
 }
