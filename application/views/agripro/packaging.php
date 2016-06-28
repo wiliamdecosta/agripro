@@ -102,7 +102,7 @@
                                 setTimeout(function(){
                                     var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
                                     if(selectedRowId != null) {
-                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'fm_code');
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'prod_code');
                                         $("#form_fm_code").val( code_display );
                                     }
                                 },100);
@@ -148,7 +148,7 @@
                 {label: 'Diupdate Oleh', name: 'created_by', width: 120, align: "left", editable: false, hidden:true}
             ],
             height: '100%',
-            autowidth: true,
+            autowidth: false,
             viewrecords: true,
             rowNum: 10,
             rowList: [10,20,50],
