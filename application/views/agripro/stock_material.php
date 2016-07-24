@@ -78,7 +78,7 @@
             mtype: "POST",
             colModel: [
                 {label: 'ID', name: 'sm_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Farmer', name: 'fm_code', width: 120, align: "left", editable: false},
+                {label: 'Farmer', name: 'fm_code', width: 200, align: "left", editable: false},
                 {label: 'Farmer',
                     name: 'fm_id',
                     width: 200,
@@ -210,7 +210,7 @@
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID."agripro.stock_material_controller/crud"; ?>',
-            caption: "Input Material Stock"
+            caption: "Pembelian Raw Material"
 
         });
 
