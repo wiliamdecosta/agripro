@@ -419,12 +419,12 @@ class Abstract_model extends  CI_Model {
 			if($field['nullable'] == false) {
 				if($this->actionType == 'CREATE') {
 					if(!isset($record[$key]) or $record[$key] == '') {
-						throw new Exception($field['display']." harus diisi");
+						throw new Exception($field['display']." is empty");
 					}
 				}else {
 					if (!isset($record[$key])) continue;
 					if($record[$key] == '') {
-						throw new Exception($field['display']." harus diisi");
+						throw new Exception($field['display']." is empty");
 					}
 				}
 			}
@@ -434,11 +434,11 @@ class Abstract_model extends  CI_Model {
 				if($field['unique'] === true) {
 					if($this->actionType == 'CREATE') {
 						if(!$this->isUnique($key, $record[$key])) {
-							throw new Exception($field['display']. " harus unik");
+							throw new Exception($field['display']. " must be a unique value");
 						}
 					}else {
 						if(!$this->isUnique($key, $record[$key], $this->record[$this->pkey])) {
-							throw new Exception($field['display']. " harus unik");
+							throw new Exception($field['display']. " must be a unique value");
 						}
 					}
 				}
@@ -448,7 +448,7 @@ class Abstract_model extends  CI_Model {
 				}elseif($field['type'] == 'int' || $field['type'] == 'float') {
 					$value = $record[$key];
 					if(!is_numeric($value)) {
-						throw new Exception($field['display']." harus angka");
+						throw new Exception($field['display']." must be a number value");
 					}
 				}elseif($field['type'] == 'date') {
 					$date = $record[$key];
@@ -533,7 +533,7 @@ class Abstract_model extends  CI_Model {
 		if(empty($id)) throw new Exception("ID is empty");
 
 		if ($this->isRefferenced($id)){
-            throw new Exception('ID '.$id.' tidak dapat dihapus karena tereferensi oleh data lain.');
+            throw new Exception('ID '.$id.' cannot deleted because it used by other data.');
         }
 
         try {

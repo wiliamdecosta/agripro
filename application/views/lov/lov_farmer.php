@@ -51,6 +51,9 @@
             $("#"+ $("#modal_lov_farmer_id_val").val()).val("");
             $("#"+ $("#modal_lov_farmer_code_val").val()).val("");
             $("#modal_lov_farmer").modal("toggle");
+
+            $("#"+ $("#modal_lov_farmer_id_val").val()).change();
+            $("#"+ $("#modal_lov_farmer_code_val").val()).change();
         });
     });
 
