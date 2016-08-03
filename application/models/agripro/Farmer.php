@@ -68,8 +68,10 @@ class Farmer extends Abstract_model {
             $this->record['updated_date'] = date('Y-m-d');
             $this->record['updated_by'] = $userdata->username;
             //if false please throw new Exception
-            if(empty($this->record['fm_tgl_lahir']))
+            if(empty($this->record['fm_tgl_lahir'])) {
+                $this->db->set('fm_tgl_lahir',null,false);
                 unset($this->record['fm_tgl_lahir']);
+            }
         }
         return true;
     }
