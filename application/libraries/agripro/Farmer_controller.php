@@ -11,7 +11,7 @@ class Farmer_controller {
         $page = getVarClean('page','int',1);
         $limit = getVarClean('rows','int',5);
         $sidx = getVarClean('sidx','str','fm_id');
-        $sord = getVarClean('sord','str','desc');
+        $sord = getVarClean('sord','str','asc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 

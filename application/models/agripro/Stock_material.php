@@ -14,7 +14,7 @@ class Stock_material extends Abstract_model {
                                 'sm_id'             => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Stock Material'),
                                 'fm_id'             => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Warehouse'),
                                 'sm_tgl_masuk'      => array('nullable' => false, 'type' => 'date', 'unique' => false, 'display' => 'Tgl Masuk'),
-                                'sm_serial_number'  => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Serial Number'),
+                                'sm_no_trans'  => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Transaction Code'),
                                 'sm_jenis_pembayaran' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Jenis Pembayaran'),
                                 'sm_no_po'          => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Nomor PO'),
 
@@ -25,7 +25,7 @@ class Stock_material extends Abstract_model {
 
                             );
 
-    public $selectClause    = "sm.sm_id, sm.fm_id, to_char(sm.sm_tgl_masuk,'yyyy-mm-dd') as sm_tgl_masuk, sm.sm_serial_number, sm.sm_jenis_pembayaran,
+    public $selectClause    = "sm.sm_id, sm.fm_id, to_char(sm.sm_tgl_masuk,'yyyy-mm-dd') as sm_tgl_masuk, sm.sm_no_trans, sm.sm_jenis_pembayaran,
                                     sm.sm_no_po,
                                     to_char(sm.created_date,'yyyy-mm-dd') as created_date, sm.created_by,
                                     to_char(sm.updated_date,'yyyy-mm-dd') as updated_date, sm.updated_by,
@@ -47,7 +47,7 @@ class Stock_material extends Abstract_model {
             //do something
             // example :
 
-            $this->record['sm_serial_number'] = $this->getSerialNumber();
+            $this->record['sm_no_trans'] = $this->getSerialNumber();
 
             $this->record['created_date'] = date('Y-m-d');
             $this->record['created_by'] = $userdata->username;
@@ -69,7 +69,7 @@ class Stock_material extends Abstract_model {
 
         $format_serial = 'ATN-FMCODE-DATE-XXXX';
 
-        $sql = "select max(substr(sm_serial_number, length(sm_serial_number)-4 + 1 )::integer) as total from stock_material
+        $sql = "select max(substr(sm_no_trans, length(sm_no_trans)-4 + 1 )::integer) as total from stock_material
                     where to_char(sm_tgl_masuk,'yyyymmdd') = '".str_replace('-','',$this->record['sm_tgl_masuk'])."'";
         $query = $this->db->query($sql);
         $row = $query->row_array();

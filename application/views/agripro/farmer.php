@@ -232,6 +232,8 @@
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
             altRows: true,
+			sortname: 'fm_name',
+			sortorder: 'desc',
             shrinkToFit: false,
             multiboxonly: true,
             onSelectRow: function (rowid) {

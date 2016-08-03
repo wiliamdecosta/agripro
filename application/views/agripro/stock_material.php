@@ -10,7 +10,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Input Material Stock</span>
+            <span>Raw Material Purchesing</span>
         </li>
     </ul>
 </div>
@@ -78,7 +78,15 @@
             mtype: "POST",
             colModel: [
                 {label: 'ID', name: 'sm_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Farmer', name: 'fm_code', width: 200, align: "left", editable: false},
+                {label: 'Transaction Code',name: 'sm_no_trans', width: 200, align: "left",editable: true,
+                    editoptions: {
+                        size: 30,
+                        maxlength:32,
+                        placeholder:'Generate By Sistem'
+                    },
+                    editrules: {required: false}
+                },
+                {label: 'Farmer Code', name: 'fm_code', width: 200, align: "left", editable: false},
                 {label: 'Farmer',
                     name: 'fm_id',
                     width: 200,
@@ -123,7 +131,7 @@
                         }
                     }
                 },
-                {label: 'Jenis Pembayaran',name: 'fm_jk',width: 120, align: "left",editable: true, edittype: 'select', hidden:true,
+                {label: 'Payment Type',name: 'sm_jenis_pembayaran',width: 150, align: "left",editable: true, edittype: 'select', hidden:false,
                     editrules: {edithidden: true, required: false},
                     editoptions: {
                     value: "DP:DP;Tunai:Tunai",
@@ -131,7 +139,7 @@
                         $(elem).width(150);  // set the width which you need
                     }
                 }},
-                {label: 'Tgl Masuk', name: 'sm_tgl_masuk', width: 120, editable: true,
+                {label: 'Date', name: 'sm_tgl_masuk', width: 120, editable: true,
                     edittype:"text",
                     editrules: {required: true},
                     editoptions: {
@@ -147,35 +155,25 @@
                         }
                     }
                 },
-                {label: 'Serial Number',name: 'sm_serial_number', width: 200, align: "left",editable: true,
-                    editoptions: {
-                        size: 30,
-                        maxlength:32,
-                        placeholder:'Generate By Sistem'
-                    },
-                    editrules: {required: false}
-                },
-                {label: 'No PO',name: 'sm_no_po',width: 150, align: "left",editable: true,
+
+                {label: 'PO Number',name: 'sm_no_po',width: 170, align: "left",editable: true,
                     editoptions: {
                         size: 30,
                         maxlength:32
                     },
                     editrules: {required: false}
-                },
-                {label: 'Tgl Pembuatan', name: 'created_date', width: 120, align: "left", editable: false},
-                {label: 'Dibuat Oleh', name: 'created_by', width: 120, align: "left", editable: false},
-                {label: 'Tgl Update', name: 'updated_date', width: 120, align: "left", editable: false},
-                {label: 'Diupdate Oleh', name: 'created_by', width: 120, align: "left", editable: false}
+                }
             ],
             height: '100%',
-            autowidth: false,
+            width:'100%',
+            autowidth: true,
             viewrecords: true,
             rowNum: 10,
             rowList: [10,20,50],
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
             altRows: true,
-            shrinkToFit: false,
+            shrinkToFit: true,
             multiboxonly: true,
             onSelectRow: function (rowid) {
                 /*do something when selected*/
@@ -210,7 +208,7 @@
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID."agripro.stock_material_controller/crud"; ?>',
-            caption: "Pembelian Raw Material"
+            caption: "Raw Material Purchesing"
 
         });
 
@@ -496,7 +494,7 @@
 
             ],
             height: '100%',
-            width:500,
+            width:'100%',
             autowidth: true,
             viewrecords: true,
             rowNum: 10,
