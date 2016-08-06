@@ -23,7 +23,27 @@
     </div>
 </div>
 
+<?php $this->load->view('lov/lov_category.php'); ?>
+<?php $this->load->view('lov/lov_product_parent.php'); ?>
+
 <script>
+    function showLovcategory(id, code) {
+        modal_lov_category_show(id, code);
+    }
+
+    function clearLovcategory() {
+        $('#form_fm_id').val('');
+        $('#form_fm_code').val('');
+    }
+    function showLovproduct(id, code) {
+        modal_lov_product_show(id, code);
+    }
+
+    function clearLovproduct() {
+        $('#form_pr_id').val('');
+        $('#form_pr_code').val('');
+    }
+
 
     jQuery(function($) {
         var grid_selector = "#grid-table";
@@ -34,25 +54,121 @@
             datatype: "json",
             mtype: "POST",
             colModel: [
-                {label: 'ID', name: 'prod_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Kode',name: 'prod_code',width: 150, align: "left",editable: true,
+                {label: 'ID', name: 'product_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'Nama',name: 'product_name',width: 150, align: "left",editable: true,
                     editoptions: {
                         size: 30,
                         maxlength:32
                     },
                     editrules: {required: true}
                 },
-                {label: 'Nama',name: 'prod_name',width: 150, align: "left",editable: true,
+                {label: 'Parent Product',
+                    name: 'parent_id',
+                    width: 200,
+                    sortable: true,
+                    editable: true,
+                    hidden: true,
+                    editrules: {edithidden: true, number:true, required:false},
+                    edittype: 'custom',
+                    editoptions: {
+                        "custom_element":function( value  , options) {
+                            var elm = $('<span></span>');
+
+                            // give the editor time to initialize
+                            setTimeout( function() {
+                                elm.append('<input id="form_pr_id" type="text"  style="display:none;">'+
+                                        '<input id="form_pr_code" disabled type="text" class="FormElement" placeholder="">'+
+                                        '<button class="btn btn-success" type="button" onclick="showLovproduct(\'form_pr_id\',\'form_pr_code\')">'+
+                                        '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
+                                        '</button>');
+                                $("#form_pr_id").val(value);
+                                elm.parent().removeClass('jqgrid-required');
+                            }, 100);
+
+                            return elm;
+                        },
+                        "custom_value":function( element, oper, gridval) {
+                            if(oper === 'get') {
+                                return $("#form_pr_id").val();
+                            } else if( oper === 'set') {
+                                $("#form_pr_id").val(gridval);
+                                var gridId = this.id;
+                                // give the editor time to set display
+                                setTimeout(function(){
+                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                    if(selectedRowId != null) {
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'product_name');
+                                        $("#form_pr_code").val( code_display );
+                                    }
+                                },100);
+                            }
+                        }
+                    }
+                },
+                 {label: 'Parent Product',name: 'parent_name',width: 150, align: "left",editable: false,
                     editoptions: {
                         size: 30,
                         maxlength:32
                     },
                     editrules: {required: true}
                 },
-                {label: 'Tgl Pembuatan', name: 'created_date', width: 120, align: "left", editable: false},
-                {label: 'Dibuat Oleh', name: 'created_by', width: 120, align: "left", editable: false},
-                {label: 'Tgl Update', name: 'updated_date', width: 120, align: "left", editable: false},
-                {label: 'Diupdate Oleh', name: 'created_by', width: 120, align: "left", editable: false}
+                {label: 'Category',
+                    name: 'category_id',
+                    width: 200,
+                    sortable: true,
+                    editable: true,
+                    hidden: true,
+                    editrules: {edithidden: true, number:true, required:true},
+                    edittype: 'custom',
+                    editoptions: {
+                        "custom_element":function( value  , options) {
+                            var elm = $('<span></span>');
+
+                            // give the editor time to initialize
+                            setTimeout( function() {
+                                elm.append('<input id="form_fm_id" type="text"  style="display:none;">'+
+                                        '<input id="form_fm_code" disabled type="text" class="FormElement jqgrid-required" placeholder="">'+
+                                        '<button class="btn btn-success" type="button" onclick="showLovcategory(\'form_fm_id\',\'form_fm_code\')">'+
+                                        '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
+                                        '</button>');
+                                $("#form_fm_id").val(value);
+                                elm.parent().removeClass('jqgrid-required');
+                            }, 100);
+
+                            return elm;
+                        },
+                        "custom_value":function( element, oper, gridval) {
+                            if(oper === 'get') {
+                                return $("#form_fm_id").val();
+                            } else if( oper === 'set') {
+                                $("#form_fm_id").val(gridval);
+                                var gridId = this.id;
+                                // give the editor time to set display
+                                setTimeout(function(){
+                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                    if(selectedRowId != null) {
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'category_name');
+                                        $("#form_fm_code").val( code_display );
+                                    }
+                                },100);
+                            }
+                        }
+                    }
+                },
+                {label: 'Category',name: 'category_name',width: 150, align: "left",editable: false,
+                    editoptions: {
+                        size: 30,
+                        maxlength:32
+                    },
+                    editrules: {required: true}
+                },
+                {label: 'Description',name: 'product_description',width: 150, align: "left",editable: true,
+                    editoptions: {
+                        size: 30,
+                        maxlength:32
+                    },
+                    editrules: {required: true}
+                }
             ],
             height: '100%',
             autowidth: true,
@@ -66,6 +182,7 @@
             multiboxonly: true,
             onSelectRow: function (rowid) {
                 /*do something when selected*/
+               
 
             },
             sortorder:'',

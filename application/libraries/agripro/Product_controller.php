@@ -10,7 +10,7 @@ class Product_controller {
 
         $page = getVarClean('page','int',1);
         $limit = getVarClean('rows','int',5);
-        $sidx = getVarClean('sidx','str','prod_id');
+        $sidx = getVarClean('sidx','str','product_id');
         $sord = getVarClean('sord','str','desc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
@@ -36,7 +36,7 @@ class Product_controller {
             );
 
             // Filter Table
-            $req_param['where'] = array();
+            $req_param['where'] = array(" 1 = 1 ");
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
@@ -76,7 +76,7 @@ class Product_controller {
         $start = getVarClean('current','int',0);
         $limit = getVarClean('rowCount','int',5);
 
-        $sort = getVarClean('sort','str','prod_id');
+        $sort = getVarClean('sort','str','product_id');
         $dir  = getVarClean('dir','str','asc');
 
         $searchPhrase = getVarClean('searchPhrase', 'str', '');
@@ -90,7 +90,7 @@ class Product_controller {
             $table = $ci->product;
 
             if(!empty($searchPhrase)) {
-                $table->setCriteria("(prod_code ilike '%".$searchPhrase."%' or prod_name ilike '%".$searchPhrase."%')");
+                $table->setCriteria("(product_id ilike '%".$searchPhrase."%' or product_name ilike '%".$searchPhrase."%')");
             }
 
             $start = ($start-1) * $limit;
@@ -107,7 +107,47 @@ class Product_controller {
 
         return $data;
     }
+    
+    function readLov_parent() {
+        permission_check('view-tracking');
 
+        $start = getVarClean('current','int',0);
+        $limit = getVarClean('rowCount','int',5);
+
+        $sort = getVarClean('sort','str','product_id');
+        $dir  = getVarClean('dir','str','asc');
+
+        $searchPhrase = getVarClean('searchPhrase', 'str', '');
+
+        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/product');
+            $table = $ci->product;
+            
+            $table->setCriteria("prod.parent_id = 0 ");
+
+            if(!empty($searchPhrase)) {
+                $table->setCriteria("(prod.product_id ilike '%".$searchPhrase."%' or prod.product_name ilike '%".$searchPhrase."%')");
+            }
+
+            $start = ($start-1) * $limit;
+            $items = $table->getAll($start, $limit, $sort, $dir);
+            $totalcount = $table->countAll();
+
+            $data['rows'] = $items;
+            $data['success'] = true;
+            $data['total'] = $totalcount;
+
+        }catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+
+        return $data;
+    }
+    
     function crud() {
 
         $data = array();
