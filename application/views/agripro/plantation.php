@@ -10,7 +10,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Farmer</span>
+            <span>Plantation</span>
         </li>
     </ul>
 </div>
@@ -30,31 +30,16 @@
     </div>
 </div>
 
-
-<?php $this->load->view('lov/lov_provinsi.php'); ?>
-<?php $this->load->view('lov/lov_kota.php'); ?>
+<?php $this->load->view('lov/lov_farmer.php'); ?>
 <script>
 
-    function showLovProvinsi(id, code) {
-        modal_lov_provinsi_show(id, code);
+    function showLovFarmer(id, code) {
+        modal_lov_farmer_show(id, code);
     }
 
-    function showLovKota(id, code) {
-        if($('#form_prov_id').val() == "") {
-            swal({title: 'Attention', text: 'Provinsi harus diisi', html: true, type: "info"});
-            return;
-        }
-        modal_lov_kota_show(id, code, $('#form_prov_id').val());
-    }
-
-    function clearLovKota() {
-        $('#form_kota_id').val('');
-        $('#form_kota_name').val('');
-    }
-
-    function clearLovProvinsi() {
-        $('#form_prov_id').val('');
-        $('#form_prov_code').val('');
+    function clearLovFarmer() {
+        $('#form_fm_id').val('');
+        $('#form_fm_code').val('');
     }
 
     jQuery(function($) {
@@ -62,36 +47,105 @@
         var pager_selector = "#grid-pager";
 
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo WS_JQGRID."agripro.farmer_controller/crud"; ?>',
+            url: '<?php echo WS_JQGRID."agripro.plantation_controller/crud"; ?>',
             datatype: "json",
             mtype: "POST",
             colModel: [
-                {label: 'ID', name: 'fm_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Code',name: 'fm_code',width: 150, align: "left",editable: true,
-                    editoptions: {
-                        size: 30,
-                        maxlength:32
-                    },
-                    editrules: {required: true}
+                {label: 'ID', key:true, name: 'plt_id', width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'Code', name: 'plt_code', width: 150, align: "left", editable: true,
+                    edittype: 'text',
+                    editrules: {edithidden: true, required: true}
                 },
-                {label: 'Name',name: 'fm_name',width: 150, align: "left",editable: true,
+                {label: 'Farmer', name: 'fm_code', width: 120, align: "left", editable: false},
+                {label: 'Farmer',
+                    name: 'fm_id',
+                    width: 200,
+                    sortable: true,
+                    editable: true,
+                    hidden: true,
+                    editrules: {edithidden: true, number:true, required:true},
+                    edittype: 'custom',
                     editoptions: {
-                        size: 30,
-                        maxlength:32
-                    },
-                    editrules: {required: true}
+                        "custom_element":function( value  , options) {
+                            var elm = $('<span></span>');
+
+                            // give the editor time to initialize
+                            setTimeout( function() {
+                                elm.append('<input id="form_fm_id" type="text"  style="display:none;" onchange="clearLovKota();">'+
+                                        '<input id="form_fm_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Choose Farmer">'+
+                                        '<button class="btn btn-success" type="button" onclick="showLovFarmer(\'form_fm_id\',\'form_fm_code\')">'+
+                                        '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
+                                        '</button>');
+                                $("#form_fm_id").val(value);
+                                elm.parent().removeClass('jqgrid-required');
+                            }, 100);
+
+                            return elm;
+                        },
+                        "custom_value":function( element, oper, gridval) {
+
+                            if(oper === 'get') {
+                                return $("#form_fm_id").val();
+                            } else if( oper === 'set') {
+                                $("#form_fm_id").val(gridval);
+                                var gridId = this.id;
+                                // give the editor time to set display
+                                setTimeout(function(){
+                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                    if(selectedRowId != null) {
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'fm_code');
+                                        $("#form_fm_code").val( code_display );
+                                    }
+                                },100);
+                            }
+                        }
+                    }
                 },
-                {label: 'Gender',name: 'fm_jk',width: 120, align: "left",editable: true, edittype: 'select', hidden:true,
-                    editrules: {edithidden: true, required: false},
+
+                {label: 'Total Width(Ha)', name: 'plt_luas_lahan', width: 150, align: "left", editable: true,
+                 editrules: {edithidden: true, required: true}
+                },
+                {label: 'Status',name: 'plt_status',width: 120, align: "left",editable: true, edittype: 'select', hidden:false,
+                    editrules: {edithidden: true, required: true},
                     editoptions: {
-                    value: "L:Laki-laki;P:Perempuan",
+                    value: "Milik:Milik",
                     dataInit: function(elem) {
-                        $(elem).width(150);  // set the width which you need
+                        $(elem).width(250);  // set the width which you need
                     }
                 }},
-                {label: 'Date of Birth', name: 'fm_tgl_lahir', width: 120, editable: true,
+                {label: 'Owner', name: 'plt_nama_pemilik', width: 170, align: "left", editable: true, edittype: 'text',
+                    editoptions: {
+                        size: 50
+                    },
+                    editrules: {edithidden: true, required: true}
+                },
+                {label: 'Address',name: 'plt_alamat',width: 225, align: "left",editable: true,
+                    edittype:'textarea',
+                    editoptions: {
+                        rows: 2,
+                        cols:50
+                    }
+                },
+                {label: 'Planted Year',name: 'plt_year_planted',width: 150, hidden:false, align: "left",editable: true,
+                    edittype: 'text',
+                    editoptions: {
+                        size: 20,
+                        maxlength:4,
+                        minlength:4,
+                        dataInit: function(element) {
+                            $(element).keypress(function(e){
+                                 if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
+                                    return false;
+                                 }
+                            });
+                        }
+                    },
+                    editrules: {edithidden: true, required: false}
+                },
+                {label: 'Harvest Prediction(Kg)', name: 'plt_harvest_prediction', width: 200, align: "left", editable: true},
+                {label: 'Contract Date', name: 'plt_date_contract', width: 120, editable: true, hidden:true,
                     edittype:"text",
-                    editrules: {required: false},
+                    editrules: {edithidden: true,required: false},
                     editoptions: {
                         // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
                         // use it to place a third party control to customize the toolbar
@@ -99,130 +153,51 @@
                            $(element).datepicker({
                                 autoclose: true,
                                 format: 'yyyy-mm-dd',
-                                orientation : 'bottom',
+                                orientation : 'up',
                                 todayHighlight : true
                             });
                         }
                     }
                 },
-                {label: 'Province', name: 'prov_code', width: 120, align: "left", editable: false},
-                {label: 'Province',
-                    name: 'prov_id',
-                    width: 200,
-                    sortable: true,
-                    editable: true,
-                    hidden: true,
-                    editrules: {edithidden: true, number:true, required:true},
-                    edittype: 'custom',
+                {label: 'Registration Date', name: 'plt_date_registration', width: 120, editable: true, hidden:true,
+                    edittype:"text",
+                    editrules: {edithidden: true,required: false},
                     editoptions: {
-                        "custom_element":function( value  , options) {
-                            var elm = $('<span></span>');
-
-                            // give the editor time to initialize
-                            setTimeout( function() {
-                                elm.append('<input id="form_prov_id" type="text"  style="display:none;" onchange="clearLovKota();">'+
-                                        '<input id="form_prov_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Choose Province">'+
-                                        '<button class="btn btn-success" type="button" onclick="showLovProvinsi(\'form_prov_id\',\'form_prov_code\')">'+
-                                        '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
-                                        '</button>');
-                                $("#form_prov_id").val(value);
-                                elm.parent().removeClass('jqgrid-required');
-                            }, 100);
-
-                            return elm;
-                        },
-                        "custom_value":function( element, oper, gridval) {
-
-                            if(oper === 'get') {
-                                return $("#form_prov_id").val();
-                            } else if( oper === 'set') {
-                                $("#form_prov_id").val(gridval);
-                                var gridId = this.id;
-                                // give the editor time to set display
-                                setTimeout(function(){
-                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
-                                    if(selectedRowId != null) {
-                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'prov_code');
-                                        $("#form_prov_code").val( code_display );
-                                    }
-                                },100);
-                            }
+                        // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
+                        // use it to place a third party control to customize the toolbar
+                        dataInit: function (element) {
+                           $(element).datepicker({
+                                autoclose: true,
+                                format: 'yyyy-mm-dd',
+                                orientation : 'up',
+                                todayHighlight : true
+                            });
                         }
                     }
                 },
-                {label: 'City', name: 'kota_name', width: 120, align: "left", editable: false},
-                {label: 'City',
-                    name: 'kota_id',
-                    width: 200,
-                    sortable: true,
-                    editable: true,
-                    hidden: true,
-                    editrules: {edithidden: true, number:true, required:true},
-                    edittype: 'custom',
+                {label: 'Inspection Date', name: 'plt_inspection_date', width: 120, editable: true, hidden:true,
+                    edittype:"text",
+                    editrules: {edithidden: true,required: false},
                     editoptions: {
-                        "custom_element":function( value  , options) {
-                            var elm = $('<span></span>');
-
-                            // give the editor time to initialize
-                            setTimeout( function() {
-                                elm.append('<input id="form_kota_id" type="text"  style="display:none;">'+
-                                        '<input id="form_kota_name" disabled type="text" class="FormElement jqgrid-required" placeholder="Choose City">'+
-                                        '<button class="btn btn-success" type="button" onclick="showLovKota(\'form_kota_id\',\'form_kota_name\')">'+
-                                        '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
-                                        '</button>');
-                                $("#form_kota_id").val(value);
-                                elm.parent().removeClass('jqgrid-required');
-                            }, 100);
-
-                            return elm;
-                        },
-                        "custom_value":function( element, oper, gridval) {
-
-                            if(oper === 'get') {
-                                return $("#form_kota_id").val();
-                            } else if( oper === 'set') {
-                                $("#form_prov_id").val(gridval);
-                                var gridId = this.id;
-                                // give the editor time to set display
-                                setTimeout(function(){
-                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
-                                    if(selectedRowId != null) {
-                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'kota_name');
-                                        $("#form_kota_name").val( code_display );
-                                    }
-                                },100);
-                            }
+                        // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
+                        // use it to place a third party control to customize the toolbar
+                        dataInit: function (element) {
+                           $(element).datepicker({
+                                autoclose: true,
+                                format: 'yyyy-mm-dd',
+                                orientation : 'up',
+                                todayHighlight : true
+                            });
                         }
                     }
                 },
-                {label: 'Address',name: 'fm_address',width: 200, align: "left",editable: true,
-                    edittype:'textarea',
-                    editoptions: {
-                        rows: 2,
-                        cols:50
-                    }
+                {label: 'Inspector', name: 'plt_inspector', width: 120, align: "left", editable: true, hidden:true,
+                    editrules: {edithidden: true,required: false}
                 },
-                {label: 'Sertification Number',name: 'fm_no_sertifikasi',width: 200, align: "left",editable: true,
-                    editoptions: {
-                        size: 30,
-                        maxlength:32
-                    },
-                    editrules: {required: false}
-                },
-                {label: 'Phone Number',name: 'fm_no_hp',width: 150, align: "left",editable: true,
-                    editoptions: {
-                        size: 30,
-                        maxlength:32
-                    },
-                    editrules: {required: false}
-                },
-                {label: 'Email',name: 'fm_email',width: 150, align: "left",editable: true,
-                    editoptions: {
-                        size: 30,
-                        maxlength:32
-                    },
-                    editrules: {required: false}
+                {label: 'Koordinat', name: 'plt_coordinate', width: 120, align: "left", editable: true, hidden:true,
+                    editrules: {edithidden: true,required: false}
                 }
+
             ],
             height: '100%',
             autowidth: true,
@@ -232,14 +207,10 @@
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
             altRows: true,
-			sortname: 'fm_name',
-			sortorder: 'desc',
             shrinkToFit: false,
             multiboxonly: true,
             onSelectRow: function (rowid) {
                 /*do something when selected*/
-                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'fm_id');
-                var celCode = $('#grid-table').jqGrid('getCell', rowid, 'fm_code');
             },
             sortorder:'',
             pager: '#grid-pager',
@@ -255,8 +226,8 @@
 
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID."agripro.farmer_controller/crud"; ?>',
-            caption: "Farmer"
+            editurl: '<?php echo WS_JQGRID."agripro.plantation_controller/crud"; ?>',
+            caption: "Plantation"
 
         });
 
@@ -327,8 +298,7 @@
                     form.css({"width": 0.60*screen.width+"px"});
 
                     setTimeout(function() {
-                        clearLovProvinsi();
-                        clearLovKota();
+                        clearLovFarmer();
                     },100);
                 },
                 afterShowForm: function(form) {
@@ -344,8 +314,7 @@
                     var tinfoel = $(".tinfo").show();
                     tinfoel.delay(3000).fadeOut();
 
-                    clearLovProvinsi();
-                    clearLovKota();
+                    clearLovFarmer();
 
                     return [true,"",response.responseText];
                 }

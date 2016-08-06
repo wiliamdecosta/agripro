@@ -36,8 +36,10 @@ class Plantation extends Abstract_model {
     public $selectClause    = "plt.*, to_char(plt.plt_date_contract,'yyyy-mm-dd') as plt_date_contract,
                                     to_char(plt.plt_date_registration,'yyyy-mm-dd') as plt_date_registration,
                                     to_char(plt.created_date,'yyyy-mm-dd') as created_date,
-                                    to_char(plt.updated_date,'yyyy-mm-dd') as updated_date";
-    public $fromClause      = "plantation plt";
+                                    to_char(plt.updated_date,'yyyy-mm-dd') as updated_date,
+                                    fm.fm_code, fm.fm_name";
+    public $fromClause      = "plantation plt
+                                left join farmer fm on plt.fm_id = fm.fm_id";
 
     public $refs            = array();
 

@@ -38,7 +38,10 @@ class Plantation_controller {
             );
 
             // Filter Table
-            $req_param['where'] = array('plt.fm_id = '.$fm_id);
+            $req_param['where'] = array();
+            if(!empty($fm_id)) {
+                $req_param['where'][] = 'plt.fm_id = '.$fm_id;
+            }
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
