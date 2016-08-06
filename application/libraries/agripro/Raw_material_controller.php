@@ -77,7 +77,7 @@ class Raw_material_controller {
         $start = getVarClean('current','int',0);
         $limit = getVarClean('rowCount','int',5);
 
-        $sort = getVarClean('sort','str','rm_id');
+        $sort = getVarClean('sort','str','product_name');
         $dir  = getVarClean('dir','str','asc');
 
         $searchPhrase = getVarClean('searchPhrase', 'str', '');
@@ -91,7 +91,7 @@ class Raw_material_controller {
             $table = $ci->raw_material;
 
             if(!empty($searchPhrase)) {
-                $table->setCriteria("(rm_code ilike '%".$searchPhrase."%' or rm_name ilike '%".$searchPhrase."%')");
+                $table->setCriteria("(product_name ilike '%".$searchPhrase."%' or product_description ilike '%".$searchPhrase."%')");
             }
 
             $start = ($start-1) * $limit;

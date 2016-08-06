@@ -6,26 +6,21 @@
  */
 class Raw_material extends Abstract_model {
 
-    public $table           = "raw_material";
-    public $pkey            = "rm_id";
-    public $alias           = "rm";
+    public $table           = "product";
+    public $pkey            = "product_id";
+    public $alias           = "pr";
 
     public $fields          = array(
-                                'rm_id'             => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Raw Material'),
-                                'rm_code'           => array('nullable' => true, 'type' => 'str', 'unique' => true, 'display' => 'Kode'),
-                                'rm_name'           => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Nama'),
-                                'created_date'      => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Created Date'),
-                                'created_by'        => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Created By'),
-                                'updated_date'      => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Updated Date'),
-                                'updated_by'        => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Updated By'),
+                                'product_id'        => array('pkey' => true, 'type' => 'int', 'nullable' => false, 'unique' => true, 'display' => 'ID Raw Material'),
+                                'category_id'       => array('nullable' => false, 'type' => 'int', 'unique' => true, 'display' => 'Category ID'),
+                                'product_name'      => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Product Name')
 
                             );
 
-    public $selectClause    = "rm.rm_id, rm.rm_code, rm.rm_name, to_char(rm.created_date,'yyyy-mm-dd') as created_date, rm.created_by,
-                                    to_char(rm.updated_date,'yyyy-mm-dd') as updated_date, rm.updated_by";
-    public $fromClause      = "raw_material rm";
+    public $selectClause    = "pr.product_id,pr.category_id,pr.parent_id,pr.product_name,pr.product_description";
+    public $fromClause      = "product pr";
 
-    public $refs            = array('stock_material_detail' => 'rm_id');
+    public $refs            = array();
 
     function __construct() {
         parent::__construct();

@@ -2,7 +2,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="<?php base_url();?>">Home</a>
+            <a href="<?php base_url(); ?>">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -57,8 +57,8 @@
 
     function showLovPlantation(id, code) {
 
-        selRowId = $('#grid-table').jqGrid ('getGridParam', 'selrow'),
-        fm_id = $('#grid-table').jqGrid ('getCell', selRowId, 'fm_id');
+        selRowId = $('#grid-table').jqGrid('getGridParam', 'selrow'),
+            fm_id = $('#grid-table').jqGrid('getCell', selRowId, 'fm_id');
 
         modal_lov_plantation_show(id, code, fm_id);
     }
@@ -68,108 +68,131 @@
         $('#form_plt_code').val('');
     }
 
-    jQuery(function($) {
+    jQuery(function ($) {
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
 
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo WS_JQGRID."agripro.stock_material_controller/crud"; ?>',
+            url: '<?php echo WS_JQGRID . "agripro.stock_material_controller/crud"; ?>',
             datatype: "json",
             mtype: "POST",
             colModel: [
                 {label: 'ID', name: 'sm_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Transaction Code',name: 'sm_no_trans', width: 200, align: "left",editable: true,
+                {
+                    label: 'Transaction Code', name: 'sm_no_trans', width: 250, align: "left", editable: true,
                     editoptions: {
                         size: 30,
-                        maxlength:32,
-                        placeholder:'Generate By Sistem'
+                        maxlength: 32,
+                        placeholder: 'Generate By Sistem'
                     },
                     editrules: {required: false}
                 },
                 {label: 'Farmer Code', name: 'fm_code', width: 200, align: "left", editable: false},
-                {label: 'Farmer',
+                {label: 'Farmer Name', name: 'fm_name', width: 200, align: "left", editable: false},
+
+                {
+                    label: 'Farmer',
                     name: 'fm_id',
-                    width: 200,
+                    width: 150,
                     sortable: true,
                     editable: true,
                     hidden: true,
-                    editrules: {edithidden: true, number:true, required:true},
+                    editrules: {edithidden: true, number: true, required: true},
                     edittype: 'custom',
                     editoptions: {
-                        "custom_element":function( value  , options) {
+                        "custom_element": function (value, options) {
                             var elm = $('<span></span>');
 
                             // give the editor time to initialize
-                            setTimeout( function() {
-                                elm.append('<input id="form_fm_id" type="text"  style="display:none;">'+
-                                        '<input id="form_fm_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Pilih Petani">'+
-                                        '<button class="btn btn-success" type="button" onclick="showLovFarmer(\'form_fm_id\',\'form_fm_code\')">'+
-                                        '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
-                                        '</button>');
+                            setTimeout(function () {
+                                elm.append('<input id="form_fm_id" type="text"  style="display:none;">' +
+                                    '<input id="form_fm_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Farmer">' +
+                                    '<button class="btn btn-success" type="button" onclick="showLovFarmer(\'form_fm_id\',\'form_fm_code\')">' +
+                                    '   <span class="fa fa-search icon-on-right bigger-110"></span>' +
+                                    '</button>');
                                 $("#form_fm_id").val(value);
                                 elm.parent().removeClass('jqgrid-required');
                             }, 100);
 
                             return elm;
                         },
-                        "custom_value":function( element, oper, gridval) {
+                        "custom_value": function (element, oper, gridval) {
 
-                            if(oper === 'get') {
+                            if (oper === 'get') {
                                 return $("#form_fm_id").val();
-                            } else if( oper === 'set') {
+                            } else if (oper === 'set') {
                                 $("#form_fm_id").val(gridval);
                                 var gridId = this.id;
                                 // give the editor time to set display
-                                setTimeout(function(){
-                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
-                                    if(selectedRowId != null) {
-                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'fm_code');
-                                        $("#form_fm_code").val( code_display );
+                                setTimeout(function () {
+                                    var selectedRowId = $("#" + gridId).jqGrid('getGridParam', 'selrow');
+                                    if (selectedRowId != null) {
+                                        var code_display = $("#" + gridId).jqGrid('getCell', selectedRowId, 'fm_code');
+                                        $("#form_fm_code").val(code_display);
                                     }
-                                },100);
+                                }, 100);
                             }
                         }
                     }
                 },
-                {label: 'Payment Type',name: 'sm_jenis_pembayaran',width: 150, align: "left",editable: true, edittype: 'select', hidden:false,
+                {
+                    label: 'Batch Total', name: 'sm_jml_karung', width: 120, align: "left", editable: true,
+                    editoptions: {
+                        size: 5,
+                        maxlength: 3
+                    },
+                    editrules: {required: false}
+                },
+                {
+                    label: 'Payment Type',
+                    name: 'sm_jenis_pembayaran',
+                    width: 150,
+                    align: "left",
+                    editable: true,
+                    edittype: 'select',
+                    hidden: false,
                     editrules: {edithidden: true, required: false},
                     editoptions: {
-                    value: "DP:DP;Tunai:Tunai",
-                    dataInit: function(elem) {
-                        $(elem).width(150);  // set the width which you need
+                        value: "DP:DP;Tunai:Tunai",
+                        dataInit: function (elem) {
+                            $(elem).width(150);  // set the width which you need
+                        }
                     }
-                }},
-                {label: 'Date', name: 'sm_tgl_masuk', width: 120, editable: true,
-                    edittype:"text",
+                },
+                {
+                    label: 'Date', name: 'sm_tgl_masuk', width: 120, editable: true,
+                    edittype: "text",
                     editrules: {required: true},
                     editoptions: {
                         // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
                         // use it to place a third party control to customize the toolbar
                         dataInit: function (element) {
-                           $(element).datepicker({
+                            $(element).datepicker({
                                 autoclose: true,
                                 format: 'yyyy-mm-dd',
-                                orientation : 'bottom',
-                                todayHighlight : true
+                                orientation: 'bottom',
+                                todayHighlight: true
                             });
-                        }
+                        },
+                        size: 30,
                     }
                 },
 
-                {label: 'PO Number',name: 'sm_no_po',width: 170, align: "left",editable: true,
+                {
+                    label: 'PO Number', name: 'sm_no_po', width: 170, align: "left", editable: true,
                     editoptions: {
                         size: 30,
-                        maxlength:32
+                        maxlength: 32
                     },
                     editrules: {required: false}
                 }
             ],
             height: '100%',
-            width:'100%',
+            width: '100%',
             autowidth: true,
             viewrecords: true,
             rowNum: 10,
-            rowList: [10,20,50],
+            rowList: [10, 20, 50],
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
             altRows: true,
@@ -183,7 +206,7 @@
                 var grid_detail = jQuery("#grid-table-detail");
                 if (rowid != null) {
                     grid_detail.jqGrid('setGridParam', {
-                        url: '<?php echo WS_JQGRID."agripro.stock_material_detail_controller/crud"; ?>',
+                        url: '<?php echo WS_JQGRID . "agripro.stock_material_detail_controller/crud"; ?>',
                         postData: {sm_id: rowid}
                     });
                     var strCaption = 'Detail :: ' + celCode;
@@ -194,7 +217,7 @@
                     responsive_jqgrid('#grid-table-detail', '#grid-pager-detail');
                 }
             },
-            sortorder:'',
+            sortorder: '',
             pager: '#grid-pager',
             jsonReader: {
                 root: 'rows',
@@ -202,12 +225,12 @@
                 repeatitems: false
             },
             loadComplete: function (response) {
-                if(response.success == false) {
+                if (response.success == false) {
                     swal({title: 'Attention', text: response.message, html: true, type: "warning"});
                 }
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID."agripro.stock_material_controller/crud"; ?>',
+            editurl: '<?php echo WS_JQGRID . "agripro.stock_material_controller/crud"; ?>',
             caption: "Raw Material Purchesing"
 
         });
@@ -236,7 +259,7 @@
             {
                 // options for the Edit Dialog
                 closeAfterEdit: true,
-                closeOnEscape:true,
+                closeOnEscape: true,
                 recreateForm: true,
                 viewPagerButtons: false,
                 serializeEditData: serializeJSON,
@@ -247,24 +270,24 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
-                    $("#sm_serial_number").prop("readonly", true);
+                    $("#sm_no_trans").prop("readonly", true);
                 },
-                afterShowForm: function(form) {
+                afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
                 },
-                afterSubmit:function(response,postdata) {
+                afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
-                    if(response.success == false) {
-                        return [false,response.message,response.responseText];
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
                     }
-                    return [true,"",response.responseText];
+                    return [true, "", response.responseText];
                 }
             },
             {
                 //new record form
                 closeAfterAdd: false,
-                clearAfterAdd : true,
-                closeOnEscape:true,
+                clearAfterAdd: true,
+                closeOnEscape: true,
                 recreateForm: true,
                 width: 'auto',
                 errorTextFormat: function (data) {
@@ -276,18 +299,18 @@
                     var form = $(e[0]);
                     style_edit_form(form);
 
-                    $("#sm_serial_number").prop("readonly", true);
-                    setTimeout(function() {
+                    $("#sm_no_trans").prop("readonly", true);
+                    setTimeout(function () {
                         clearLovFarmer();
-                    },100);
+                    }, 100);
                 },
-                afterShowForm: function(form) {
+                afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
                 },
-                afterSubmit:function(response,postdata) {
+                afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
-                    if(response.success == false) {
-                        return [false,response.message,response.responseText];
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
                     }
 
                     $(".tinfo").html('<div class="ui-state-success">' + response.message + '</div>');
@@ -295,7 +318,7 @@
                     tinfoel.delay(3000).fadeOut();
 
 
-                    return [true,"",response.responseText];
+                    return [true, "", response.responseText];
                 }
             },
             {
@@ -307,18 +330,18 @@
                     style_delete_form(form);
 
                 },
-                afterShowForm: function(form) {
+                afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
                 },
                 onClick: function (e) {
                     //alert(1);
                 },
-                afterSubmit:function(response,postdata) {
+                afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
-                    if(response.success == false) {
-                        return [false,response.message,response.responseText];
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
                     }
-                    return [true,"",response.responseText];
+                    return [true, "", response.responseText];
                 }
             },
             {
@@ -348,145 +371,157 @@
             datatype: "json",
             mtype: "POST",
             colModel: [
-                {label: 'ID', key:true, name: 'smd_id', width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'ID', key: true, name: 'smd_id', width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'Raw Material', name: 'rm_code', width: 120, align: "left", editable: false},
-                {label: 'Raw Material',
+                {
+                    label: 'Raw Material',
                     name: 'rm_id',
                     width: 200,
                     sortable: true,
                     editable: true,
                     hidden: true,
-                    editrules: {edithidden: true, number:true, required:true},
+                    editrules: {edithidden: true, number: true, required: true},
                     edittype: 'custom',
                     editoptions: {
-                        "custom_element":function( value  , options) {
+                        "custom_element": function (value, options) {
                             var elm = $('<span></span>');
 
                             // give the editor time to initialize
-                            setTimeout( function() {
-                                elm.append('<input id="form_rm_id" type="text"  style="display:none;">'+
-                                        '<input id="form_rm_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Pilih Raw Material">'+
-                                        '<button class="btn btn-success" type="button" onclick="showLovRawMaterial(\'form_rm_id\',\'form_rm_code\')">'+
-                                        '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
-                                        '</button>');
+                            setTimeout(function () {
+                                elm.append('<input id="form_rm_id" type="text"  style="display:none;">' +
+                                    '<input id="form_rm_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Pilih Raw Material">' +
+                                    '<button class="btn btn-success" type="button" onclick="showLovRawMaterial(\'form_rm_id\',\'form_rm_code\')">' +
+                                    '   <span class="fa fa-search icon-on-right bigger-110"></span>' +
+                                    '</button>');
                                 $("#form_rm_id").val(value);
                                 elm.parent().removeClass('jqgrid-required');
                             }, 100);
 
                             return elm;
                         },
-                        "custom_value":function( element, oper, gridval) {
+                        "custom_value": function (element, oper, gridval) {
 
-                            if(oper === 'get') {
+                            if (oper === 'get') {
                                 return $("#form_rm_id").val();
-                            } else if( oper === 'set') {
+                            } else if (oper === 'set') {
                                 $("#form_rm_id").val(gridval);
                                 var gridId = this.id;
                                 // give the editor time to set display
-                                setTimeout(function(){
-                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
-                                    if(selectedRowId != null) {
-                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'rm_code');
-                                        $("#form_rm_code").val( code_display );
+                                setTimeout(function () {
+                                    var selectedRowId = $("#" + gridId).jqGrid('getGridParam', 'selrow');
+                                    if (selectedRowId != null) {
+                                        var code_display = $("#" + gridId).jqGrid('getCell', selectedRowId, 'rm_code');
+                                        $("#form_rm_code").val(code_display);
                                     }
-                                },100);
+                                }, 100);
                             }
                         }
                     }
                 },
                 {label: 'Sumber Lahan', name: 'plt_code', width: 120, align: "left", editable: false},
-                {label: 'Sumber Lahan',
+                {
+                    label: 'Sumber Lahan',
                     name: 'smd_plt_id',
                     width: 200,
                     sortable: true,
                     editable: true,
                     hidden: true,
-                    editrules: {edithidden: true, number:true, required:true},
+                    editrules: {edithidden: true, number: true, required: true},
                     edittype: 'custom',
                     editoptions: {
-                        "custom_element":function( value  , options) {
+                        "custom_element": function (value, options) {
                             var elm = $('<span></span>');
 
                             // give the editor time to initialize
-                            setTimeout( function() {
-                                elm.append('<input id="form_smd_plt_id" type="text"  style="display:none;">'+
-                                        '<input id="form_plt_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Pilih Plantation">'+
-                                        '<button class="btn btn-success" type="button" onclick="showLovPlantation(\'form_smd_plt_id\',\'form_plt_code\')">'+
-                                        '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
-                                        '</button>');
+                            setTimeout(function () {
+                                elm.append('<input id="form_smd_plt_id" type="text"  style="display:none;">' +
+                                    '<input id="form_plt_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Pilih Plantation">' +
+                                    '<button class="btn btn-success" type="button" onclick="showLovPlantation(\'form_smd_plt_id\',\'form_plt_code\')">' +
+                                    '   <span class="fa fa-search icon-on-right bigger-110"></span>' +
+                                    '</button>');
                                 $("#form_smd_plt_id").val(value);
                                 elm.parent().removeClass('jqgrid-required');
                             }, 100);
 
                             return elm;
                         },
-                        "custom_value":function( element, oper, gridval) {
+                        "custom_value": function (element, oper, gridval) {
 
-                            if(oper === 'get') {
+                            if (oper === 'get') {
                                 return $("#form_smd_plt_id").val();
-                            } else if( oper === 'set') {
+                            } else if (oper === 'set') {
                                 $("#form_smd_plt_id").val(gridval);
                                 var gridId = this.id;
                                 // give the editor time to set display
-                                setTimeout(function(){
-                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
-                                    if(selectedRowId != null) {
-                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'plt_code');
-                                        $("#form_plt_code").val( code_display );
+                                setTimeout(function () {
+                                    var selectedRowId = $("#" + gridId).jqGrid('getGridParam', 'selrow');
+                                    if (selectedRowId != null) {
+                                        var code_display = $("#" + gridId).jqGrid('getCell', selectedRowId, 'plt_code');
+                                        $("#form_plt_code").val(code_display);
                                     }
-                                },100);
+                                }, 100);
                             }
                         }
                     }
                 },
-                {label: 'Batch Number',name: 'smd_batch_number', width: 200, align: "left",editable: true,
+                {
+                    label: 'Batch Number', name: 'smd_batch_number', width: 200, align: "left", editable: true,
                     editoptions: {
                         size: 30,
-                        maxlength:32,
-                        placeholder:'Generate By Sistem'
+                        maxlength: 32,
+                        placeholder: 'Generate By Sistem'
                     },
                     editrules: {required: false}
                 },
 
-                {label: 'Qty(Kg)', name: 'smd_qty', width: 120, align: "right", editable: true, formatter:'number',
+                {
+                    label: 'Qty(Kg)', name: 'smd_qty', width: 120, align: "right", editable: true, formatter: 'number',
                     edittype: 'text',
                     editrules: {edithidden: true, required: true},
-                    formatoptions: { decimalSeparator: ".", thousandsSeparator: " "}
+                    formatoptions: {decimalSeparator: ".", thousandsSeparator: " "}
                 },
-                {label: 'Harga(Rp)', name: 'smd_harga', width: 120, align: "right", editable: true, formatter:'number',
+                {
+                    label: 'Harga(Rp)',
+                    name: 'smd_harga',
+                    width: 120,
+                    align: "right",
+                    editable: true,
+                    formatter: 'number',
                     edittype: 'text',
                     editrules: {edithidden: true, required: true},
-                    formatoptions: { decimalSeparator: ".", thousandsSeparator: ","}
+                    formatoptions: {decimalSeparator: ".", thousandsSeparator: ","}
                 },
 
-                {label: 'Tgl Panen', name: 'smd_tgl_panen', width: 120, editable: true,
-                    edittype:"text",
+                {
+                    label: 'Tgl Panen', name: 'smd_tgl_panen', width: 120, editable: true,
+                    edittype: "text",
                     editrules: {required: false},
                     editoptions: {
                         // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
                         // use it to place a third party control to customize the toolbar
                         dataInit: function (element) {
-                           $(element).datepicker({
+                            $(element).datepicker({
                                 autoclose: true,
                                 format: 'yyyy-mm-dd',
-                                orientation : 'up',
-                                todayHighlight : true
+                                orientation: 'up',
+                                todayHighlight: true
                             });
                         }
                     }
                 },
-                {label: 'Tgl Pengeringan', name: 'smd_tgl_pengeringan', width: 120, editable: true,
-                    edittype:"text",
+                {
+                    label: 'Tgl Pengeringan', name: 'smd_tgl_pengeringan', width: 120, editable: true,
+                    edittype: "text",
                     editrules: {required: false},
                     editoptions: {
                         // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
                         // use it to place a third party control to customize the toolbar
                         dataInit: function (element) {
-                           $(element).datepicker({
+                            $(element).datepicker({
                                 autoclose: true,
                                 format: 'yyyy-mm-dd',
-                                orientation : 'up',
-                                todayHighlight : true
+                                orientation: 'up',
+                                todayHighlight: true
                             });
                         }
                     }
@@ -494,11 +529,11 @@
 
             ],
             height: '100%',
-            width:'100%',
+            width: '100%',
             autowidth: true,
             viewrecords: true,
             rowNum: 10,
-            rowList: [10,20,50],
+            rowList: [10, 20, 50],
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
             altRows: true,
@@ -507,7 +542,7 @@
             onSelectRow: function (permission_name) {
                 /*do something when selected*/
             },
-            sortorder:'',
+            sortorder: '',
             pager: '#grid-pager-detail',
             jsonReader: {
                 root: 'rows',
@@ -515,13 +550,13 @@
                 repeatitems: false
             },
             loadComplete: function (response) {
-                if(response.success == false) {
+                if (response.success == false) {
                     swal({title: 'Attention', text: response.message, html: true, type: "warning"});
                 }
 
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID."agripro.stock_material_detail_controller/crud"; ?>',
+            editurl: '<?php echo WS_JQGRID . "agripro.stock_material_detail_controller/crud"; ?>',
             caption: "Stock Material Detail"
 
         });
@@ -548,7 +583,7 @@
 
             {
                 closeAfterEdit: true,
-                closeOnEscape:true,
+                closeOnEscape: true,
                 recreateForm: true,
                 viewPagerButtons: false,
                 serializeEditData: serializeJSON,
@@ -560,20 +595,20 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
-                    form.css({"height": 0.50*screen.height+"px"});
-                    form.css({"width": 0.60*screen.width+"px"});
+                    form.css({"height": 0.50 * screen.height + "px"});
+                    form.css({"width": 0.60 * screen.width + "px"});
 
                     $("#smd_batch_number").prop("readonly", true);
                 },
-                afterShowForm: function(form) {
+                afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
                 },
-                afterSubmit:function(response,postdata) {
+                afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
-                    if(response.success == false) {
-                        return [false,response.message,response.responseText];
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
                     }
-                    return [true,"",response.responseText];
+                    return [true, "", response.responseText];
                 }
 
             },
@@ -581,15 +616,15 @@
 
                 //new record form
                 editData: {
-                    sm_id: function() {
-                        var selRowId =  $("#grid-table").jqGrid ('getGridParam', 'selrow');
+                    sm_id: function () {
+                        var selRowId = $("#grid-table").jqGrid('getGridParam', 'selrow');
                         var sm_id = $("#grid-table").jqGrid('getCell', selRowId, 'sm_id');
                         return sm_id;
                     }
                 },
                 closeAfterAdd: true,
-                clearAfterAdd : true,
-                closeOnEscape:true,
+                clearAfterAdd: true,
+                closeOnEscape: true,
                 recreateForm: true,
                 width: 'auto',
                 errorTextFormat: function (data) {
@@ -600,29 +635,29 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
-                    form.css({"height": 0.50*screen.height+"px"});
-                    form.css({"width": 0.60*screen.width+"px"});
+                    form.css({"height": 0.50 * screen.height + "px"});
+                    form.css({"width": 0.60 * screen.width + "px"});
 
                     $("#smd_batch_number").prop("readonly", true);
-                    setTimeout(function() {
+                    setTimeout(function () {
                         clearLovRawMaterial();
                         clearLovPlantation();
-                    },100);
+                    }, 100);
                 },
-                afterShowForm: function(form) {
+                afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
                 },
-                afterSubmit:function(response,postdata) {
+                afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
-                    if(response.success == false) {
-                        return [false,response.message,response.responseText];
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
                     }
 
                     $(".tinfo").html('<div class="ui-state-success">' + response.message + '</div>');
                     var tinfoel = $(".tinfo").show();
                     tinfoel.delay(3000).fadeOut();
 
-                    return [true,"",response.responseText];
+                    return [true, "", response.responseText];
                 }
             },
             {
@@ -633,18 +668,18 @@
                     var form = $(e[0]);
                     style_delete_form(form);
                 },
-                afterShowForm: function(form) {
+                afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
                 },
                 onClick: function (e) {
                     //alert(1);
                 },
-                afterSubmit:function(response,postdata) {
+                afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
-                    if(response.success == false) {
-                        return [false,response.message,response.responseText];
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
                     }
-                    return [true,"",response.responseText];
+                    return [true, "", response.responseText];
                 }
             },
             {
@@ -673,8 +708,8 @@
 
     function responsive_jqgrid(grid_selector, pager_selector) {
         var parent_column = $(grid_selector).closest('[class*="col-"]');
-        $(grid_selector).jqGrid( 'setGridWidth', $(".page-content").width() );
-        $(pager_selector).jqGrid( 'setGridWidth', parent_column.width() );
+        $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+        $(pager_selector).jqGrid('setGridWidth', parent_column.width());
     }
 
 </script>
