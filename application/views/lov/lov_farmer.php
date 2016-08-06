@@ -22,8 +22,8 @@
                   <tr>
                      <th data-column-id="fm_id" data-sortable="false" data-visible="false">ID Farmer</th>
                      <th data-header-align="center" data-align="center" data-formatter="opt-edit" data-sortable="false" data-width="100">Options</th>
-                     <th data-column-id="fm_code">Kode Petani</th>
-                     <th data-column-id="fm_name">Nama Petani</th>
+                     <th data-column-id="fm_code">Farmer Code</th>
+                     <th data-column-id="fm_name">Name</th>
                   </tr>
                 </thead>
                 </table>
