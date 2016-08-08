@@ -57,6 +57,7 @@
         modal_lov_category_set_field_value(the_id_field, the_code_field);
         $("#modal_lov_category").modal({backdrop: 'static'});
         modal_lov_category_prepare_table();
+		$('#modal_lov_category_grid_selection').bootgrid('reload');
     }
 
 

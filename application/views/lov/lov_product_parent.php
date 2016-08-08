@@ -58,6 +58,7 @@
         modal_lov_product_set_field_value(the_id_field, the_code_field);
         $("#modal_lov_product").modal({backdrop: 'static'});
         modal_lov_product_prepare_table();
+		$('#modal_lov_product_grid_selection').bootgrid('reload');
     }
 
 
@@ -74,6 +75,7 @@
          $("#"+ $("#modal_lov_product_id_val").val()).change();
          $("#"+ $("#modal_lov_product_code_val").val()).change();
     }
+	
 
     function modal_lov_product_prepare_table() {
         $("#modal_lov_product_grid_selection").bootgrid({

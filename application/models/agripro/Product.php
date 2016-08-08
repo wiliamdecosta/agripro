@@ -44,7 +44,7 @@ class Product extends Abstract_model {
             $this->record['updated_date'] = date('Y-m-d');
             $this->record['updated_by'] = $userdata->username;*/
             if($this->record['parent_id'] == '')
-                $this->record['parent_id'] = 0;
+                $this->record['parent_id'] = null;
         }else {
             //do something
             //example:

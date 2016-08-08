@@ -114,8 +114,8 @@ class Product_controller {
         $start = getVarClean('current','int',0);
         $limit = getVarClean('rowCount','int',5);
 
-        $sort = getVarClean('sort','str','product_id');
-        $dir  = getVarClean('dir','str','asc');
+        $sort = getVarClean('sort','str','product_name');
+        $dir  = getVarClean('dir','str','asc'); 
 
         $searchPhrase = getVarClean('searchPhrase', 'str', '');
 
@@ -127,7 +127,7 @@ class Product_controller {
             $ci->load->model('agripro/product');
             $table = $ci->product;
             
-            $table->setCriteria("prod.parent_id = 0 ");
+            $table->setCriteria("prod.parent_id is null ");
 
             if(!empty($searchPhrase)) {
                 $table->setCriteria("(prod.product_id ilike '%".$searchPhrase."%' or prod.product_name ilike '%".$searchPhrase."%')");

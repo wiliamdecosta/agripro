@@ -28,6 +28,7 @@
 
 <script>
     function showLovcategory(id, code) {
+        clearLovcategory();
         modal_lov_category_show(id, code);
     }
 
@@ -36,6 +37,7 @@
         $('#form_fm_code').val('');
     }
     function showLovproduct(id, code) {
+        clearLovproduct();
         modal_lov_product_show(id, code);
     }
 
