@@ -20,10 +20,10 @@
                 <table id="modal_lov_product_grid_selection" class="table table-striped table-bordered table-hover">
                 <thead>
                   <tr>
-                     <th data-column-id="prod_id" data-sortable="false" data-visible="false">ID Produk</th>
+                     <th data-column-id="product_id" data-sortable="false" data-visible="false">ID Produk</th>
                      <th data-header-align="center" data-align="center" data-formatter="opt-edit" data-sortable="false" data-width="100">Options</th>
-                     <th data-column-id="prod_code">Kode Produk</th>
-                     <th data-column-id="prod_name">Nama Produk</th>
+                     <th data-column-id="product_code">Code</th>
+                     <th data-column-id="product_name">Name</th>
                   </tr>
                 </thead>
                 </table>
@@ -79,7 +79,7 @@
         $("#modal_lov_product_grid_selection").bootgrid({
              formatters: {
                 "opt-edit" : function(col, row) {
-                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_product_set_value(\''+ row.prod_id +'\', \''+ row.prod_code +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
+                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_product_set_value(\''+ row.product_id +'\', \''+ row.product_name +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
                 }
              },
              rowCount:[5,10],
