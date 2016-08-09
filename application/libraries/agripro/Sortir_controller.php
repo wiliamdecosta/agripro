@@ -16,7 +16,7 @@ class Sortir_controller {
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 		
-		$sm_id = getVarClean('sm_id',0);
+		$sm_id = getVarClean('sm_id','int',0);
 		
         try {
 

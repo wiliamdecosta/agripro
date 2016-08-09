@@ -19,7 +19,7 @@ class Sortir extends Abstract_model {
 
                             );
 
-    public $selectClause    = "sr.sortir_id, sr.product_id, sr.sm_id, sr.sortir_tgl, sr.sortir_qty, sm.sm_no_trans, pr.product_name ";
+    public $selectClause    = "sr.sortir_id, sr.product_id, sr.sm_id, sr.sortir_tgl, sr.sortir_qty, sm.sm_no_trans, pr.product_name, pr.product_code ";
     public $fromClause      = "sortir sr
 								JOIN stock_material sm ON sr.product_id = sm.product_id AND sr.sm_id = sm.sm_id
 								JOIN product pr ON sr.product_id = pr.product_id 
