@@ -11,15 +11,16 @@ class Sortir extends Abstract_model {
     public $alias           = "sr";
 
     public $fields          = array(
-                                'sortir_id'        => array('pkey' => true, 'type' => 'int', 'nullable' => false, 'unique' => true, 'display' => 'ID Sortir'),
-                                'product_id'       => array('nullable' => false, 'type' => 'int', 'unique' => true, 'display' => 'Product ID'),
-                                'sm_id'      => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Stock Material ID'),
-                                'sortir_tgl'      => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Tanggal'),
-                                'sortir_qty'      => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'QTY')
+                                'sortir_id'  => array('pkey' => true, 'type' => 'int', 'nullable' => false, 'unique' => true, 'display' => 'ID Sortir'),
+                                'product_id'       => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product ID'),
+                                'sm_id'      => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'Stock Material ID'),
+                                'sortir_tgl'      => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'Tanggal'),
+                                'sortir_qty'      => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'QTY')
 
                             );
 
-    public $selectClause    = "sr.sortir_id, sr.product_id, sr.sm_id, sr.sortir_tgl, sr.sortir_qty, sm.sm_no_trans, pr.product_name, pr.product_code ";
+    public $selectClause    = "sr.sortir_id, sr.product_id, sr.sm_id, sr.sortir_tgl, sr.sortir_qty, 
+								sm.sm_no_trans, sm.sm_qty_bersih, pr.product_id, pr.product_name, pr.product_code ";
     public $fromClause      = "sortir sr
 								JOIN stock_material sm ON sr.sm_id = sm.sm_id
 								JOIN product pr ON sr.product_id = pr.product_id 

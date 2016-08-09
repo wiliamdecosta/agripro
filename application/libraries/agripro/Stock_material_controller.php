@@ -14,8 +14,10 @@ class Stock_material_controller {
         $sord = getVarClean('sord','str','desc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
-
-        try {
+		
+		$is_sortir = getVarClean('is_sortir','str',0);
+        
+		try {
 
             $ci = & get_instance();
             $ci->load->model('agripro/stock_material');
@@ -36,7 +38,9 @@ class Stock_material_controller {
             );
 
             // Filter Table
-            $req_param['where'] = array();
+			if($is_sortir == '1'){
+				$req_param['where'] = array( "sm.sm_qty_bersih *1 > 0 " );
+			}
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
