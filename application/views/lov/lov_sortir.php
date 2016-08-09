@@ -9,6 +9,7 @@
             </div>
             <input type="hidden" id="modal_lov_sortir_id_val" value="" />
             <input type="hidden" id="modal_lov_product_code_val" value="" />
+            <input type="hidden" id="modal_lov_sortir_qty_val" value="" />
 
             <!-- modal body -->
             <div class="modal-body">
@@ -23,7 +24,7 @@
                      <th data-column-id="sortir_id" data-sortable="false" data-visible="false">ID Sortir</th>
                      <th data-header-align="center" data-align="center" data-formatter="opt-edit" data-sortable="false" data-width="100">Options</th>
                      <th data-column-id="product_code">Product Code</th>
-                     <th data-column-id="sortir_date">Sorting Date</th>
+                     <th data-column-id="sortir_tgl">Sorting Date</th>
                      <th data-column-id="sortir_qty">Quantity(Kg)</th>
                   </tr>
                 </thead>
@@ -51,37 +52,43 @@
         $("#modal_lov_sortir_btn_blank").on('click', function() {
             $("#"+ $("#modal_lov_sortir_id_val").val()).val("");
             $("#"+ $("#modal_lov_product_code_val").val()).val("");
+            $("#"+ $("#modal_lov_sortir_qty_val").val()).val("");
             $("#modal_lov_sortir").modal("toggle");
         });
     });
 
-    function modal_lov_sortir_show(the_id_field, the_code_field) {
-        modal_lov_sortir_set_field_value(the_id_field, the_code_field);
+    function modal_lov_sortir_show(the_id_field, the_code_field, the_qty_field) {
+        modal_lov_sortir_set_field_value(the_id_field, the_code_field, the_qty_field);
         $("#modal_lov_sortir").modal({backdrop: 'static'});
         modal_lov_sortir_prepare_table();
 		$("#modal_lov_sortir_grid_selection").bootgrid("reload");
     }
 
 
-    function modal_lov_sortir_set_field_value(the_id_field, the_code_field) {
+    function modal_lov_sortir_set_field_value(the_id_field, the_code_field, the_qty_field) {
          $("#modal_lov_sortir_id_val").val(the_id_field);
          $("#modal_lov_product_code_val").val(the_code_field);
+         $("#modal_lov_sortir_qty_val").val(the_qty_field);
     }
 
-    function modal_lov_sortir_set_value(the_id_val, the_code_val) {
+    function modal_lov_sortir_set_value(the_id_val, the_code_val, the_qty_field) {
          $("#"+ $("#modal_lov_sortir_id_val").val()).val(the_id_val);
          $("#"+ $("#modal_lov_product_code_val").val()).val(the_code_val);
+         $("#"+ $("#modal_lov_sortir_qty_val").val()).val(the_qty_field);
+
          $("#modal_lov_sortir").modal("toggle");
 
          $("#"+ $("#modal_lov_sortir_id_val").val()).change();
          $("#"+ $("#modal_lov_product_code_val").val()).change();
+         $("#"+ $("#modal_lov_sortir_qty_val").val()).change();
+
     }
 
     function modal_lov_sortir_prepare_table() {
         $("#modal_lov_sortir_grid_selection").bootgrid({
              formatters: {
                 "opt-edit" : function(col, row) {
-                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_sortir_set_value(\''+ row.sortir_id +'\', \''+ row.product_code +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
+                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_sortir_set_value(\''+ row.sortir_id +'\', \''+ row.product_code +'\', \''+ row.sortir_qty +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
                 }
              },
              rowCount:[5,10],

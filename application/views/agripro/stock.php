@@ -71,7 +71,7 @@
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID."agripro.stock_controller/crud"; ?>',
-            caption: "Product"
+            caption: "Stock"
 
         });
 

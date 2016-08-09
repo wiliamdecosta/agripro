@@ -558,15 +558,14 @@ class Abstract_model extends  CI_Model {
         return false;
     }
 
-    public function generate_id($table_name) {
-        $seq_name = strtoupper($table_name)."_"."SEQ";
+    public function generate_id($table_name, $pkey) {
+        $seq_name = strtolower($table_name)."_".$pkey."_seq";
 
-        $sql = "SELECT $seq_name.NEXTVAL AS seq FROM DUAL";
+        $sql = "SELECT $seq_name.nextval as seq from dual";
         $query = $this->db->query($sql);
 		$row = $query->row_array();
 
 		return $row['seq'];
-
     }
 
     public function setJQGridParam($param) {
