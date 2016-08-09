@@ -12,17 +12,16 @@ class Product extends Abstract_model {
 
     public $fields          = array(
                             'product_id'   => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'Product Id'),
-                            'category_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Category'),
+                            'product_code' => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'Product Code'),
                             'product_name' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Name'),
                             'parent_id' => array('nullable' => true, 'type' => 'int', 'unique' => false, 'display' => 'Parent Product'),
                             'product_description' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Description')
                           
                             );
 
-    public $selectClause    = "prod.product_id, prod.category_id, prod.parent_id,prod.product_name,prod.product_description, cat.category_id,
-								cat.category_name, cat.category_description, par.parent_name ";
+    public $selectClause    = "prod.product_id, prod.parent_id,prod.product_name,prod.product_description,
+                               prod.product_code, par.parent_name ";
     public $fromClause      = "product prod 
-							   JOIN category cat ON prod.category_id = cat.category_id
                                LEFT JOIN (select product_id as parent_id, product_name as parent_name from product ) as par  
                                     ON par.parent_id = prod.parent_id ";
 

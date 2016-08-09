@@ -64,6 +64,13 @@
                     },
                     editrules: {required: true}
                 },
+                {label: 'Product Code',name: 'product_code',width: 150, align: "left",editable: true,
+                    editoptions: {
+                        size: 30,
+                        maxlength:32
+                    },
+                    editrules: {required: true}
+                },
                 {label: 'Parent Product',
                     name: 'parent_id',
                     width: 200,
@@ -108,56 +115,6 @@
                     }
                 },
                  {label: 'Parent Product',name: 'parent_name',width: 150, align: "left",editable: false,
-                    editoptions: {
-                        size: 30,
-                        maxlength:32
-                    },
-                    editrules: {required: true}
-                },
-                {label: 'Category',
-                    name: 'category_id',
-                    width: 200,
-                    sortable: true,
-                    editable: true,
-                    hidden: true,
-                    editrules: {edithidden: true, number:true, required:true},
-                    edittype: 'custom',
-                    editoptions: {
-                        "custom_element":function( value  , options) {
-                            var elm = $('<span></span>');
-
-                            // give the editor time to initialize
-                            setTimeout( function() {
-                                elm.append('<input id="form_fm_id" type="text"  style="display:none;">'+
-                                        '<input id="form_fm_code" disabled type="text" class="FormElement jqgrid-required" placeholder="">'+
-                                        '<button class="btn btn-success" type="button" onclick="showLovcategory(\'form_fm_id\',\'form_fm_code\')">'+
-                                        '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
-                                        '</button>');
-                                $("#form_fm_id").val(value);
-                                elm.parent().removeClass('jqgrid-required');
-                            }, 100);
-
-                            return elm;
-                        },
-                        "custom_value":function( element, oper, gridval) {
-                            if(oper === 'get') {
-                                return $("#form_fm_id").val();
-                            } else if( oper === 'set') {
-                                $("#form_fm_id").val(gridval);
-                                var gridId = this.id;
-                                // give the editor time to set display
-                                setTimeout(function(){
-                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
-                                    if(selectedRowId != null) {
-                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'category_name');
-                                        $("#form_fm_code").val( code_display );
-                                    }
-                                },100);
-                            }
-                        }
-                    }
-                },
-                {label: 'Category',name: 'category_name',width: 150, align: "left",editable: false,
                     editoptions: {
                         size: 30,
                         maxlength:32
