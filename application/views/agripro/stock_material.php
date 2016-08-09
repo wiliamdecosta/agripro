@@ -57,14 +57,17 @@
 
     function showLovPlantation(id, code) {
 
-        selRowId = $('#grid-table').jqGrid('getGridParam', 'selrow'),
-            fm_id = $('#grid-table').jqGrid('getCell', selRowId, 'fm_id');
-
-        modal_lov_plantation_show(id, code, fm_id);
+        selRowId = $('#grid-table').jqGrid('getGridParam', 'selrow');
+           // fm_id = $('#grid-table').jqGrid('getCell', selRowId, 'fm_id');
+        if($('#form_fm_id').val() == "") {
+            swal({title: 'Attention', text: 'Please choose farmer', html: true, type: "info"});
+            return;
+        }
+        modal_lov_plantation_show(id, code, $('#form_fm_id').val());
     }
 
     function clearLovPlantation() {
-        $('#form_smd_plt_id').val('');
+        $('#form_plt_id').val('');
         $('#form_plt_code').val('');
     }
 
@@ -89,7 +92,6 @@
                 },
                 {label: 'Farmer Code', name: 'fm_code', width: 200, align: "left", editable: false},
                 {label: 'Farmer Name', name: 'fm_name', width: 200, align: "left", editable: false},
-
                 {
                     label: 'Farmer',
                     name: 'fm_id',
@@ -105,8 +107,8 @@
 
                             // give the editor time to initialize
                             setTimeout(function () {
-                                elm.append('<input id="form_fm_id" type="text"  style="display:none;">' +
-                                    '<input id="form_fm_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Farmer">' +
+                                elm.append('<input id="form_fm_id" type="text"  style="display:none;" onchange="clearLovPlantation()">' +
+                                    '<input size="30" id="form_fm_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Farmer">' +
                                     '<button class="btn btn-success" type="button" onclick="showLovFarmer(\'form_fm_id\',\'form_fm_code\')">' +
                                     '   <span class="fa fa-search icon-on-right bigger-110"></span>' +
                                     '</button>');
@@ -132,8 +134,84 @@
                                     }
                                 }, 100);
                             }
+                        },size : 25
+                    }
+                },
+                {label: 'Plantation Code', name: 'plt_code', width: 200, align: "left", editable: false},
+                {label: 'Plantation',
+                    name: 'plt_id',
+                    width: 200,
+                    sortable: true,
+                    editable: true,
+                    hidden: true,
+                    editrules: {edithidden: true, number:true, required:true},
+                    edittype: 'custom',
+                    editoptions: {
+                        "custom_element":function( value  , options) {
+                            var elm = $('<span></span>');
+
+                            // give the editor time to initialize
+                            setTimeout( function() {
+                                elm.append('<input id="form_plt_id" type="text"  style="display:none;">'+
+                                    '<input size="30" id="form_plt_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Choose Plantation">'+
+                                    '<button class="btn btn-success" type="button" onclick="showLovPlantation(\'form_plt_id\',\'form_plt_code\')">'+
+                                    '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
+                                    '</button>');
+                                $("#form_plt_id").val(value);
+                                elm.parent().removeClass('jqgrid-required');
+                            }, 100);
+
+                            return elm;
+                        },
+                        "custom_value":function( element, oper, gridval) {
+
+                            if(oper === 'get') {
+                                return $("#form_plt_id").val();
+                            } else if( oper === 'set') {
+                                $("#form_plt_id").val(gridval);
+                                var gridId = this.id;
+                                // give the editor time to set display
+                                setTimeout(function(){
+                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                    if(selectedRowId != null) {
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'plt_code');
+                                        $("#form_plt_code").val( code_display );
+                                    }
+                                },100);
+                            }
                         }
                     }
+                },
+                {
+                    label: 'Raw Material',
+                    name: 'product_id',
+                    width: 150,
+                    align: "left",
+                    editable: true,
+                    edittype: 'select',
+                    hidden: false,
+                    editrules: {edithidden: false, required: true},
+                    editoptions: {
+                        value: "1:KA;2:KB;3:STICK",
+                        dataInit: function (elem) {
+                            $(elem).width(150);  // set the width which you need
+                        }
+                    }
+                },
+                {
+                    label: 'Total Weight (KGs)', name: 'sm_qty_kotor', width: 150, align: "left", editable: true,
+                    editoptions: {
+                        size: 10,
+                        maxlength: 4
+                    },
+                    editrules: {required: true}
+                },
+                {
+                    label: 'Price (RP) / Kgs ', name: 'sm_harga_per_kg', width: 170, align: "left", editable: true,
+                    editoptions: {
+                        size: 25
+                    },
+                    editrules: {required: true}
                 },
                 {
                     label: 'Batch Total', name: 'sm_jml_karung', width: 120, align: "left", editable: true,
@@ -160,7 +238,7 @@
                     }
                 },
                 {
-                    label: 'Date', name: 'sm_tgl_masuk', width: 120, editable: true,
+                    label: 'Transaction Date', name: 'sm_tgl_masuk', width: 120, editable: true,
                     edittype: "text",
                     editrules: {required: true},
                     editoptions: {
@@ -174,14 +252,50 @@
                                 todayHighlight: true
                             });
                         },
-                        size: 30,
+                        size: 25
+                    }
+                },
+                {
+                    label: 'Harvest Date', name: 'smd_tgl_panen', width: 120, editable: true,
+                    edittype: "text",
+                    editrules: {required: false},
+                    editoptions: {
+                        // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
+                        // use it to place a third party control to customize the toolbar
+                        dataInit: function (element) {
+                            $(element).datepicker({
+                                autoclose: true,
+                                format: 'yyyy-mm-dd',
+                                orientation: 'up',
+                                todayHighlight: true
+                            });
+                        },
+                        size: 25
+                    }
+                },
+                {
+                    label: 'Drying Date', name: 'smd_tgl_pengeringan', width: 120, editable: true,
+                    edittype: "text",
+                    editrules: {required: false},
+                    editoptions: {
+                        // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
+                        // use it to place a third party control to customize the toolbar
+                        dataInit: function (element) {
+                            $(element).datepicker({
+                                autoclose: true,
+                                format: 'yyyy-mm-dd',
+                                orientation: 'up',
+                                todayHighlight: true
+                            });
+                        },
+                        size: 25
                     }
                 },
 
                 {
                     label: 'PO Number', name: 'sm_no_po', width: 170, align: "left", editable: true,
                     editoptions: {
-                        size: 30,
+                        size: 25,
                         maxlength: 32
                     },
                     editrules: {required: false}
@@ -298,6 +412,8 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
+                    form.css({"height": 0.70*screen.height+"px"});
+                    form.css({"width": 0.60*screen.width+"px"});
 
                     $("#sm_no_trans").prop("readonly", true);
                     setTimeout(function () {

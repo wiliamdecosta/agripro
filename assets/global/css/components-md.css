@@ -1556,7 +1556,11 @@ Custom buttons based on bootstrap SASS
     transition: all 0.3s; }
 
 .btn:not(.btn-sm):not(.btn-lg) {
-  line-height: 1.44; }
+  line-height: 1.54;
+  margin-bottom: 3px;
+  margin-left: 2px;
+}
+
 
 /***
 Custom color buttons 
