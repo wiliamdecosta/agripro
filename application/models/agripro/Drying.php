@@ -4,7 +4,7 @@
  * Farmer Model
  *
  */
-class Stock_material extends Abstract_model
+class Drying extends Abstract_model
 {
 
     public $table = "stock_material";
@@ -14,16 +14,12 @@ class Stock_material extends Abstract_model
     public $fields = array(
         'sm_id' => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Stock Material'),
         'fm_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Warehouse'),
-        'plt_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Plantation'),
         'product_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product ID'),
-        'sm_qty_kotor' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Total Weight (KGs)'),
-        'sm_harga_per_kg' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Price / Kgs'),
-        'sm_tgl_masuk' => array('nullable' => false, 'type' => 'date', 'unique' => false, 'display' => 'Date'),
-        'sm_tgl_panen' => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Harvest Date'),
+        'sm_qty_kotor' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Bruto'),
+        'sm_qty_bersih' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Net Weight'),
+
+        'sm_tgl_pengeringan' => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Drying Date'),
         'sm_no_trans' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Transaction Code'),
-        'sm_jenis_pembayaran' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Payment Type'),
-        'sm_no_po' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'PO Number'),
-        'sm_jml_karung' => array('nullable' => true, 'type' => 'int', 'unique' => false, 'display' => 'Batch Total'),
 
         'created_date' => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Created Date'),
         'created_by' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Created By'),
@@ -35,6 +31,7 @@ class Stock_material extends Abstract_model
     public $selectClause = "sm.sm_id, sm.fm_id, to_char(sm.sm_tgl_masuk,'yyyy-mm-dd') as sm_tgl_masuk, sm.sm_no_trans, sm.sm_jenis_pembayaran,
                                     sm.sm_no_po,sm.sm_jml_karung,sm.product_id,pr.product_code,sm.sm_qty_kotor,sm.sm_harga_per_kg,sm.sm_harga_total,
                                     sm.sm_tgl_panen,sm.sm_harga_total,plt.plt_code,sm.plt_id,sm.sm_tgl_panen,
+                                    sm.sm_tgl_pengeringan,sm.sm_qty_bersih,
                                     to_char(sm.created_date,'yyyy-mm-dd') as created_date, sm.created_by,
                                     to_char(sm.updated_date,'yyyy-mm-dd') as updated_date, sm.updated_by,
                                     fm.fm_code, fm.fm_name";
@@ -60,7 +57,7 @@ class Stock_material extends Abstract_model
             // example :
 
             $this->record['sm_no_trans'] = $this->getSerialNumber();
-            $this->record['sm_harga_total'] = $this->getTotalPrice();
+
             $this->record['created_date'] = date('Y-m-d');
             $this->record['created_by'] = $userdata->username;
             $this->record['updated_date'] = date('Y-m-d');
@@ -69,7 +66,6 @@ class Stock_material extends Abstract_model
         } else {
             //do something
             //example:
-            $this->record['sm_harga_total'] = $this->getTotalPrice();
             $this->record['updated_date'] = date('Y-m-d');
             $this->record['updated_by'] = $userdata->username;
             //if false please throw new Exception
@@ -102,14 +98,6 @@ class Stock_material extends Abstract_model
         $format_serial = str_replace('FMCODE', $itemfarmer['fm_code'], $format_serial);
 
         return $format_serial;
-    }
-
-    function getTotalPrice(){
-
-        $price = $this->record['sm_harga_per_kg'];
-        $qty = $this->record['sm_qty_kotor'];
-        $total_price = $price * $qty;
-        return $total_price;
     }
 
 }

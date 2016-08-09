@@ -48,6 +48,12 @@ class Raw_material extends Abstract_model {
         return true;
     }
 
+    public function getListRawMaterial(){
+        $sql = "SELECT * FROM product WHERE product_code in ('STICK','KA','KB','KC','KF','KM','KS','KTP')";
+        $q = $this->db->query($sql);
+        return $q->result_array();
+    }
+
 }
 
 /* End of file Groups.php */
