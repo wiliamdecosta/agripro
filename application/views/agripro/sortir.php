@@ -23,9 +23,9 @@
     </div>
 </div>
 <div class="space-4"></div>
- <input type="hidden" id="temp_sm_id">
- <input type="hidden" id="temp_qty_available">
- <input type="hidden" id="temp_product_id">
+<input type="text" id="temp_sm_id">
+<input type="text" id="temp_qty_available">
+<input type="text" id="temp_product_id">
 <div class="row" id="detail_placeholder" style="display:none;">
     <div class="col-xs-12">
         <table id="grid-table-detail"></table>
@@ -73,36 +73,37 @@
         $('#form_plt_id').val('');
         $('#form_plt_code').val('');
     }
-	
-	function get_availableqty(){
-		$('#temp_qty_available').val('');
-		sm_id = $('#temp_sm_id').val();
-		$.ajax({
-			url: "<?php echo WS_JQGRID.'agripro.sortir_controller/get_availableqty'; ?>",
-			type: "POST",
-			data: { sm_id: sm_id },
-			success: function (data){
-					
-				$('#temp_qty_available').val(data);
-			},
-			error: function (xhr, status, error) {
-				swal({title: "Error!", text: xhr.responseText, html: true, type: "error"});
-				return false;
-			}
-		});
-	}
-	 function validation_qty(value){
-		ava_qty = $('#temp_qty_available').val();
-		if(value > ava_qty){
-			return [false, "Available Quantity : "+ava_qty+" (Kg) "];
-		}else{
-			return[true,''];	
-		}
-		//return [false, "Available Quantity is : "+ava_qty+" (Kg) " +value];
-	 }
-	 function get_sm_id(){
-		return $('#temp_sm_id').val();
-	 }
+
+    function get_availableqty() {
+        $('#temp_qty_available').val('');
+        sm_id = $('#temp_sm_id').val();
+        $.ajax({
+            url: "<?php echo WS_JQGRID . 'agripro.sortir_controller/get_availableqty'; ?>",
+            type: "POST",
+            dataType: 'json',
+            data: {sm_id: sm_id},
+            success: function (data) {
+
+                $('#temp_qty_available').val(data.avaqty);
+            },
+            error: function (xhr, status, error) {
+                swal({title: "Error!", text: xhr.responseText, html: true, type: "error"});
+                return false;
+            }
+        });
+    }
+    function validation_qty(value) {
+        ava_qty = $('#temp_qty_available').val();
+        if ((value*1) > (ava_qty*1)) {
+            return [false, "Available Quantity : " + ava_qty + " (Kg) "];
+        } else {
+            return [true, ''];
+        }
+        //return [false, "Available Quantity is : "+ava_qty+" (Kg) " +value];
+    }
+    function get_sm_id() {
+        return $('#temp_sm_id').val();
+    }
 
     jQuery(function ($) {
         var grid_selector = "#grid-table";
@@ -112,7 +113,7 @@
             url: '<?php echo WS_JQGRID . "agripro.stock_material_controller/crud"; ?>',
             datatype: "json",
             mtype: "POST",
-			postData: {is_sortir: '1'},
+            postData: {is_sortir: '1'},
             colModel: [
                 {label: 'ID', name: 'sm_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
                 {
@@ -168,23 +169,23 @@
             shrinkToFit: true,
             multiboxonly: true,
             onSelectRow: function (rowid) {
-				var celValue = $('#grid-table').jqGrid('getCell', rowid, 'sm_id');
+                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'sm_id');
                 var celCode = $('#grid-table').jqGrid('getCell', rowid, 'sm_no_trans');
-				
+
                 var grid_detail = jQuery("#grid-table-detail");
                 if (rowid != null) {
                     grid_detail.jqGrid('setGridParam', {
-                        url: '<?php echo WS_JQGRID."agripro.sortir_controller/crud"; ?>',
+                        url: '<?php echo WS_JQGRID . "agripro.sortir_controller/crud"; ?>',
                         postData: {sm_id: celValue}
                     });
                     var strCaption = 'Detail :: ' + celCode;
-					 $("#temp_sm_id").val(celValue);
+                    $("#temp_sm_id").val(celValue);
                     grid_detail.jqGrid('setCaption', strCaption);
                     $("#grid-table-detail").trigger("reloadGrid");
                     $("#detail_placeholder").show();
-					// get quantity
-					get_availableqty();
-					
+                    // get quantity
+                    get_availableqty();
+
                     responsive_jqgrid('#grid-table-detail', '#grid-pager-detail');
                 }
             },
@@ -257,7 +258,7 @@
                 }
             },
             {
-				
+
                 //new record form
                 closeAfterAdd: true,
                 clearAfterAdd: true,
@@ -273,7 +274,7 @@
                     var form = $(e[0]);
                     style_edit_form(form);
                     /*form.css({"height": 0.70 * screen.height + "px"});
-                    form.css({"width": 0.60 * screen.width + "px"});*/
+                     form.css({"width": 0.60 * screen.width + "px"});*/
 
                     $("#sm_no_trans").prop("readonly", true);
                     setTimeout(function () {
@@ -342,37 +343,51 @@
                 }
             }
         );
-		
-		
-		/* ------------------------------  detail grid --------------------------------*/
+
+
+        /* ------------------------------  detail grid --------------------------------*/
         jQuery("#grid-table-detail").jqGrid({
             datatype: "json",
             mtype: "POST",
             colModel: [
-			{label: 'ID', key:true, name: 'sortir_id', width: 5, sorttype: 'number', editable: true, hidden: true},
-			{label: 'Stock Material ID',name: 'sm_id', width: 100, sorttype: 'number', editable: true, hidden: true},
-			{label: 'Product Code', name: 'product_code', width: 150, align: "left", editable: false},
-			{label: 'Product Code',
-				name: 'product_id',
-				width: 150,
-				align: "left",
-				editable: true,
-				edittype: 'select',
-				hidden: true,
-				editrules: {edithidden: true, required: true},
-				editoptions: {dataUrl: '<?php echo WS_JQGRID."agripro.sortir_controller/list_product"; ?>',
-					postData: {sm_id: function(){return $('#temp_sm_id').val() }},
-					dataInit: function (elem) {
-						$(elem).width(240);  // set the width which you need
-					}
-				}
-			},
-			{label: 'Sorting Date', name: 'sortir_tgl', width: 120, editable: true,
+                {label: 'ID', key: true, name: 'sortir_id', width: 5, sorttype: 'number', editable: true, hidden: true},
+                {
+                    label: 'Stock Material ID',
+                    name: 'sm_id',
+                    width: 100,
+                    sorttype: 'number',
+                    editable: true,
+                    hidden: true
+                },
+                {label: 'Product Code', name: 'product_code', width: 150, align: "left", editable: false},
+                {
+                    label: 'Product Code',
+                    name: 'product_id',
+                    width: 150,
+                    align: "left",
+                    editable: true,
+                    edittype: 'select',
+                    hidden: true,
+                    editrules: {edithidden: true, required: true},
+                    editoptions: {
+                        dataUrl: '<?php echo WS_JQGRID . "agripro.sortir_controller/list_product"; ?>',
+                        postData: {
+                            sm_id: function () {
+                                return $('#temp_sm_id').val()
+                            }
+                        },
+                        dataInit: function (elem) {
+                            $(elem).width(240);  // set the width which you need
+                        }
+                    }
+                },
+                {
+                    label: 'Sorting Date', name: 'sortir_tgl', width: 120, editable: true,
                     edittype: "text",
                     editrules: {required: true},
                     editoptions: {
                         // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
-						// use it to place a third party control to customize the toolbar
+                        // use it to place a third party control to customize the toolbar
                         dataInit: function (element) {
                             $(element).datepicker({
                                 autoclose: true,
@@ -383,20 +398,27 @@
                         },
                         size: 25
                     }
-			},
-			{label: 'Quantity(Kg)', name: 'sortir_qty', index:'sortir_qty', width: 120, align: "right", editable: true, formatter:'number',
-				edittype: 'text',
-				editrules: {edithidden: true, required: true, custom:true, custom_func:validation_qty},
-				formatoptions: { decimalSeparator: ".", thousandsSeparator: " "}
-				
-			}
-			
+                },
+                {
+                    label: 'Quantity(Kg)',
+                    name: 'sortir_qty',
+                    index: 'sortir_qty',
+                    width: 120,
+                    align: "right",
+                    editable: true,
+                    formatter: 'number',
+                    edittype: 'text',
+                    editrules: {edithidden: true, required: true, custom: true, custom_func: validation_qty},
+                    formatoptions: {decimalSeparator: ".", thousandsSeparator: " "}
+
+                }
+
             ],
             height: '100%',
             autowidth: true,
             viewrecords: true,
             rowNum: 10,
-            rowList: [10,20,50],
+            rowList: [10, 20, 50],
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
             altRows: true,
@@ -404,9 +426,9 @@
             multiboxonly: true,
             onSelectRow: function (permission_name) {
                 /*do something when selected*/
-				
+
             },
-            sortorder:'',
+            sortorder: '',
             pager: '#grid-pager-detail',
             jsonReader: {
                 root: 'rows',
@@ -414,156 +436,156 @@
                 repeatitems: false
             },
             loadComplete: function (response) {
-                if(response.success == false) {
+                if (response.success == false) {
                     swal({title: 'Attention', text: response.message, html: true, type: "warning"});
                 }
-				get_availableqty();
+                get_availableqty();
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID."agripro.sortir_controller/crud"; ?>',
+            editurl: '<?php echo WS_JQGRID . "agripro.sortir_controller/crud"; ?>',
             caption: "Sorting Raw Material"
-			
+
         });
-		
+
         jQuery('#grid-table-detail').jqGrid('navGrid', '#grid-pager-detail',
-		{   //navbar options
-			edit: true,
-			editicon: 'fa fa-pencil blue bigger-120',
-			add: true,
-			addicon: 'fa fa-plus-circle purple bigger-120',
-			del: true,
-			delicon: 'fa fa-trash-o red bigger-120',
-			search: true,
-			searchicon: 'fa fa-search orange bigger-120',
-			refresh: true,
-			afterRefresh: function () {
-				// some code here
-			},
-			
-			refreshicon: 'fa fa-refresh green bigger-120',
-			view: false,
-			viewicon: 'fa fa-search-plus grey bigger-120'
-		},
-		
-		{
-			closeAfterEdit: true,
-			closeOnEscape:true,
-			recreateForm: true,
-			viewPagerButtons: false,
-			serializeEditData: serializeJSON,
-			width: 'auto',
-			errorTextFormat: function (data) {
-				return 'Error: ' + data.responseText
-			},
-			
-			beforeShowForm: function (e, form) {
-				var form = $(e[0]);
-				style_edit_form(form);
-				$("#rd_serial_number").prop("readonly", true);
-			},
-			afterShowForm: function(form) {
-				form.closest('.ui-jqdialog').center();
-			},
-			afterSubmit:function(response,postdata) {
-				var response = jQuery.parseJSON(response.responseText);
-				if(response.success == false) {
-					return [false,response.message,response.responseText];
-				}
-				return [true,"",response.responseText];
-			}
-			
-		},
-		{
-			editData: {
-				sm_id: function() {
-					var selRowId =  $("#grid-table").jqGrid ('getGridParam', 'selrow');
-					var sm_id = $("#grid-table").jqGrid('getCell', selRowId, 'sm_id');
-					
-					return sm_id;
-				}
-			},	
-			//new record form
-			closeAfterAdd: true,
-			clearAfterAdd : true,
-			closeOnEscape:true,
-			recreateForm: true,
-			width: 'auto',
-			errorTextFormat: function (data) {
-				return 'Error: ' + data.responseText
-			},
-			serializeEditData: serializeJSON,
-			viewPagerButtons: false,
-			beforeShowForm: function (e, form) {
-				var form = $(e[0]);
-				style_edit_form(form);
-				
-				//$("#rd_serial_number").prop("readonly", true);
-			},
-			afterShowForm: function(form) {
-				form.closest('.ui-jqdialog').center();
-			},
-			/* beforeSubmit: function(postdata){
-				//postdata.something = 'somevalue';
-				 if($('#temp_qty_available').val() < postdata.sortir_qty){
-					msg_txt = 'Please Insert Quantity no more than Available Quantity ('+$('#temp_qty_available').val()+' Kg)';
-					swal({title: "Warning!", text: msg_txt, html: true, type: "error"});
-				}
-			}, */
-			afterSubmit:function(response,postdata) {
-				var response = jQuery.parseJSON(response.responseText);
-				if(response.success == false) {
-					return [false,response.message,response.responseText];
-				}
-				
-				$(".tinfo").html('<div class="ui-state-success">' + response.message + '</div>');
-				var tinfoel = $(".tinfo").show();
-				tinfoel.delay(3000).fadeOut();
-				
-				return [true,"",response.responseText];
-			}
-		},
-		{
-			//delete record form
-			serializeDelData: serializeJSON,
-			recreateForm: true,
-			beforeShowForm: function (e) {
-				var form = $(e[0]);
-				style_delete_form(form);
-			},
-			afterShowForm: function(form) {
-				form.closest('.ui-jqdialog').center();
-			},
-			onClick: function (e) {
-				//alert(1);
-			},
-			afterSubmit:function(response,postdata) {
-				var response = jQuery.parseJSON(response.responseText);
-				if(response.success == false) {
-					return [false,response.message,response.responseText];
-				}
-				return [true,"",response.responseText];
-			}
-		},
-		{
-			//search form
-			closeAfterSearch: false,
-			recreateForm: true,
-			afterShowSearch: function (e) {
-				var form = $(e[0]);
-				style_search_form(form);
-				form.closest('.ui-jqdialog').center();
-			},
-			afterRedraw: function () {
-				style_search_filters($(this));
-			}
-		},
-		{
-			//view record form
-			recreateForm: true,
-			beforeShowForm: function (e) {
-				var form = $(e[0]);
-			}
-		}
+            {   //navbar options
+                edit: true,
+                editicon: 'fa fa-pencil blue bigger-120',
+                add: true,
+                addicon: 'fa fa-plus-circle purple bigger-120',
+                del: true,
+                delicon: 'fa fa-trash-o red bigger-120',
+                search: true,
+                searchicon: 'fa fa-search orange bigger-120',
+                refresh: true,
+                afterRefresh: function () {
+                    // some code here
+                },
+
+                refreshicon: 'fa fa-refresh green bigger-120',
+                view: false,
+                viewicon: 'fa fa-search-plus grey bigger-120'
+            },
+
+            {
+                closeAfterEdit: true,
+                closeOnEscape: true,
+                recreateForm: true,
+                viewPagerButtons: false,
+                serializeEditData: serializeJSON,
+                width: 'auto',
+                errorTextFormat: function (data) {
+                    return 'Error: ' + data.responseText
+                },
+
+                beforeShowForm: function (e, form) {
+                    var form = $(e[0]);
+                    style_edit_form(form);
+                    $("#rd_serial_number").prop("readonly", true);
+                },
+                afterShowForm: function (form) {
+                    form.closest('.ui-jqdialog').center();
+                },
+                afterSubmit: function (response, postdata) {
+                    var response = jQuery.parseJSON(response.responseText);
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
+                    }
+                    return [true, "", response.responseText];
+                }
+
+            },
+            {
+                editData: {
+                    sm_id: function () {
+                        var selRowId = $("#grid-table").jqGrid('getGridParam', 'selrow');
+                        var sm_id = $("#grid-table").jqGrid('getCell', selRowId, 'sm_id');
+
+                        return sm_id;
+                    }
+                },
+                //new record form
+                closeAfterAdd: true,
+                clearAfterAdd: true,
+                closeOnEscape: true,
+                recreateForm: true,
+                width: 'auto',
+                errorTextFormat: function (data) {
+                    return 'Error: ' + data.responseText
+                },
+                serializeEditData: serializeJSON,
+                viewPagerButtons: false,
+                beforeShowForm: function (e, form) {
+                    var form = $(e[0]);
+                    style_edit_form(form);
+
+                    //$("#rd_serial_number").prop("readonly", true);
+                },
+                afterShowForm: function (form) {
+                    form.closest('.ui-jqdialog').center();
+                },
+                /* beforeSubmit: function(postdata){
+                 //postdata.something = 'somevalue';
+                 if($('#temp_qty_available').val() < postdata.sortir_qty){
+                 msg_txt = 'Please Insert Quantity no more than Available Quantity ('+$('#temp_qty_available').val()+' Kg)';
+                 swal({title: "Warning!", text: msg_txt, html: true, type: "error"});
+                 }
+                 }, */
+                afterSubmit: function (response, postdata) {
+                    var response = jQuery.parseJSON(response.responseText);
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
+                    }
+
+                    $(".tinfo").html('<div class="ui-state-success">' + response.message + '</div>');
+                    var tinfoel = $(".tinfo").show();
+                    tinfoel.delay(3000).fadeOut();
+
+                    return [true, "", response.responseText];
+                }
+            },
+            {
+                //delete record form
+                serializeDelData: serializeJSON,
+                recreateForm: true,
+                beforeShowForm: function (e) {
+                    var form = $(e[0]);
+                    style_delete_form(form);
+                },
+                afterShowForm: function (form) {
+                    form.closest('.ui-jqdialog').center();
+                },
+                onClick: function (e) {
+                    //alert(1);
+                },
+                afterSubmit: function (response, postdata) {
+                    var response = jQuery.parseJSON(response.responseText);
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
+                    }
+                    return [true, "", response.responseText];
+                }
+            },
+            {
+                //search form
+                closeAfterSearch: false,
+                recreateForm: true,
+                afterShowSearch: function (e) {
+                    var form = $(e[0]);
+                    style_search_form(form);
+                    form.closest('.ui-jqdialog').center();
+                },
+                afterRedraw: function () {
+                    style_search_filters($(this));
+                }
+            },
+            {
+                //view record form
+                recreateForm: true,
+                beforeShowForm: function (e) {
+                    var form = $(e[0]);
+                }
+            }
         );
 
     });

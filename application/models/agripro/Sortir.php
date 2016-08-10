@@ -53,12 +53,12 @@ class Sortir extends Abstract_model {
 	
 	function get_availableqty($sm_id){
 		
-		$sql = "SELECT (select sm_qty_bersih from stock_material where sm_id = $sm_id ) - sum(sortir_qty) as avaqty from sortir where sm_id = $sm_id ";
+		$sql = "SELECT (select sm_qty_bersih from stock_material where sm_id = $sm_id ) - COALESCE (sum(sortir_qty),0) as avaqty from sortir where sm_id = $sm_id ";
         $query = $this->db->query($sql);
         $row = $query->row_array();
         $query->free_result();
 		
-        return $row['avaqty'];
+        return floatval($row['avaqty']);
 			
 	}
 	
