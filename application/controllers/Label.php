@@ -78,7 +78,7 @@ class Label extends CI_Controller
 
 
         $pdf->Image('assets/image/agripro.gif',110,75,30);
-        $pdf->Image(base_url().'label/barcode?val='.$item['packing_batch_number'],110,105,30,12,'PNG');
+        $pdf->Image(base_url().'label/barcode?val='.$item['packing_batch_number'],110,110,30,12,'PNG');
         $pdf->Image('assets/image/label_packing_footer.png',8,130,130);
 
 
