@@ -566,7 +566,9 @@ class Abstract_model extends  CI_Model {
         $query = $this->db->query($sql);
 		$row = $query->row_array();
 
-		return $row['seq'];
+        if(empty($row['seq'])) return 1;
+
+        return $row['seq'];
     }
 
     public function setJQGridParam($param) {
