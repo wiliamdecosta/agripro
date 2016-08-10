@@ -561,7 +561,8 @@ class Abstract_model extends  CI_Model {
     public function generate_id($table_name, $pkey) {
         $seq_name = strtolower($table_name)."_".$pkey."_seq";
 
-        $sql = "SELECT $seq_name.nextval as seq from dual";
+        //$sql = "SELECT $seq_name.nextval as seq from dual";
+        $sql = "select lastval() as seq from ".$table_name;
         $query = $this->db->query($sql);
 		$row = $query->row_array();
 
