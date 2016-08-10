@@ -13,7 +13,7 @@ class Stock_category extends Abstract_model {
     public $fields          = array(
                                 'sc_id'             => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Stock Category'),
                                 'sc_code'           => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Code'),
-                                'sc_description'    => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Description'),
+                                'sc_description'    => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Description'),
                             );
 
     public $selectClause    = "sc.*";

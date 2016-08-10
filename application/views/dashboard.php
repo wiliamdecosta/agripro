@@ -7,6 +7,7 @@
         </li>
         <li>
             <span>Dashboard</span>
+            <?php /*print_r($this->session->all_userdata()); */?>
         </li>
     </ul>
 </div>
