@@ -61,6 +61,13 @@
                 {label: 'Serial', name: 'packing_serial', width: 120, align: "left", editable: false},
                 {label: 'Weight(Kg)', name: 'packing_kg', width: 120, align: "left", editable: false},
                 {label: 'Packing Date', name: 'packing_tgl', width: 120, align: "left", editable: false},
+                {label: 'Print Label',name: 'packing_id',width: 120, align: "center",editable: false,
+                    formatter:function(cellvalue, options, rowObject) {
+                        var url = "<?php echo base_url().'label/packing_label?id='?>"+cellvalue;
+                        return '<a class="btn btn-primary btn-xs" href="#" onclick="PopupCenter(\''+url+'\',\'Label Packing\',500,500);">Label</a>';
+
+                    }
+                },
             ],
             height: '100%',
             autowidth: true,

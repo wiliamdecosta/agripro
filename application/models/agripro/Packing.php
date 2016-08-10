@@ -26,7 +26,7 @@ class Packing extends Abstract_model {
                             );
 
 
-    public $selectClause    = "pack.*, prod.product_name";
+    public $selectClause    = "pack.*, prod.product_name, to_char(pack.packing_tgl,'yyyy-mm-dd') as packing_tgl";
     public $fromClause      = "packing pack
                                 left join product prod
                                 on pack.product_id = prod.product_id";
