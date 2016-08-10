@@ -349,7 +349,11 @@ class Sortir_controller
 
         $sm_id = getVarClean('sm_id', 'int', 0);
 
-        $out['avaqty'] = floatval($table->get_availableqty($sm_id));
+        $qty = explode('|',$table->get_availableqty($sm_id));
+		
+        $out['avaqty'] = $qty[0];
+        $out['srqty'] = $qty[1];
+        $out['qty_bersih'] = $qty[2];
 
         echo json_encode($out);
         exit;

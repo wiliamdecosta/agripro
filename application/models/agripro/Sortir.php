@@ -53,20 +53,38 @@ class Sortir extends Abstract_model {
 	
 	function get_availableqty($sm_id){
 		
-		$sql = "SELECT (select sm_qty_bersih from stock_material where sm_id = $sm_id ) - COALESCE (sum(sortir_qty),0) as avaqty from sortir where sm_id = $sm_id ";
+		$sql = "SELECT (select sm_qty_bersih from stock_material where sm_id = $sm_id ) - 
+						COALESCE (sum(sortir_qty),0) as avaqty, COALESCE (sum(sortir_qty),0) as srtqty , 
+						(select sm_qty_bersih from stock_material where sm_id = $sm_id ) qty_bersih
+						from sortir where sm_id = $sm_id ";
         $query = $this->db->query($sql);
         $row = $query->row_array();
         $query->free_result();
 		
-        return floatval($row['avaqty']);
+        return floatval($row['avaqty']) .'|'. floatval($row['srtqty']).'|'. floatval($row['qty_bersih']);
 			
 	}
 	
+	
 	function list_product($sm_id){
 			
-        $sql = "SELECT * FROM product WHERE parent_id = (select product_id from stock_material where sm_id = $sm_id) 
-				UNION ALL
-				SELECT * FROM product WHERE product_code IN ('LOST') ";
+        $sql = "
+				SELECT * 
+				FROM (
+						SELECT * 
+							FROM product 
+								WHERE parent_id = (select product_id 
+														from stock_material 
+															where sm_id = $sm_id) 
+						UNION ALL
+						SELECT * 
+							FROM product 
+								WHERE product_code IN ('LOST')
+						) as a 
+					WHERE a.product_id not in (select distinct product_id 
+														from sortir 
+															where sm_id = $sm_id )
+				";
         $q = $this->db->query($sql);
         return $q->result_array();
 		

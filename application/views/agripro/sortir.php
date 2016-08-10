@@ -23,13 +23,31 @@
     </div>
 </div>
 <div class="space-4"></div>
-<input type="text" id="temp_sm_id">
-<input type="text" id="temp_qty_available">
-<input type="text" id="temp_product_id">
+
+<input type="hidden" id="temp_sm_id">
+<input type="hidden" id="temp_qty_available">
+<input type="hidden" id="temp_product_id">
 <div class="row" id="detail_placeholder" style="display:none;">
     <div class="col-xs-12">
         <table id="grid-table-detail"></table>
         <div id="grid-pager-detail"></div>
+    </div>
+</div>
+<div class="space-4"></div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="caption">
+			<i class="glyphicon glyphicon-circle-arrow-right font-green"></i>
+			<span class="caption-subject font-green bold uppercase" id="info_qty">Sorting Qty 0 (Kg)</span>
+		</div>
+		<div class="caption">
+			<i class="glyphicon glyphicon-circle-arrow-right font-blue"></i>
+			<span class="caption-subject font-blue bold uppercase" id="net_qty">Stock Material Quantity : 0 (Kg)</span>
+		</div>
+		<div class="caption">
+			<i class="glyphicon glyphicon-circle-arrow-right font-red"></i>
+			<span class="caption-subject font-red bold uppercase" id="info_avaqty">Available Quantity : 0 (Kg)</span>
+		</div>
     </div>
 </div>
 
@@ -85,6 +103,9 @@
             success: function (data) {
 
                 $('#temp_qty_available').val(data.avaqty);
+                $('#info_avaqty').html('Available Quantity : '+data.avaqty +' (Kg)');
+                $('#info_qty').html('Sorting Quantity : ' + data.srqty +' (Kg)');
+                $('#net_qty').html('Stock Material Quantity : ' + data.qty_bersih +' (Kg)');
             },
             error: function (xhr, status, error) {
                 swal({title: "Error!", text: xhr.responseText, html: true, type: "error"});
