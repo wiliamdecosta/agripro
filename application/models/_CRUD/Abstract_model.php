@@ -562,7 +562,7 @@ class Abstract_model extends  CI_Model {
         $seq_name = strtolower($table_name)."_".$pkey."_seq";
 
         //$sql = "SELECT $seq_name.nextval as seq from dual";
-        $sql = "select last_value as seq from ".$seq_name;
+        $sql = "select (last_value+1) as seq from ".$seq_name;
         $query = $this->db->query($sql);
 		$row = $query->row_array();
 
