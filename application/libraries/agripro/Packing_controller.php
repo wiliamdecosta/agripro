@@ -374,6 +374,96 @@ class Packing_controller {
 
     }
 
+
+    function updateForm() {
+
+        $ci = & get_instance();
+        $ci->load->model('agripro/packing');
+        $table = $ci->packing;
+
+        $data = array('success' => false, 'message' => '');
+        $table->actionType = 'UPDATE';
+
+        $packing_id = getVarClean('packing_id','int',0);
+        $packing_kg = getVarClean('packing_kg','float',0);
+        $packing_tgl = getVarClean('packing_tgl','str','');
+        $product_id = getVarClean('product_id','int',0);
+        $userdata = $ci->ion_auth->user()->row();
+
+
+        $pd_id = (array) $ci->input->post('pd_id');
+        $sortir_ids = (array) $ci->input->post('sortir_id');
+        $weights = (array) $ci->input->post('weight');
+
+        try{
+
+            if(count($sortir_ids) == 0) {
+                throw new Exception('Data source material must be filled');
+            }
+
+            $table->db->trans_begin(); //Begin Trans
+
+                $items = array(
+                    'packing_id' => $packing_id,
+                    'packing_kg' => $packing_kg,
+                    'packing_tgl' => $packing_tgl,
+                    'product_id' => $product_id
+                );
+
+                $table->setRecord($items);
+
+                $record_detail = array();
+                $ci->load->model('agripro/packing_detail');
+                $tableDetail = $ci->packing_detail;
+
+                for($i = 0; $i < count($sortir_ids); $i++) {
+
+                    $record_detail[] = array (
+                        'pd_id' => $pd_id[$i],
+                        'packing_id' => $packing_id,
+                        'sortir_id' => $sortir_ids[$i],
+                        'pd_kg' => $weights[$i]
+                    );
+
+                    //cek data
+                    //if ok
+                    //tampung dulu ke suatu array
+                }
+
+
+                foreach($record_detail as $item_detail) {
+
+                    if(empty($item_detail['pd_id'])) {
+                        $tableDetail->actionType = 'CREATE';
+                        unset($item_detail['pd_id']);
+                        $tableDetail->setRecord($item_detail);
+                        $tableDetail->create();
+                    }else {
+                        //do nothing
+                    }
+                }
+
+                $table->update();
+
+            $table->db->trans_commit(); //Commit Trans
+
+            $data['success'] = true;
+            $data['message'] = 'Data added successfully';
+
+        }catch (Exception $e) {
+            $table->db->trans_rollback(); //Rollback Trans
+
+            $data['message'] = $e->getMessage();
+        }
+
+
+        echo json_encode($data);
+        exit;
+
+    }
+
+
+
 }
 
 /* End of file Warehouse_controller.php */

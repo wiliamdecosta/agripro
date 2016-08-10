@@ -71,6 +71,43 @@ class Packing_detail_controller {
         return $data;
     }
 
+
+    function getDetail() {
+
+        $packing_id = getVarClean('packing_id','int',0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/packing_detail');
+            $table = $ci->packing_detail;
+
+            $table->setCriteria('pd.packing_id = '.$packing_id);
+            $items = $table->getAll(0,-1);
+
+            $output = '';
+            $no = 1;
+            foreach($items as $item) {
+                $output .= '
+                    <tr>
+                        <td>'.$no++.'</td>
+                        <td><input type="hidden" name="pd_id[]" value="'.$item['pd_id'].'"> <input type="hidden" name="sortir_id[]" value="'.$item['sortir_id'].'">'.$item['product_code'].'</td>
+                        <td><input type="hidden" name="weight[]" value="'.$item['pd_kg'].'">'.$item['pd_kg'].'</td>
+                        <td><button type="button" onclick="deleteDataRow(this,'.$item['pd_id'].');"><i class="fa fa-trash"></i> Delete </button></td>
+                    </tr>
+                ';
+            }
+
+        }catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+        echo $output;
+        exit;
+
+
+    }
+
     function crud() {
 
         $data = array();

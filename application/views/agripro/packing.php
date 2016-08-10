@@ -44,6 +44,27 @@
         $('#add-packing').on('click',function(e) {
             loadContentWithParams('agripro.packing_add_form',{});
         });
+
+        $('#edit-packing').on('click', function(e) {
+
+            var rowId = $('#grid-table').jqGrid('getGridParam','selrow');
+            if(rowId == null) {
+                swal('Informasi','Please select a row','info');
+                return;
+            }
+
+            var rowData = jQuery("#grid-table").getRowData(rowId);
+            loadContentWithParams('agripro.packing_edit_form', {
+                packing_id : rowData.packing_id,
+                product_id : rowData.product_id,
+                product_code : rowData.product_code,
+                packing_batch_number : rowData.packing_batch_number,
+                packing_serial : rowData.packing_serial,
+                packing_tgl : rowData.packing_tgl,
+                packing_kg : rowData.packing_kg
+            });
+
+        });
     });
 
     jQuery(function($) {
@@ -56,14 +77,18 @@
             mtype: "POST",
             colModel: [
                 {label: 'ID', name: 'packing_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Product Name', name: 'product_name', width: 120, align: "left", editable: false},
-                {label: 'Batch Number', name: 'packing_batch_number', width: 120, align: "left", editable: false},
-                {label: 'Serial', name: 'packing_serial', width: 120, align: "left", editable: false},
-                {label: 'Weight(Kg)', name: 'packing_kg', width: 120, align: "left", editable: false},
-                {label: 'Packing Date', name: 'packing_tgl', width: 120, align: "left", editable: false},
-                {label: 'Print Label',name: 'packing_id',width: 120, align: "center",editable: false,
+                {label: 'ID Product', name: 'product_id', width: 120, align: "left", editable: false, hidden:true},
+                {label: 'Product Code', name: 'product_code', width: 120, align: "left", editable: false, hidden:true},
+
+                {label: 'Product Name', name: 'product_name', width: 150, align: "left", editable: false},
+                {label: 'Batch Number', name: 'packing_batch_number', width: 200, align: "left", editable: false},
+                {label: 'Serial', name: 'packing_serial', width: 80, align: "left", editable: false},
+                {label: 'Weight(Kg)', name: 'packing_kg', width: 80, align: "right", editable: false},
+                {label: 'Packing Date', name: 'packing_tgl', width: 120, align: "center", editable: false},
+                {label: 'Print Label',name: '',width: 120, align: "center",editable: false,
                     formatter:function(cellvalue, options, rowObject) {
-                        var url = "<?php echo base_url().'label/packing_label?id='?>"+cellvalue;
+                        var val = rowObject['packing_id'];
+                        var url = "<?php echo base_url().'label/packing_label?id='?>"+val;
                         return '<a class="btn btn-primary btn-xs" href="#" onclick="PopupCenter(\''+url+'\',\'Label Packing\',500,500);">Label</a>';
 
                     }

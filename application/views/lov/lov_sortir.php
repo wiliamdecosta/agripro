@@ -72,6 +72,7 @@
     }
 
     function modal_lov_sortir_set_value(the_id_val, the_code_val, the_qty_field) {
+
          $("#"+ $("#modal_lov_sortir_id_val").val()).val(the_id_val);
          $("#"+ $("#modal_lov_product_code_val").val()).val(the_code_val);
          $("#"+ $("#modal_lov_sortir_qty_val").val()).val(the_qty_field);
