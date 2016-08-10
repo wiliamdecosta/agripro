@@ -100,7 +100,7 @@
                     label: 'RM Name', name: 'product_code', width: 120, align: "left", editable: false
                 },
                 {
-                    label: 'Bruto', name: 'sm_qty_kotor', width: 120, align: "left", editable: true,
+                    label: 'Bruto (Kgs)', name: 'sm_qty_kotor', width: 120, align: "left", editable: true,
                     editoptions: {
                         size: 10,
                         maxlength: 4
@@ -108,7 +108,7 @@
                     editrules: {required: true}
                 },
                 {
-                    label: 'Net weight', name: 'sm_qty_bersih', width: 120, align: "left", editable: true,
+                    label: 'Netto (Kgs)', name: 'sm_qty_bersih', width: 120, align: "left", editable: true,
                     editoptions: {
                         size: 10,
                         maxlength: 4

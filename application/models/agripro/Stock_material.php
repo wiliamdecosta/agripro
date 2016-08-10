@@ -35,6 +35,7 @@ class Stock_material extends Abstract_model
     public $selectClause = "sm.sm_id, sm.fm_id, to_char(sm.sm_tgl_masuk,'yyyy-mm-dd') as sm_tgl_masuk, sm.sm_no_trans, sm.sm_jenis_pembayaran,
                                     sm.sm_no_po,sm.sm_jml_karung,sm.product_id,pr.product_code,sm.sm_qty_kotor,sm.sm_harga_per_kg,sm.sm_harga_total,
                                     sm.sm_tgl_panen,sm.sm_harga_total,plt.plt_code,sm.plt_id,sm.sm_tgl_panen,
+                                    sm.sm_tgl_pengeringan,sm.sm_qty_bersih,
                                     to_char(sm.created_date,'yyyy-mm-dd') as created_date, sm.created_by,
                                     to_char(sm.updated_date,'yyyy-mm-dd') as updated_date, sm.updated_by,
                                     fm.fm_code, fm.fm_name";
