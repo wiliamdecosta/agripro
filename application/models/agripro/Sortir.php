@@ -20,7 +20,7 @@ class Sortir extends Abstract_model {
                             );
 
     public $selectClause    = "sr.sortir_id, sr.product_id, sr.sm_id, sr.sortir_tgl, sr.sortir_qty, 
-								sm.sm_no_trans, sm.sm_qty_bersih, pr.product_id, pr.product_name, pr.product_code ";
+								sm.sm_no_trans, sm.sm_qty_bersih, pr.product_id, pr.product_name, pr.product_code";
     public $fromClause      = "sortir sr
 								JOIN stock_material sm ON sr.sm_id = sm.sm_id
 								JOIN product pr ON sr.product_id = pr.product_id 
@@ -50,8 +50,27 @@ class Sortir extends Abstract_model {
         }
         return true;
     }
-
-
+	
+	function get_availableqty($sm_id){
+		
+		$sql = "SELECT (select sm_qty_bersih from stock_material where sm_id = $sm_id ) - sum(sortir_qty) as avaqty from sortir where sm_id = $sm_id ";
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        $query->free_result();
+		
+        return $row['avaqty'];
+			
+	}
+	
+	function list_product($sm_id){
+			
+        $sql = "SELECT * FROM product WHERE parent_id = (select product_id from stock_material where sm_id = $sm_id) 
+				UNION ALL
+				SELECT * FROM product WHERE product_code IN ('LOST') ";
+        $q = $this->db->query($sql);
+        return $q->result_array();
+		
+    }
 }
 
 /* End of file Groups.php */

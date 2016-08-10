@@ -24,6 +24,8 @@
 </div>
 <div class="space-4"></div>
  <input type="hidden" id="temp_sm_id">
+ <input type="hidden" id="temp_qty_available">
+ <input type="hidden" id="temp_product_id">
 <div class="row" id="detail_placeholder" style="display:none;">
     <div class="col-xs-12">
         <table id="grid-table-detail"></table>
@@ -71,6 +73,36 @@
         $('#form_plt_id').val('');
         $('#form_plt_code').val('');
     }
+	
+	function get_availableqty(){
+		$('#temp_qty_available').val('');
+		sm_id = $('#temp_sm_id').val();
+		$.ajax({
+			url: "<?php echo WS_JQGRID.'agripro.sortir_controller/get_availableqty'; ?>",
+			type: "POST",
+			data: { sm_id: sm_id },
+			success: function (data){
+					
+				$('#temp_qty_available').val(data);
+			},
+			error: function (xhr, status, error) {
+				swal({title: "Error!", text: xhr.responseText, html: true, type: "error"});
+				return false;
+			}
+		});
+	}
+	 function validation_qty(value){
+		ava_qty = $('#temp_qty_available').val();
+		if(value > ava_qty){
+			return [false, "Available Quantity : "+ava_qty+" (Kg) "];
+		}else{
+			return[true,''];	
+		}
+		//return [false, "Available Quantity is : "+ava_qty+" (Kg) " +value];
+	 }
+	 function get_sm_id(){
+		return $('#temp_sm_id').val();
+	 }
 
     jQuery(function ($) {
         var grid_selector = "#grid-table";
@@ -335,6 +367,8 @@
                     grid_detail.jqGrid('setCaption', strCaption);
                     $("#grid-table-detail").trigger("reloadGrid");
                     $("#detail_placeholder").show();
+					// get quantity
+					get_availableqty();
 					
                     responsive_jqgrid('#grid-table-detail', '#grid-pager-detail');
                 }
@@ -511,8 +545,8 @@
 				edittype: 'select',
 				hidden: true,
 				editrules: {edithidden: true, required: true},
-				editoptions: {dataUrl: '<?php echo site_url('raw_material_controller/listRawMaterial');?>',
-					postData: {is_sortir: '1'},
+				editoptions: {dataUrl: '<?php echo WS_JQGRID."agripro.sortir_controller/list_product"; ?>',
+					postData: {sm_id: function(){return $('#temp_sm_id').val() }},
 					dataInit: function (elem) {
 						$(elem).width(240);  // set the width which you need
 					}
@@ -535,10 +569,11 @@
                         size: 25
                     }
 			},
-			{label: 'Quantity(Kg)', name: 'sortir_qty', width: 120, align: "right", editable: true, formatter:'number',
+			{label: 'Quantity(Kg)', name: 'sortir_qty', index:'sortir_qty', width: 120, align: "right", editable: true, formatter:'number',
 				edittype: 'text',
-				editrules: {edithidden: true, required: true},
+				editrules: {edithidden: true, required: true, custom:true, custom_func:validation_qty},
 				formatoptions: { decimalSeparator: ".", thousandsSeparator: " "}
+				
 			}
 			
             ],
@@ -567,7 +602,7 @@
                 if(response.success == false) {
                     swal({title: 'Attention', text: response.message, html: true, type: "warning"});
                 }
-				
+				get_availableqty();
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID."agripro.sortir_controller/crud"; ?>',
@@ -647,15 +682,18 @@
 				var form = $(e[0]);
 				style_edit_form(form);
 				
-				$("#rd_serial_number").prop("readonly", true);
+				//$("#rd_serial_number").prop("readonly", true);
 			},
 			afterShowForm: function(form) {
 				form.closest('.ui-jqdialog').center();
 			},
-			beforeSubmit: function(postdata, formid){
+			/* beforeSubmit: function(postdata){
 				//postdata.something = 'somevalue';
-				
-			},
+				 if($('#temp_qty_available').val() < postdata.sortir_qty){
+					msg_txt = 'Please Insert Quantity no more than Available Quantity ('+$('#temp_qty_available').val()+' Kg)';
+					swal({title: "Warning!", text: msg_txt, html: true, type: "error"});
+				}
+			}, */
 			afterSubmit:function(response,postdata) {
 				var response = jQuery.parseJSON(response.responseText);
 				if(response.success == false) {

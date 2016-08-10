@@ -332,6 +332,40 @@ class Sortir_controller {
         }
         return $data;
     }
+	
+	function get_availableqty(){
+	
+		$ci = & get_instance();
+		$ci->load->model('agripro/sortir');
+		$table = $ci->sortir;
+		
+		$sm_id = getVarClean('sm_id','int',0);
+		
+		
+			$avaqty = $table->get_availableqty($sm_id);
+			
+			echo $avaqty;
+		
+		exit;
+	
+	}
+	
+	function list_product(){
+		
+        $ci = & get_instance();
+		$ci->load->model('agripro/sortir');
+		$table = $ci->sortir;
+		
+		$sm_id = getVarClean('sm_id', 'int', 0);
+		
+        $result = $table->list_product($sm_id);
+        echo "<select>";
+        foreach ($result as $value) {
+            echo "<option value=" . $value['product_id'] . ">" . strtoupper($value['product_code']) . "</option>";
+        }
+        echo "</select>";
+		exit;
+    }
 
 }
 
