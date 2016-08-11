@@ -19,6 +19,7 @@ class Sortir_controller
         $dir = getVarClean('dir', 'str', 'asc');
 
         $searchPhrase = getVarClean('searchPhrase', 'str', '');
+        $product_id = getVarClean('product_id', 'int', 0);
 
         $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
 
@@ -28,7 +29,8 @@ class Sortir_controller
             $ci->load->model('agripro/sortir');
             $table = $ci->sortir;
 
-            //$table->setCriteria("prod.parent_id is null ");
+            if(!empty($product_id))
+                $table->setCriteria("sr.product_id = ".$product_id);
 
             if (!empty($searchPhrase)) {
                 $table->setCriteria("(sr.sortir_id ilike '%" . $searchPhrase . "%' or pr.product_code ilike '%" . $searchPhrase . "%')");
@@ -350,7 +352,7 @@ class Sortir_controller
         $sm_id = getVarClean('sm_id', 'int', 0);
 
         $qty = explode('|',$table->get_availableqty($sm_id));
-		
+
         $out['avaqty'] = $qty[0];
         $out['srqty'] = $qty[1];
         $out['qty_bersih'] = $qty[2];

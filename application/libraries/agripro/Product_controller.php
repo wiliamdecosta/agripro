@@ -69,7 +69,7 @@ class Product_controller {
 
         return $data;
     }
-    
+
     function readLov() {
         permission_check('view-tracking');
 
@@ -107,7 +107,7 @@ class Product_controller {
 
         return $data;
     }
-    
+
     function readLov_parent() {
         permission_check('view-tracking');
 
@@ -115,7 +115,7 @@ class Product_controller {
         $limit = getVarClean('rowCount','int',5);
 
         $sort = getVarClean('sort','str','product_name');
-        $dir  = getVarClean('dir','str','asc'); 
+        $dir  = getVarClean('dir','str','asc');
 
         $searchPhrase = getVarClean('searchPhrase', 'str', '');
 
@@ -126,7 +126,7 @@ class Product_controller {
             $ci = & get_instance();
             $ci->load->model('agripro/product');
             $table = $ci->product;
-            
+
             $table->setCriteria("prod.parent_id is null ");
 
             if(!empty($searchPhrase)) {
@@ -147,7 +147,49 @@ class Product_controller {
 
         return $data;
     }
-    
+
+
+    function readLovProductPacking() {
+        permission_check('view-tracking');
+
+        $start = getVarClean('current','int',0);
+        $limit = getVarClean('rowCount','int',5);
+
+        $sort = getVarClean('sort','str','product_id');
+        $dir  = getVarClean('dir','str','asc');
+
+        $searchPhrase = getVarClean('searchPhrase', 'str', '');
+
+        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/product');
+            $table = $ci->product;
+
+            $table->setCriteria("prod.parent_id is not null");
+            $table->setCriteria("(prod.product_code NOT IN('LOST'))");
+
+            if(!empty($searchPhrase)) {
+                $table->setCriteria("(product_code ilike '%".$searchPhrase."%' or product_name ilike '%".$searchPhrase."%')");
+            }
+
+            $start = ($start-1) * $limit;
+            $items = $table->getAll($start, $limit, $sort, $dir);
+            $totalcount = $table->countAll();
+
+            $data['rows'] = $items;
+            $data['success'] = true;
+            $data['total'] = $totalcount;
+
+        }catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+
+        return $data;
+    }
+
     function crud() {
 
         $data = array();

@@ -133,7 +133,7 @@
     </div>
 </div>
 
-<?php $this->load->view('lov/lov_product.php'); ?>
+<?php $this->load->view('lov/lov_product_packing.php'); ?>
 <?php $this->load->view('lov/lov_sortir.php'); ?>
 
 <script>
@@ -142,7 +142,11 @@
     }
 
     function showLovSortir(id, code, qty_field) {
-        modal_lov_sortir_show(id, code, qty_field);
+        if( $('#packing_product_id').val() == "") {
+            swal("Information","Choose product first","info");
+            return;
+        }
+        modal_lov_sortir_show(id, code, qty_field, $('#packing_product_id').val());
     }
 </script>
 
