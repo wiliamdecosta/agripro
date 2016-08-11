@@ -23,7 +23,7 @@ class Portal extends CI_Controller
             $data['detail_packing'] = $this->Portal->getDetailPackaging($packing->row()->packing_id);
             $this->load->view('portal/detail_tracking',$data);
         }else{
-            echo json_encode('Data tidak ditemukan');
+            echo json_encode('Data not found');
         }
     }
 
