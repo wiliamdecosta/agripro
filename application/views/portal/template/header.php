@@ -45,8 +45,10 @@
                     <div class="header-column">
                         <div class="header-logo">
                             <a href="<?php echo base_url();?>">
-                                <img alt="Porto" width="350" height="54" data-sticky-width="82" data-sticky-height="40"
+                                <img data-sticky-top="33" src="<?php echo base_url(); ?>assets/image/agp.png">
+                                <img alt="Porto" width="350" height="54" data-sticky-width="72" data-sticky-height="40"
                                      data-sticky-top="33" src="<?php echo base_url(); ?>assets/image/portal_logo.png">
+
                             </a>
                         </div>
                     </div>

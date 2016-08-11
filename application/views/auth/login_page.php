@@ -43,6 +43,7 @@
 <!--            <img class="login-logo login-6" src="--><?php //echo base_url(); ?><!--assets/image/login_logo.png" height=""/>-->
             <div class="login-content">
                 <h1>Login Area</h1>
+                <img data-sticky-top="33" src="<?php echo base_url(); ?>assets/image/agp.png">
                 <img class="" src="<?php echo base_url(); ?>assets/image/login_logo.png" height=""/>
                 <h4> Supply Chain Management - AGRIPRO TRIDAYA NUSANTARA </h4>
                 <?php //echo form_open("auth/login", array('class' => 'login-form')); ?>
