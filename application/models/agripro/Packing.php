@@ -66,7 +66,7 @@ class Packing extends Abstract_model {
 
         $format_serial = 'WHKODE-PRODUCTCODE-DATE-XXXX';
 
-        $sql = "select substr(packing_batch_number, length(packing_batch_number)-4 + 1 )::integer as total from packing
+        $sql = "select max(substr(packing_batch_number, length(packing_batch_number)-4 + 1 )::integer)+1 as total from packing
                     where to_char(packing_tgl,'yyyymmdd') = '".str_replace('-','',$this->record['packing_tgl'])."'";
         $query = $this->db->query($sql);
         $row = $query->row_array();
