@@ -58,7 +58,7 @@
 <input type="hidden" id="temp_qty_available">
 <input type="hidden" id="temp_product_id">
 <input type="hidden" id="temp_rowid">
-<div class="row" id="detail_placeholder" style="display:none;">
+<div class="row" id="detail_placeholder" >
     <div class="col-xs-12">
         <table id="grid-table-detail"></table>
         <div id="grid-pager-detail"></div>
@@ -113,14 +113,16 @@
 		
 		$("#temp_rowid").val(rowid);
 		
-		
 		var celValue = $('#grid-table').jqGrid('getCell', rowid, 'sm_id');
 		var celCode = $('#grid-table').jqGrid('getCell', rowid, 'sm_no_trans');
 		var prod_date_1 = $('#grid-table').jqGrid('getCell', rowid, 'sm_tgl_produksi');
+		
 		$("#temp_sm_id").val(celValue);
-		if(prod_date_1.length > 0 || $("#tgl_produksi").val().length>0){
+		
+		if( $("#tgl_produksi").val().length > 0 ){
 				
 			$('#header_sortir').show();
+			
 			var grid_detail = jQuery("#grid-table-detail");
 			if (rowid != null) {
 				grid_detail.jqGrid('setGridParam', {
@@ -137,10 +139,10 @@
 				
 				responsive_jqgrid('#grid-table-detail', '#grid-pager-detail');
 			}
-			
+			console.log('masuk 1');
 		}else{
 			$('#header_sortir').show();
-            $("#detail_placeholder").hide();
+			console.log('masuk 2');
 		}
 		
 		
@@ -157,11 +159,19 @@
 				dataType: 'json',
 				data: {sm_id: sm_id},
 				success: function (data) {
+					
 					$('#tgl_produksi').val(data.tgl_prod);
 					$('#temp_qty_available').val(data.avaqty);
 					$('#info_avaqty').html('Available Quantity : '+data.avaqty +' (Kg)');
 					$('#info_qty').html('Sorting Quantity : ' + data.srqty +' (Kg)');
 					$('#net_qty').html('Stock Material Quantity : ' + data.qty_bersih +' (Kg)');
+					
+					if(data.tgl_prod.length > 0){
+						$('#header_sortir').show();
+						$("#detail_placeholder").show();
+					}else{
+						$("#detail_placeholder").hide();
+					}
 				},
 				error: function (xhr, status, error) {
 					swal({title: "Error!", text: xhr.responseText, html: true, type: "error"});
@@ -185,6 +195,7 @@
 	$(document).ready(function(){
 		
 		$('#header_sortir').hide();
+		$('#detail_placeholder').hide();
 		
 		$('#tgl_produksi').datepicker({
 			autoclose: true,
@@ -207,7 +218,7 @@
 					success: function (data) {
 						swal({title: "Success!", text: 'Production Date Succesfully added ', html: true, type: "success"});
 						$('#tgl_produksi').val(tgl_produksi);
-						show_detail_grid($('#temp_rowid').val());
+						get_availableqty();
 					},
 					error: function (xhr, status, error) {
 						swal({title: "Error!", text: xhr.responseText, html: true, type: "error"});
@@ -306,8 +317,33 @@
             shrinkToFit: true,
             multiboxonly: true,
             onSelectRow: function (rowid) {
-                $("#detail_placeholder").hide();
-                show_detail_grid(rowid);
+				
+                //show_detail_grid(rowid);
+				
+				var celValue = $('#grid-table').jqGrid('getCell', rowid, 'sm_id');
+				var celCode = $('#grid-table').jqGrid('getCell', rowid, 'sm_no_trans');
+				var prod_date_1 = $('#grid-table').jqGrid('getCell', rowid, 'sm_tgl_produksi');
+				
+				$("#temp_sm_id").val(celValue);
+				
+					var grid_detail = jQuery("#grid-table-detail");
+					if (rowid != null) {
+						grid_detail.jqGrid('setGridParam', {
+							url: '<?php echo WS_JQGRID . "agripro.sortir_controller/crud"; ?>',
+							postData: {sm_id: celValue}
+						});
+						var strCaption = 'Detail :: ' + celCode;
+						$("#temp_sm_id").val(celValue);
+						grid_detail.jqGrid('setCaption', strCaption);
+						$("#grid-table-detail").trigger("reloadGrid");
+						$("#detail_placeholder").show();
+						// get quantity
+						get_availableqty();
+						
+						responsive_jqgrid('#grid-table-detail', '#grid-pager-detail');
+					}
+				
+				
 
             },
             sortorder: '',
