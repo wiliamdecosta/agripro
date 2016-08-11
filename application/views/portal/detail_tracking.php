@@ -5,32 +5,32 @@
             <thead>
             <tr>
                 <th>
-                    Product Code
-                </th>
-                <th>
                     Product Name
                 </th>
                 <th>
-                    Serial Number
+                    Weight
                 </th>
                 <th>
-                    Batch Number
+                    Packing Date
+                </th>
+                <th>
+                    Warehouse
                 </th>
             </tr>
             </thead>
             <tbody>
             <tr>
                 <td>
-                    <?php echo $packaging->prod_code;?>
+                    <?php echo $packaging->product_name;?>
                 </td>
                 <td>
-                    <?php echo $packaging->prod_name;?>
+                    <?php echo $packaging->packing_kg;?> Kgs
                 </td>
                 <td>
-                    <?php echo $packaging->pkg_serial_number;?>
+                    <?php echo $packaging->packing_tgl;?>
                 </td>
                 <td>
-                    <?php echo $packaging->pkg_batch_number;?>
+                    <?php echo $packaging->wh_name;?> - <?php echo $packaging->wh_location;?>
                 </td>
             </tr>
             </tbody>
@@ -38,32 +38,29 @@
     </div>
 </div>
 <hr>
-<h4> Detail Packaging</h4>
+<h4> Detail Packaging Source</h4>
 <div class="row">
     <div class="col-md-12">
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th>
-                    Serial Number
+                    Raw Material
                 </th>
                 <th>
-                    Batch Number
+                    Weight
                 </th>
                 <th>
-                    Farmer
+                    Farmer Name
                 </th>
                 <th>
-                    FM Sertification
+                    Farmer Code
                 </th>
                 <th>
-                    Province
+                    Gender
                 </th>
                 <th>
-                    City
-                </th>
-                <th>
-                    Tanggal Masuk
+                    Farmer Address
                 </th>
             </tr>
             </thead>
@@ -71,25 +68,22 @@
             <?php foreach($detail_packing as $detail){;?>
             <tr>
                 <td>
-                    <?php echo $detail->sm_serial_number;?>
+                    <?php echo $detail->rm_name;?>
                 </td>
                 <td>
-                    <?php echo $detail->smd_batch_number;?>
+                    <?php echo $detail->pd_kg;?>
                 </td>
                 <td>
                     <?php echo $detail->fm_name;?>
                 </td>
                 <td>
-                    <?php echo $detail->fm_no_sertifikasi;?>
+                    <?php echo $detail->fm_code;?>
                 </td>
                 <td>
-                    <?php echo $detail->prov_code;?>
+                    <?php echo $detail->fm_jk;?>
                 </td>
                 <td>
-                    <?php echo $detail->kota_name;?>
-                </td>
-                <td>
-                    <?php echo $detail->sm_tgl_masuk;?>
+                    <?php echo $detail->fm_address;?>
                 </td>
             </tr>
             <?php  } ;?>
