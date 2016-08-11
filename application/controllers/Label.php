@@ -43,9 +43,14 @@ class Label extends CI_Controller
         $pdf->Ln();
 
         $pdf->Cell(5,6,'','',0,'C');
-        $pdf->Cell(40,6,'BATCH NUMBER','',0,'L');
+        $pdf->Cell(40,6,'SERIAL NUMBER','',0,'L');
         $pdf->Cell(5,6,':','',0,'C');
         $pdf->Cell(70,6,$item['packing_batch_number'],'',0,'L');
+        $pdf->Ln();
+        $pdf->Cell(5,6,'','',0,'C');
+        $pdf->Cell(40,6,'BATCH NUMBER','',0,'L');
+        $pdf->Cell(5,6,':','',0,'C');
+        $pdf->Cell(70,6,$item['packing_serial'],'',0,'L');
         $pdf->Ln();
         $pdf->Cell(5,6,'','',0,'C');
         $pdf->Cell(40,6,'ORIGIN','',0,'L');
