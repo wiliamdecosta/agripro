@@ -26,6 +26,7 @@
                      <th data-column-id="product_code">Product Code</th>
                      <th data-column-id="sortir_tgl">Sorting Date</th>
                      <th data-column-id="sortir_qty">Quantity(Kg)</th>
+                     <th data-column-id="fm_name">Farmer</th>
                   </tr>
                 </thead>
                 </table>
