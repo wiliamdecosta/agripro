@@ -170,6 +170,7 @@
 						$('#header_sortir').show();
 						$("#detail_placeholder").show();
 					}else{
+						$('#header_sortir').show();
 						$("#detail_placeholder").hide();
 					}
 				},
@@ -336,7 +337,7 @@
 						$("#temp_sm_id").val(celValue);
 						grid_detail.jqGrid('setCaption', strCaption);
 						$("#grid-table-detail").trigger("reloadGrid");
-						$("#detail_placeholder").show();
+						//$("#detail_placeholder").show();
 						// get quantity
 						get_availableqty();
 						
