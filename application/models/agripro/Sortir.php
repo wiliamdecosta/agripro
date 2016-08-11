@@ -74,7 +74,7 @@ class Sortir extends Abstract_model {
 				FROM (
 						SELECT * 
 							FROM product 
-								WHERE parent_id = (	select parent_id 
+								WHERE parent_id = (	select  coalesce(parent_id,product_id) 
 														from product 
 															where product_id = (select product_id 
 																					from stock_material 
