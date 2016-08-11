@@ -140,6 +140,7 @@
 			
 		}else{
 			$('#header_sortir').show();
+            $("#detail_placeholder").hide();
 		}
 		
 		
@@ -275,7 +276,7 @@
                     }
                 },
 			{
-				label: 'Production Date', name: 'sm_tgl_produksi', width: 120, editable: true,
+				label: 'Production Date', name: 'sm_tgl_produksi', width: 120, editable: true, hidden: true,
 				edittype: "text",
 				editrules: {required: true},
 				editoptions: {
@@ -305,7 +306,9 @@
             shrinkToFit: true,
             multiboxonly: true,
             onSelectRow: function (rowid) {
+                $("#detail_placeholder").hide();
                 show_detail_grid(rowid);
+
             },
             sortorder: '',
             pager: '#grid-pager',
