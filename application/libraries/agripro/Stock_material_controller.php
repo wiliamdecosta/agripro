@@ -14,9 +14,9 @@ class Stock_material_controller {
         $sord = getVarClean('sord','str','desc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
-		
+
 		$is_sortir = getVarClean('is_sortir','str',0);
-        
+
 		try {
 
             $ci = & get_instance();
@@ -295,6 +295,39 @@ class Stock_material_controller {
         return $data;
     }
 
+
+    function summary_stock() {
+
+        $ci = & get_instance();
+        $ci->load->model('agripro/stock_material');
+        $table = $ci->stock_material;
+
+        $sql = "select prod.product_code, prod.product_name, wh.wh_code, sum(sm.sm_qty_kotor) as qty
+                from stock_material as sm
+                left join product as prod on sm.product_id = prod.product_id
+                left join warehouse as wh on sm.wh_id = wh.wh_id
+                group by prod.product_code, prod.product_name, wh.wh_code
+                order by prod.product_code";
+
+        $query = $table->db->query($sql);
+        $items = $query->result_array();
+
+        $no = 1;
+        $output = "";
+        foreach($items as $item) {
+            $output.= '
+                <tr>
+                    <td>'.$no++.'</td>
+                    <td>'.$item['product_code'].'</td>
+                    <td>'.$item['product_name'].'</td>
+                    <td>'.$item['wh_code'].'</td>
+                    <td align="right">'.$item['qty'].'</td>
+                </tr>
+            ';
+        }
+        echo $output;
+        exit;
+    }
 }
 
 /* End of file Warehouse_controller.php */
