@@ -81,8 +81,8 @@
                 {label: 'Product Code', name: 'product_code', width: 120, align: "left", editable: false, hidden:true},
 
                 {label: 'Product Name', name: 'product_name', width: 150, align: "left", editable: false},
-                {label: 'Batch Number', name: 'packing_batch_number', width: 200, align: "left", editable: false},
-                {label: 'Serial', name: 'packing_serial', width: 80, align: "left", editable: false},
+                {label: 'Serial', name: 'packing_batch_number', width: 200, align: "left", editable: false},
+                {label: 'Batch Number', name: 'packing_serial', width: 80, align: "left", editable: false},
                 {label: 'Weight(Kg)', name: 'packing_kg', width: 80, align: "right", editable: false},
                 {label: 'Packing Date', name: 'packing_tgl', width: 120, align: "center", editable: false},
                 {label: 'Print Label',name: '',width: 120, align: "center",editable: false,
