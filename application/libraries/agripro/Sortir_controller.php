@@ -356,6 +356,7 @@ class Sortir_controller
         $out['avaqty'] = $qty[0];
         $out['srqty'] = $qty[1];
         $out['qty_bersih'] = $qty[2];
+        $out['tgl_prod'] = $qty[3];
 
         echo json_encode($out);
         exit;
@@ -379,6 +380,29 @@ class Sortir_controller
         exit;
     }
 
+	function upd_tgl_prod(){
+		
+        $ci = & get_instance();
+        $ci->load->model('agripro/sortir');
+        $table = $ci->sortir;
+		
+        $sm_id = getVarClean('sm_id','str','');
+        $tgl_prod = getVarClean('tgl_prod','str','');
+		
+        try{
+            $table->upd_tgl_prod($sm_id, $tgl_prod);
+            $data['success'] = true;
+            $data['message'] = 'Succesfully ';
+			}catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+		
+        echo json_encode($data);
+        exit;
+		
+		
+    }
+	
 }
 
 /* End of file Warehouse_controller.php */

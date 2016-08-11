@@ -10,7 +10,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Raw Material Purchesing</span>
+            <span>Sorting Raw Material</span>
         </li>
     </ul>
 </div>
@@ -23,33 +23,48 @@
     </div>
 </div>
 <div class="space-4"></div>
-
+<div class="m-heading-1 border-green m-bordered" id="header_sortir">
+<div class="row">
+	
+	<div class="col-md-4">
+		<div class="input-group">
+			<div class="input-icon">
+				<i class="fa fa-calendar-plus-o fa-fw"></i>
+			<input id="tgl_produksi" class="form-control" type="text" name="tgl_produksi" placeholder="Production Date" readonly /> </div>
+			<span class="input-group-btn">
+				<button class="btn btn-success" type="button" id="save_tgl_prod">
+				<i class="fa fa-save fa-fw" /></i> Save</button>
+		</span>
+	</div>
+</div>
+	<div class="col-md-8">
+			<div class="caption">
+				<i class="glyphicon glyphicon-circle-arrow-right font-green"></i>
+				<span class="caption-subject font-green bold uppercase" id="info_qty">Sorting Qty 0 (Kg)</span>
+			</div>
+			<div class="caption">
+				<i class="glyphicon glyphicon-circle-arrow-right font-blue"></i>
+				<span class="caption-subject font-blue bold uppercase" id="net_qty">Stock Material Quantity : 0 (Kg)</span>
+			</div>
+			<div class="caption">
+				<i class="glyphicon glyphicon-circle-arrow-right font-red"></i>
+				<span class="caption-subject font-red bold uppercase" id="info_avaqty">Available Quantity : 0 (Kg)</span>
+			</div>
+	</div>
+	
+</div>
+</div>
 <input type="hidden" id="temp_sm_id">
 <input type="hidden" id="temp_qty_available">
 <input type="hidden" id="temp_product_id">
+<input type="hidden" id="temp_rowid">
 <div class="row" id="detail_placeholder" style="display:none;">
     <div class="col-xs-12">
         <table id="grid-table-detail"></table>
         <div id="grid-pager-detail"></div>
     </div>
 </div>
-<div class="space-4"></div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="caption">
-			<i class="glyphicon glyphicon-circle-arrow-right font-green"></i>
-			<span class="caption-subject font-green bold uppercase" id="info_qty">Sorting Qty 0 (Kg)</span>
-		</div>
-		<div class="caption">
-			<i class="glyphicon glyphicon-circle-arrow-right font-blue"></i>
-			<span class="caption-subject font-blue bold uppercase" id="net_qty">Stock Material Quantity : 0 (Kg)</span>
-		</div>
-		<div class="caption">
-			<i class="glyphicon glyphicon-circle-arrow-right font-red"></i>
-			<span class="caption-subject font-red bold uppercase" id="info_avaqty">Available Quantity : 0 (Kg)</span>
-		</div>
-    </div>
-</div>
+
 
 <?php $this->load->view('lov/lov_farmer.php'); ?>
 <?php $this->load->view('lov/lov_raw_material.php'); ?>
@@ -91,27 +106,68 @@
         $('#form_plt_id').val('');
         $('#form_plt_code').val('');
     }
-
+	
+	function show_detail_grid(rowid){
+		
+		get_availableqty();
+		
+		$("#temp_rowid").val(rowid);
+		
+		
+		var celValue = $('#grid-table').jqGrid('getCell', rowid, 'sm_id');
+		var celCode = $('#grid-table').jqGrid('getCell', rowid, 'sm_no_trans');
+		var prod_date_1 = $('#grid-table').jqGrid('getCell', rowid, 'sm_tgl_produksi');
+		$("#temp_sm_id").val(celValue);
+		if(prod_date_1.length > 0 || $("#tgl_produksi").val().length>0){
+				
+			$('#header_sortir').show();
+			var grid_detail = jQuery("#grid-table-detail");
+			if (rowid != null) {
+				grid_detail.jqGrid('setGridParam', {
+					url: '<?php echo WS_JQGRID . "agripro.sortir_controller/crud"; ?>',
+					postData: {sm_id: celValue}
+				});
+				var strCaption = 'Detail :: ' + celCode;
+				$("#temp_sm_id").val(celValue);
+				grid_detail.jqGrid('setCaption', strCaption);
+				$("#grid-table-detail").trigger("reloadGrid");
+				$("#detail_placeholder").show();
+				// get quantity
+				get_availableqty();
+				
+				responsive_jqgrid('#grid-table-detail', '#grid-pager-detail');
+			}
+			
+		}else{
+			$('#header_sortir').show();
+		}
+		
+		
+			
+	}
+	
     function get_availableqty() {
-        $('#temp_qty_available').val('');
-        sm_id = $('#temp_sm_id').val();
-        $.ajax({
-            url: "<?php echo WS_JQGRID . 'agripro.sortir_controller/get_availableqty'; ?>",
-            type: "POST",
-            dataType: 'json',
-            data: {sm_id: sm_id},
-            success: function (data) {
-
-                $('#temp_qty_available').val(data.avaqty);
-                $('#info_avaqty').html('Available Quantity : '+data.avaqty +' (Kg)');
-                $('#info_qty').html('Sorting Quantity : ' + data.srqty +' (Kg)');
-                $('#net_qty').html('Stock Material Quantity : ' + data.qty_bersih +' (Kg)');
-            },
-            error: function (xhr, status, error) {
-                swal({title: "Error!", text: xhr.responseText, html: true, type: "error"});
-                return false;
-            }
-        });
+		
+			$('#temp_qty_available').val(0);
+			sm_id = $('#temp_sm_id').val();
+			$.ajax({
+				url: "<?php echo WS_JQGRID . 'agripro.sortir_controller/get_availableqty'; ?>",
+				type: "POST",
+				dataType: 'json',
+				data: {sm_id: sm_id},
+				success: function (data) {
+					$('#tgl_produksi').val(data.tgl_prod);
+					$('#temp_qty_available').val(data.avaqty);
+					$('#info_avaqty').html('Available Quantity : '+data.avaqty +' (Kg)');
+					$('#info_qty').html('Sorting Quantity : ' + data.srqty +' (Kg)');
+					$('#net_qty').html('Stock Material Quantity : ' + data.qty_bersih +' (Kg)');
+				},
+				error: function (xhr, status, error) {
+					swal({title: "Error!", text: xhr.responseText, html: true, type: "error"});
+					return false;
+				}
+			});
+		
     }
     function validation_qty(value) {
         ava_qty = $('#temp_qty_available').val();
@@ -125,6 +181,47 @@
     function get_sm_id() {
         return $('#temp_sm_id').val();
     }
+	$(document).ready(function(){
+		
+		$('#header_sortir').hide();
+		
+		$('#tgl_produksi').datepicker({
+			autoclose: true,
+			format: 'yyyy-mm-dd',
+			orientation: 'down',
+			todayHighlight: true
+		});
+		
+		$('#save_tgl_prod').click(function(){
+			
+			sm_id = $('#temp_sm_id').val();
+			tgl_produksi = $('#tgl_produksi').val();
+			
+			if(tgl_produksi.length > 0 ){
+				$.ajax({
+					url: "<?php echo WS_JQGRID . 'agripro.sortir_controller/upd_tgl_prod'; ?>",
+					type: "POST",
+					dataType: 'json',
+					data: {sm_id: sm_id, tgl_prod:tgl_produksi},
+					success: function (data) {
+						swal({title: "Success!", text: 'Production Date Succesfully added ', html: true, type: "success"});
+						$('#tgl_produksi').val(tgl_produksi);
+						show_detail_grid($('#temp_rowid').val());
+					},
+					error: function (xhr, status, error) {
+						swal({title: "Error!", text: xhr.responseText, html: true, type: "error"});
+						return false;
+					}
+				});
+			}else{
+				swal({title: "Warning!", text: 'Please Choose Production Date', html: true, type: "warning"});
+			}
+				
+			
+				
+		});
+			
+	})
 
     jQuery(function ($) {
         var grid_selector = "#grid-table";
@@ -176,7 +273,25 @@
                         },
                         size: 25
                     }
-                }
+                },
+			{
+				label: 'Production Date', name: 'sm_tgl_produksi', width: 120, editable: true,
+				edittype: "text",
+				editrules: {required: true},
+				editoptions: {
+					// dataInit is the client-side event that fires upon initializing the toolbar search field for a column
+					// use it to place a third party control to customize the toolbar
+					dataInit: function (element) {
+						$(element).datepicker({
+							autoclose: true,
+							format: 'yyyy-mm-dd',
+							orientation: 'up',
+							todayHighlight: true
+						});
+					},
+					size: 25
+				}
+			}
             ],
             height: '100%',
             width: '100%',
@@ -190,25 +305,7 @@
             shrinkToFit: true,
             multiboxonly: true,
             onSelectRow: function (rowid) {
-                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'sm_id');
-                var celCode = $('#grid-table').jqGrid('getCell', rowid, 'sm_no_trans');
-
-                var grid_detail = jQuery("#grid-table-detail");
-                if (rowid != null) {
-                    grid_detail.jqGrid('setGridParam', {
-                        url: '<?php echo WS_JQGRID . "agripro.sortir_controller/crud"; ?>',
-                        postData: {sm_id: celValue}
-                    });
-                    var strCaption = 'Detail :: ' + celCode;
-                    $("#temp_sm_id").val(celValue);
-                    grid_detail.jqGrid('setCaption', strCaption);
-                    $("#grid-table-detail").trigger("reloadGrid");
-                    $("#detail_placeholder").show();
-                    // get quantity
-                    get_availableqty();
-
-                    responsive_jqgrid('#grid-table-detail', '#grid-pager-detail');
-                }
+                show_detail_grid(rowid);
             },
             sortorder: '',
             pager: '#grid-pager',
@@ -221,10 +318,15 @@
                 if (response.success == false) {
                     swal({title: 'Attention', text: response.message, html: true, type: "warning"});
                 }
+				// reset 
+				$('#temp_qty_available').val(0);
+				$('#info_avaqty').html('Available Quantity : 0 (Kg)');
+				$('#info_qty').html('Sorting Quantity : 0 (Kg)');
+				$('#net_qty').html('Stock Material Quantity : 0 (Kg)');
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID . "agripro.stock_material_controller/crud"; ?>',
-            caption: "Raw Material Purchesing"
+            caption: "Sorting Raw Material"
 
         });
 

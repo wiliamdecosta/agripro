@@ -55,13 +55,14 @@ class Sortir extends Abstract_model {
 		
 		$sql = "SELECT (select sm_qty_bersih from stock_material where sm_id = $sm_id ) - 
 						COALESCE (sum(sortir_qty),0) as avaqty, COALESCE (sum(sortir_qty),0) as srtqty , 
-						(select sm_qty_bersih from stock_material where sm_id = $sm_id ) qty_bersih
+						COALESCE((select sm_qty_bersih from stock_material where sm_id = $sm_id ),0) qty_bersih,
+						(select sm_tgl_produksi from stock_material where sm_id = $sm_id ) tgl_prod
 						from sortir where sm_id = $sm_id ";
         $query = $this->db->query($sql);
         $row = $query->row_array();
         $query->free_result();
 		
-        return floatval($row['avaqty']) .'|'. floatval($row['srtqty']).'|'. floatval($row['qty_bersih']);
+        return floatval($row['avaqty']) .'|'. floatval($row['srtqty']).'|'. floatval($row['qty_bersih']).'|'. $row['tgl_prod'];
 			
 	}
 	
@@ -73,9 +74,12 @@ class Sortir extends Abstract_model {
 				FROM (
 						SELECT * 
 							FROM product 
-								WHERE parent_id = (select product_id 
-														from stock_material 
-															where sm_id = $sm_id) 
+								WHERE parent_id = (	select parent_id 
+														from product 
+															where product_id = (select product_id 
+																					from stock_material 
+																					where sm_id = $sm_id) 
+															)
 						UNION ALL
 						SELECT * 
 							FROM product 
@@ -89,6 +93,17 @@ class Sortir extends Abstract_model {
         return $q->result_array();
 		
     }
+	
+	function upd_tgl_prod($sm_id,$tgl_prod){
+		
+        $sql = " UPDATE stock_material 
+					set sm_tgl_produksi = to_date('".$tgl_prod."','yyyy-mm-dd')
+					where sm_id = $sm_id 
+		";
+        $q = $this->db->query($sql);
+		
+    }
+	
 }
 
 /* End of file Groups.php */
