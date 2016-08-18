@@ -308,6 +308,7 @@ class Packing_controller {
 
         $sortir_ids = (array)$ci->input->post('sortir_id');
         $weights = (array)$ci->input->post('weight');
+        $product_ids = (array)$ci->input->post('product_ids');
 
         try{
 
@@ -339,6 +340,8 @@ class Packing_controller {
                 $tableDetail = $ci->packing_detail;
                 $tableDetail->actionType = 'CREATE';
 
+                $total_source_kg = 0;
+
                 for($i = 0; $i < count($sortir_ids); $i++) {
                     $record_detail[] = array(
                         'packing_id' => $table->record[$table->pkey],
@@ -346,10 +349,22 @@ class Packing_controller {
                         'pd_kg' => $weights[$i]
                     );
 
+                    //jika product_id master !== product_id detail maka throw exception
+                    if($product_id != $product_ids[$i]) {
+                        throw new Exception('Item of source package has different product');
+                    }
+
+                    $total_source_kg += $weights[$i];
                     //cek data
                     //if ok
                     //tampung dulu ke suatu array
                 }
+
+                //cek data apakah total_source_kg == packing_kg
+                if($packing_kg != $total_source_kg) {
+                    throw new Exception('Total weight of sources ('.$total_source_kg.' Kg) does not match with packing weight ('.$packing_kg.' Kg)');
+                }
+
 
                 $table->create();
                 foreach($record_detail as $item_detail) {

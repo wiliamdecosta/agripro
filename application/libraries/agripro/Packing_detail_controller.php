@@ -88,14 +88,23 @@ class Packing_detail_controller {
             $output = '';
             $no = 1;
             foreach($items as $item) {
-                $output .= '
+                /*$output .= '
                     <tr>
                         <td>'.$no++.'</td>
-                        <td><input type="hidden" name="pd_id[]" value="'.$item['pd_id'].'"> <input type="hidden" name="sortir_id[]" value="'.$item['sortir_id'].'">'.$item['product_code'].'</td>
+                        <td><input type="hidden" name="pd_id[]" value="'.$item['pd_id'].'"> <input type="hidden" name="sortir_id[]" value="'.$item['sortir_id'].'"><input type="hidden" name="product_ids[]" value="'.$item['product_id'].'">'.$item['product_code'].'</td>
                         <td><input type="hidden" name="weight[]" value="'.$item['pd_kg'].'">'.$item['pd_kg'].'</td>
                         <td><button type="button" onclick="deleteDataRow(this,'.$item['pd_id'].');"><i class="fa fa-trash"></i> Delete </button></td>
                     </tr>
+                ';*/
+                $output .= '
+                    <tr>
+                        <td>'.$no++.'</td>
+                        <td><input type="hidden" name="pd_id[]" value="'.$item['pd_id'].'"> <input type="hidden" name="sortir_id[]" value="'.$item['sortir_id'].'"><input type="hidden" name="product_ids[]" value="'.$item['product_id'].'">'.$item['product_code'].'</td>
+                        <td><input type="hidden" name="weight[]" value="'.$item['pd_kg'].'">'.$item['pd_kg'].'</td>
+                        <td>'.$item['fm_name'].'</td>
+                    </tr>
                 ';
+
             }
 
         }catch (Exception $e) {

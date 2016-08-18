@@ -23,11 +23,13 @@ class Packing_detail extends Abstract_model {
 
                             );
 
-    public $selectClause    = "pd.*, product.product_code";
+    public $selectClause    = "pd.*, product.product_id, product.product_code, farmer.fm_code, farmer.fm_name";
 
     public $fromClause      = "packing_detail as pd
                                 left join sortir on pd.sortir_id = sortir.sortir_id
-                                left join product on sortir.product_id = product.product_id";
+                                left join product on sortir.product_id = product.product_id
+                                left join stock_material on sortir.sm_id = stock_material.sm_id
+                                left join farmer on stock_material.fm_id = farmer.fm_id";
 
     public $refs            = array();
 

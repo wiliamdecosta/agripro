@@ -10,7 +10,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Edit Packing Form</span>
+            <span>View Packing Form</span>
         </li>
     </ul>
 </div>
@@ -20,7 +20,7 @@
     <div class="col-md-12">
         <div class="portlet box green">
             <div class="portlet-title">
-                <div class="caption">Form Packing</div>
+                <div class="caption">View Packing Form</div>
             </div>
 
             <div class="portlet-body form">
@@ -35,12 +35,12 @@
                             <div class="col-md-3">
                                 <div class="input-group">
                                     <input type="hidden" name="product_id" id="packing_product_id" value="<?php echo $this->input->post('product_id'); ?>" class="form-control">
-                                    <input type="text" name="product_code" id="packing_product_code" value="<?php echo $this->input->post('product_code'); ?>" readonly="" class="form-control required" placeholder="Choose Product">
-                                    <span class="input-group-btn">
+                                    <input type="text" name="product_code" readonly="" id="packing_product_code" value="<?php echo $this->input->post('product_code'); ?>" readonly="" class="form-control" placeholder="Choose Product">
+                                    <!-- <span class="input-group-btn">
                                         <button class="btn btn-success" type="button" onclick="showLovProduct('packing_product_id','packing_product_code')">
                                             <span class="fa fa-search icon-on-right bigger-110"></span>
                                         </button>
-                                    </span>
+                                    </span> -->
                                 </div>
                             </div>
                         </div>
@@ -78,18 +78,21 @@
                                 <h3>Source Package</h3>
 
                                 <div class="form-group">
+                                    <!--
                                     <label class="col-md-3 control-label">Source Material</label>
                                     <div class="col-md-3">
                                         <div class="input-group">
                                             <input type="hidden" name="source_sortir_id" id="source_sortir_id" class="form-control">
+                                            <input type="hidden" name="source_product_id" id="source_product_id" class="form-control">
                                             <input type="text" name="source_product_code" id="source_product_code" readonly="" class="form-control" placeholder="Choose Source">
                                             <span class="input-group-btn">
-                                                <button class="btn btn-success" type="button" onclick="showLovSortir('source_sortir_id','source_product_code','product_weight_compare')">
+                                                <button class="btn btn-success" type="button" onclick="showLovSortir('source_sortir_id','source_product_code','product_weight_compare','source_product_id')">
                                                     <span class="fa fa-search icon-on-right bigger-110"></span>
                                                 </button>
                                             </span>
                                         </div>
                                     </div>
+
 
                                     <div class="col-md-3">
                                         <input type="text" id="source_product_weight" name="source_product_weight" class="form-control" placeholder="Weight(Kg)">
@@ -98,6 +101,7 @@
                                     <div class="col-md-1">
                                         <button class="btn btn-primary" type="button" id="btn-add-source"> Add Source </button>
                                     </div>
+                                    -->
                                 </div>
 
                                 <table class="table table-bordered table-striped" id="tbl-packing-detail">
@@ -106,7 +110,7 @@
                                             <th>#</th>
                                             <th>Source Material</th>
                                             <th>Weight(Kg)</th>
-                                            <th>Action</th>
+                                            <th>Farmer</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbody-packing-detail">
@@ -122,8 +126,7 @@
                     <div class="form-actions">
                         <div class="row">
                             <div class="col-md-offset-3 col-md-9">
-                                <input type="submit" name="submit" value="Save Data" class="btn btn-success">
-                                <input type="button" name="back" id="btn-back" value="Back" class="btn btn-danger">
+                                <button type="button" name="back" id="btn-back" class="btn btn-danger"><i class="fa fa-arrow-left"></i>Back</button>
                             </div>
                         </div>
                     </div>
@@ -142,12 +145,12 @@
         modal_lov_product_show(id,code);
     }
 
-    function showLovSortir(id, code, qty_field) {
+    function showLovSortir(id, code, qty_field, source_product_id) {
         if( $('#packing_product_id').val() == "") {
             swal("Information","Choose product first","info");
             return;
         }
-        modal_lov_sortir_show(id, code, qty_field, $('#packing_product_id').val());
+        modal_lov_sortir_show(id, code, qty_field, $('#packing_product_id').val(), source_product_id);
     }
 </script>
 
@@ -158,6 +161,7 @@
         var jumlah_baris = document.getElementById('tbl-packing-detail').rows.length;
 
         var sortir_id = document.getElementById('source_sortir_id').value;
+        var product_id = document.getElementById('source_product_id').value;
         var product_code = document.getElementById('source_product_code').value;
         var weight = document.getElementById('source_product_weight').value;
 
@@ -168,11 +172,12 @@
         var tdAction = tr.insertCell(3);
 
         tdNo.innerHTML = jumlah_baris;
-        tdProduct.innerHTML = '<input type="hidden" name="pd_id[]"> <input type="hidden" name="sortir_id[]" value="'+ sortir_id +'">' + product_code;
+        tdProduct.innerHTML = '<input type="hidden" name="pd_id[]"> <input type="hidden" name="sortir_id[]" value="'+ sortir_id +'"> <input type="hidden" name="product_ids[]" value="'+ product_id +'">' + product_code;
         tdWeight.innerHTML = '<input type="hidden" name="weight[]" value="'+ weight +'">' + weight;
         tdAction.innerHTML = '<button type="button" onclick="deleteDataRow(this,null);"><i class="fa fa-trash"></i> Delete </button>';
 
         document.getElementById('source_sortir_id').value = "";
+        document.getElementById('source_product_id').value = "";
         document.getElementById('source_product_code').value = "";
         document.getElementById('source_product_weight').value = "";
         document.getElementById('product_weight_compare').value = "";
@@ -265,6 +270,18 @@
             if( packing_weight_float > packing_kg_float ) {
                 swal('Information','Weight greater than packing capacity weight','info');
                 return;
+            }
+
+            var source_sortir_ids = $('[name="sortir_id[]"]');
+            if(source_sortir_ids.length > 0) {
+                var error = false;
+                $('[name="sortir_id[]"]').each(function(index) {
+                    if(sortir_id == $(this).val()) {
+                        swal('Information','Oops, we found double source package. choose another source','info');
+                        error = true;
+                    }
+                });
+                if(error) return;
             }
 
             insertDataRow();

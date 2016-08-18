@@ -19,8 +19,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <button class="btn btn-success" id="add-packing"> Add Packing </button>
-        <button class="btn btn-primary" id="edit-packing"> Edit Packing </button>
+        <button class="btn blue-madison" id="add-packing"><i class="fa fa-dropbox bigger-120"></i> Add Packing</button>
     </div>
 </div>
 <div class="space-4"></div>
@@ -39,31 +38,26 @@
 </div>
 
 <script>
+    function viewPacking(rowId) {
+
+        var rowData = jQuery("#grid-table").getRowData(rowId);
+        loadContentWithParams('agripro.packing_edit_form', {
+            packing_id : rowData.packing_id,
+            product_id : rowData.product_id,
+            product_code : rowData.product_code,
+            packing_batch_number : rowData.packing_batch_number,
+            packing_serial : rowData.packing_serial,
+            packing_tgl : rowData.packing_tgl,
+            packing_kg : rowData.packing_kg
+        });
+    }
+</script>
+
+<script>
 
     jQuery(function($) {
         $('#add-packing').on('click',function(e) {
             loadContentWithParams('agripro.packing_add_form',{});
-        });
-
-        $('#edit-packing').on('click', function(e) {
-
-            var rowId = $('#grid-table').jqGrid('getGridParam','selrow');
-            if(rowId == null) {
-                swal('Informasi','Please select a row','info');
-                return;
-            }
-
-            var rowData = jQuery("#grid-table").getRowData(rowId);
-            loadContentWithParams('agripro.packing_edit_form', {
-                packing_id : rowData.packing_id,
-                product_id : rowData.product_id,
-                product_code : rowData.product_code,
-                packing_batch_number : rowData.packing_batch_number,
-                packing_serial : rowData.packing_serial,
-                packing_tgl : rowData.packing_tgl,
-                packing_kg : rowData.packing_kg
-            });
-
         });
     });
 
@@ -82,14 +76,19 @@
 
                 {label: 'Product Name', name: 'product_name', width: 150, align: "left", editable: false},
                 {label: 'Serial', name: 'packing_batch_number', width: 200, align: "left", editable: false},
-                {label: 'Batch Number', name: 'packing_serial', width: 80, align: "left", editable: false},
+                {label: 'Batch Number', name: 'packing_serial', width: 100, align: "left", editable: false},
                 {label: 'Weight(Kg)', name: 'packing_kg', width: 80, align: "right", editable: false},
                 {label: 'Packing Date', name: 'packing_tgl', width: 120, align: "center", editable: false},
+                {label: 'View Packing',name: '',width: 120, align: "center",editable: false,
+                    formatter:function(cellvalue, options, rowObject) {
+                        return '<a class="btn green-meadow btn-xs" href="#" onclick="viewPacking('+rowObject['packing_id']+')"><i class="fa fa-search-plus"></i>View</a>';
+                    }
+                },
                 {label: 'Print Label',name: '',width: 120, align: "center",editable: false,
                     formatter:function(cellvalue, options, rowObject) {
                         var val = rowObject['packing_id'];
                         var url = "<?php echo base_url().'label/packing_label?id='?>"+val;
-                        return '<a class="btn btn-primary btn-xs" href="#" onclick="PopupCenter(\''+url+'\',\'Label Packing\',500,500);">Label</a>';
+                        return '<a class="btn btn-danger btn-xs" href="#" onclick="PopupCenter(\''+url+'\',\'Label Packing\',500,500);"><i class="fa fa-print"></i>Label</a>';
 
                     }
                 },
@@ -115,7 +114,7 @@
                         url: '<?php echo WS_JQGRID."agripro.packing_detail_controller/crud"; ?>',
                         postData: {packing_id: rowid}
                     });
-                    var strCaption = 'Detail :: ' + celCode;
+                    var strCaption = 'Contains :: ' + celCode;
                     grid_detail.jqGrid('setCaption', strCaption);
                     $("#grid-table-detail").trigger("reloadGrid");
                     $("#detail_placeholder").show();

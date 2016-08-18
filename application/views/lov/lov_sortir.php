@@ -10,6 +10,7 @@
             <input type="hidden" id="modal_lov_sortir_id_val" value="" />
             <input type="hidden" id="modal_lov_product_code_val" value="" />
             <input type="hidden" id="modal_lov_sortir_qty_val" value="" />
+            <input type="hidden" id="modal_lov_sortir_product_id_val" value="" />
 
             <!-- modal body -->
             <div class="modal-body">
@@ -58,31 +59,34 @@
         });
     });
 
-    function modal_lov_sortir_show(the_id_field, the_code_field, the_qty_field, product_id) {
-        modal_lov_sortir_set_field_value(the_id_field, the_code_field, the_qty_field);
+    function modal_lov_sortir_show(the_id_field, the_code_field, the_qty_field, product_id, source_product_id) {
+        modal_lov_sortir_set_field_value(the_id_field, the_code_field, the_qty_field, source_product_id);
         $("#modal_lov_sortir").modal({backdrop: 'static'});
         modal_lov_sortir_prepare_table(product_id);
 		$("#modal_lov_sortir_grid_selection").bootgrid("reload");
     }
 
 
-    function modal_lov_sortir_set_field_value(the_id_field, the_code_field, the_qty_field) {
+    function modal_lov_sortir_set_field_value(the_id_field, the_code_field, the_qty_field, the_source_product_id_field) {
          $("#modal_lov_sortir_id_val").val(the_id_field);
          $("#modal_lov_product_code_val").val(the_code_field);
          $("#modal_lov_sortir_qty_val").val(the_qty_field);
+         $("#modal_lov_sortir_product_id_val").val(the_source_product_id_field);
     }
 
-    function modal_lov_sortir_set_value(the_id_val, the_code_val, the_qty_field) {
+    function modal_lov_sortir_set_value(the_id_val, the_code_val, the_qty_field, the_source_product_id_field) {
 
          $("#"+ $("#modal_lov_sortir_id_val").val()).val(the_id_val);
          $("#"+ $("#modal_lov_product_code_val").val()).val(the_code_val);
          $("#"+ $("#modal_lov_sortir_qty_val").val()).val(the_qty_field);
+         $("#"+ $("#modal_lov_sortir_product_id_val").val()).val(the_source_product_id_field);
 
          $("#modal_lov_sortir").modal("toggle");
 
          $("#"+ $("#modal_lov_sortir_id_val").val()).change();
          $("#"+ $("#modal_lov_product_code_val").val()).change();
          $("#"+ $("#modal_lov_sortir_qty_val").val()).change();
+         $("#"+ $("#modal_lov_sortir_product_id_val").val()).change();
 
     }
 
@@ -91,7 +95,7 @@
         $("#modal_lov_sortir_grid_selection").bootgrid({
              formatters: {
                 "opt-edit" : function(col, row) {
-                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_sortir_set_value(\''+ row.sortir_id +'\', \''+ row.product_code +'\', \''+ row.sortir_qty +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
+                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_sortir_set_value(\''+ row.sortir_id +'\', \''+ row.product_code +'\', \''+ row.sortir_qty +'\', \''+ row.product_id +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
                 }
              },
              rowCount:[5,10],
