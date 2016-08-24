@@ -198,7 +198,7 @@ class Packing extends Abstract_model {
         $loop = 0;
         foreach($details as $packing_detail) {
             $data_sortir[$loop]['sortir_id'] = $packing_detail['sortir_id'];
-            $data_sortir[$loop]['restore_store_qty'] = $packing_detail['packing_kg'];
+            $data_sortir[$loop]['restore_store_qty'] = $packing_detail['pd_kg'];
             $loop++;
 
             $tPackingDetail->remove($packing_detail['pd_id']);

@@ -226,10 +226,12 @@
                 //delete record form
                 serializeDelData: serializeJSON,
                 recreateForm: true,
+                width:400,
+                caption:'Delete data packing',
+                msg: "Once You delete selected record, it cannot be restored.<br>Are You sure to delete selected record?",
                 beforeShowForm: function (e) {
                     var form = $(e[0]);
                     style_delete_form(form);
-
                 },
                 afterShowForm: function(form) {
                     form.closest('.ui-jqdialog').center();
