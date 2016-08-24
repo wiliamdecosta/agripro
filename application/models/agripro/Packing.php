@@ -31,7 +31,7 @@ class Packing extends Abstract_model {
                                 left join product prod
                                 on pack.product_id = prod.product_id";
 
-    public $refs            = array('packing_detail' => 'packing_id');
+    public $refs            = array();
 
     function __construct() {
         parent::__construct();
@@ -150,6 +150,7 @@ class Packing extends Abstract_model {
             $record_stock['sc_id'] = $tStockCategory->getIDByCode('SORTIR_STOCK');
             $record_stock['wh_id'] = $packing_master['warehouse_id'];
             $record_stock['product_id'] = $packing_detail['product_id'];
+            $record_stock['stock_description'] = 'sortir_qty has used for packing_detail';
             $tStock->setRecord($record_stock);
             $tStock->create();
         }
@@ -160,11 +161,8 @@ class Packing extends Abstract_model {
 
         foreach($details as $packing_detail) {
 
-            $itemSortir = array();
-            $itemSortir = $tSortir->get($packing_detail['sortir_id']);
-
-            $decrease_kg = (float)($itemSortir['sortir_qty'] - $packing_detail['pd_kg']);
-            $sql = "UPDATE sortir SET sortir_qty = ".$decrease_kg."
+            $decrease_kg = (float) $packing_detail['pd_kg'];
+            $sql = "UPDATE sortir SET sortir_qty = sortir_qty - ".$decrease_kg."
                         WHERE sortir_id = ".$packing_detail['sortir_id'];
             $tSortir->db->query($sql);
         }
@@ -173,6 +171,64 @@ class Packing extends Abstract_model {
 
     public function removePacking($packing_id) {
 
+        $ci = & get_instance();
+
+        $ci->load->model('agripro/stock');
+        $tStock = $ci->stock;
+
+        $ci->load->model('agripro/packing_detail');
+        $tPackingDetail = $ci->packing_detail;
+
+        $ci->load->model('agripro/sortir');
+        $tSortir = $ci->sortir;
+
+        /**
+         * Steps to Delete Packing
+         *
+         * 1. Remove all stock_detail first
+         * 2. When loop for delete stock_detail, save data sortir in array
+         * 3. Delete data packing in stock
+         * 4. Loop data sortir for delete data sortir in stock and restore qty to sortir
+         * 5. Delete data master packing
+         */
+
+        $data_sortir = array();
+        $tPackingDetail->setCriteria('pd.packing_id = '.$packing_id);
+        $details = $tPackingDetail->getAll();
+        $loop = 0;
+        foreach($details as $packing_detail) {
+            $data_sortir[$loop]['sortir_id'] = $packing_detail['sortir_id'];
+            $data_sortir[$loop]['restore_store_qty'] = $packing_detail['packing_kg'];
+            $loop++;
+
+            $tPackingDetail->remove($packing_detail['pd_id']);
+        }
+
+        /**
+         * Delete data stock by packing_id
+         */
+        $tStock->deleteByReference($packing_id, 'PACKING');
+
+        /**
+         * loop for delete data stock by sortir_id and restore store_qty in table sortir
+         */
+        foreach($data_sortir as $sortir) {
+            //delete data stock by sortir_id
+            $tStock->deleteByReference($sortir['sortir_id'], 'SORTIR');
+
+            //restore store qty
+            $increase_kg = (float) $sortir['restore_store_qty'];
+            $sql = "UPDATE sortir SET sortir_qty = sortir_qty + ".$increase_kg."
+                        WHERE sortir_id = ".$sortir['sortir_id'];
+
+            $tSortir->db->query($sql);
+
+        }
+
+        /**
+         * Delete data master packing
+         */
+        $this->remove($packing_id);
     }
 
 }

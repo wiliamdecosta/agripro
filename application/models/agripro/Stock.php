@@ -23,6 +23,7 @@ class Stock extends Abstract_model {
                                 'stock_ref_id'       => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Ref ID'),
                                 'stock_ref_code'     => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'Ref Code'),
 
+                                'stock_description'  => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Description'),
 
                                 'created_date'      => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Created Date'),
                                 'created_by'        => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Created By'),
@@ -62,6 +63,14 @@ class Stock extends Abstract_model {
             //if false please throw new Exception
         }
         return true;
+    }
+
+    public function deleteByReference($ref_id, $ref_code) {
+
+        $sql = "delete from stock where stock_ref_id = ".$ref_id."
+                    and upper(stock_ref_code) = '".strtoupper($ref_code)."'";
+        $this->db->query($sql);
+
     }
 
 }
