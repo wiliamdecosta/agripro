@@ -41,7 +41,7 @@ class Stock_category extends Abstract_model {
         return true;
     }
 
-    function getIDByCode($code) {
+    public function getIDByCode($code) {
         if(empty($code)) return "";
 
         $code = strtoupper($code);

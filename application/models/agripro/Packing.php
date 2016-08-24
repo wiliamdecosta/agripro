@@ -97,20 +97,20 @@ class Packing extends Abstract_model {
     }
 
     function insertStock($packing_master) {
-        $ci->load->model('agripro/Stock');
+        $ci = & get_instance();
+
+        $ci->load->model('agripro/stock');
         $tStock = $ci->stock;
         $tStock->actionType = 'CREATE';
 
-        $ci->load->model('agripro/Stock_category');
+        $ci->load->model('agripro/stock_category');
         $tStockCategory = $ci->stock_category;
 
-        $ci->load->model('agripro/Packing_detail');
+        $ci->load->model('agripro/packing_detail');
         $tPackingDetail = $ci->packing_detail;
 
-        $ci->load->model('agripro/Sortir');
+        $ci->load->model('agripro/sortir');
         $tSortir = $ci->sortir;
-        $tSortir->actionType = 'UPDATE';
-
 
         /**
          * Steps :
@@ -134,7 +134,6 @@ class Packing extends Abstract_model {
         $record_stock['product_id'] = $packing_master['product_id'];
         $tStock->setRecord($record_stock);
         $tStock->create();
-
 
         /**
          * Step 2 - Insert detail to stock as SORTIR_STOCK (OUT STOCK - stock_tgl_keluar)
@@ -169,6 +168,11 @@ class Packing extends Abstract_model {
                         WHERE sortir_id = ".$packing_detail['sortir_id'];
             $tSortir->db->query($sql);
         }
+    }
+
+
+    public function removePacking($packing_id) {
+
     }
 
 }

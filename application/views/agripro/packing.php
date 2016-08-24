@@ -275,6 +275,7 @@
                 {label: 'ID', key:true, name: 'pd_id', width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'Product', name: 'product_code', width: 120, align: "left", editable: false},
                 {label: 'Weight(Kg)', name: 'pd_kg', width: 120, align: "left", editable: false},
+                {label: 'Farmer', name: 'fm_name', width: 120, align: "left", editable: false},
             ],
             height: '100%',
             width:500,
