@@ -301,11 +301,17 @@ class Packing_controller {
         $data = array('success' => false, 'message' => '');
         $table->actionType = 'CREATE';
 
+        /**
+         * Data master
+         */
         $packing_kg = getVarClean('packing_kg','float',0);
         $packing_tgl = getVarClean('packing_tgl','str','');
         $product_id = getVarClean('product_id','int',0);
         $userdata = $ci->ion_auth->user()->row();
 
+        /**
+         * Data details
+         */
         $sortir_ids = (array)$ci->input->post('sortir_id');
         $weights = (array)$ci->input->post('weight');
         $product_ids = (array)$ci->input->post('product_ids');
@@ -322,7 +328,7 @@ class Packing_controller {
                     'packing_kg' => $packing_kg,
                     'packing_tgl' => $packing_tgl,
                     'product_id' => $product_id,
-                    'warehouse_id' => $userdata->wh_id,
+                    'warehouse_id' => $userdata->wh_id, //get from session
                     'packing_batch_number' => '',
                     'packing_serial' => '',
                 );
@@ -372,6 +378,8 @@ class Packing_controller {
                     $tableDetail->create();
                 }
 
+                $table->insertStock($table->record);
+
             $table->db->trans_commit(); //Commit Trans
 
             $data['success'] = true;
@@ -390,7 +398,7 @@ class Packing_controller {
     }
 
 
-    function updateForm() {
+    /*function updateForm() {
 
         $ci = & get_instance();
         $ci->load->model('agripro/packing');
@@ -476,7 +484,7 @@ class Packing_controller {
         exit;
 
     }
-
+*/
 
 
 }

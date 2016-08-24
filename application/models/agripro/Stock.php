@@ -14,11 +14,16 @@ class Stock extends Abstract_model {
                                 'stock_id'           => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Stock'),
                                 'sc_id'              => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'ID Stock Category'),
                                 'wh_id'              => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'ID Warehouse'),
-                                'prod_id'              => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'ID Product'),
+                                'prod_id'            => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'ID Product'),
 
                                 'stock_kg'           => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'Weight KGs'),
                                 'stock_tgl_masuk'    => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'In Date'),
                                 'stock_tgl_keluar'   => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Out Date'),
+
+                                'stock_ref_id'       => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Ref ID'),
+                                'stock_ref_code'     => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'Ref Code'),
+
+
                                 'created_date'      => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Created Date'),
                                 'created_by'        => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Created By'),
                                 'updated_date'      => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Updated Date'),

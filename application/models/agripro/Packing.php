@@ -96,6 +96,80 @@ class Packing extends Abstract_model {
         );
     }
 
+    function insertStock($packing_master) {
+        $ci->load->model('agripro/Stock');
+        $tStock = $ci->stock;
+        $tStock->actionType = 'CREATE';
+
+        $ci->load->model('agripro/Stock_category');
+        $tStockCategory = $ci->stock_category;
+
+        $ci->load->model('agripro/Packing_detail');
+        $tPackingDetail = $ci->packing_detail;
+
+        $ci->load->model('agripro/Sortir');
+        $tSortir = $ci->sortir;
+        $tSortir->actionType = 'UPDATE';
+
+
+        /**
+         * Steps :
+         * 1. Insert master to Stock as PACKING_STOCK category (IN STOCK - PACKING)
+         * 2. Insert detail to Stock as SORTIR_STOCK category (OUT STOCK - SORTIR)
+         * 3. Decrease Sortir Weight by Detail packing weight
+         */
+
+
+        /**
+         * Step 1 - Insert master to stock as PACKING_STOCK (IN STOCK - stock_tgl_masuk)
+         */
+        $record_stock = array();
+        $stock_date = $packing_master['packing_tgl'];
+        $record_stock['stock_tgl_masuk'] = $stock_date; //base on packing_tgl
+        $record_stock['stock_kg'] = $packing_master['packing_kg'];
+        $record_stock['stock_ref_id'] = $packing_master['packing_id'];
+        $record_stock['stock_ref_code'] = 'PACKING';
+        $record_stock['sc_id'] = $tStockCategory->getIDByCode('PACKING_STOCK');
+        $record_stock['wh_id'] = $packing_master['warehouse_id'];
+        $record_stock['product_id'] = $packing_master['product_id'];
+        $tStock->setRecord($record_stock);
+        $tStock->create();
+
+
+        /**
+         * Step 2 - Insert detail to stock as SORTIR_STOCK (OUT STOCK - stock_tgl_keluar)
+         */
+
+        $tPackingDetail->setCriteria('pd.packing_id = '.$packing_master['packing_id']);
+        $details = $tPackingDetail->getAll();
+        foreach($details as $packing_detail) {
+            $record_stock = array();
+            $record_stock['stock_tgl_keluar'] = $stock_date; //base on packing_tgl
+            $record_stock['stock_kg'] = $packing_detail['pd_kg'];
+            $record_stock['stock_ref_id'] = $packing_detail['sortir_id']; //sortir id become reference on stock
+            $record_stock['stock_ref_code'] = 'SORTIR';
+            $record_stock['sc_id'] = $tStockCategory->getIDByCode('SORTIR_STOCK');
+            $record_stock['wh_id'] = $packing_master['warehouse_id'];
+            $record_stock['product_id'] = $packing_detail['product_id'];
+            $tStock->setRecord($record_stock);
+            $tStock->create();
+        }
+
+        /**
+         * Step 3 - Decrease sortir_qty by pd_kg
+         */
+
+        foreach($details as $packing_detail) {
+
+            $itemSortir = array();
+            $itemSortir = $tSortir->get($packing_detail['sortir_id']);
+
+            $decrease_kg = (float)($itemSortir['sortir_qty'] - $packing_detail['pd_kg']);
+            $sql = "UPDATE sortir SET sortir_qty = ".$decrease_kg."
+                        WHERE sortir_id = ".$packing_detail['sortir_id'];
+            $tSortir->db->query($sql);
+        }
+    }
 
 }
 /* End of file Groups.php */

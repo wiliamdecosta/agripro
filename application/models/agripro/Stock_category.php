@@ -41,6 +41,18 @@ class Stock_category extends Abstract_model {
         return true;
     }
 
+    function getIDByCode($code) {
+        if(empty($code)) return "";
+
+        $code = strtoupper($code);
+        $sql = "SELECT ".$this->pkey." FROM ".$this->table." WHERE upper(sc_code) = '".$code."'";
+
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+
+        return $row[$this->pkey];
+    }
+
 }
 
 /* End of file Groups.php */
