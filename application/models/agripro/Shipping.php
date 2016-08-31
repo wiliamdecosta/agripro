@@ -59,4 +59,4 @@ class Shipping extends Abstract_model {
     }
 
 }
-/* End of file Groups.php */
+/* End of file Shipping.php */

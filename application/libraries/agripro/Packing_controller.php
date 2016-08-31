@@ -71,6 +71,55 @@ class Packing_controller {
     }
 
 
+
+    function readLov() {
+
+        permission_check('view-tracking');
+
+        $start = getVarClean('current','int',0);
+        $limit = getVarClean('rowCount','int',5);
+
+        $sort = getVarClean('sort','str','packing_id');
+        $dir  = getVarClean('dir','str','asc');
+
+        $searchPhrase = getVarClean('searchPhrase', 'str', '');
+        $for_shipping = getVarClean('for_shipping','str','Y');
+
+        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/packing');
+            $table = $ci->packing;
+
+            $userdata = $ci->ion_auth->user()->row();
+            if($for_shipping == 'Y') {
+                $table->setCriteria('pack.packing_id NOT IN (select packing_id from shipping_detail)');
+            }
+
+            $table->setCriteria('pack.warehouse_id = '.$userdata->wh_id);
+
+            if(!empty($searchPhrase)) {
+                $table->setCriteria("pack.packing_batch_number ilike '%".$searchPhrase."%' or prod.product_code ilike '%".$searchPhrase."%'");
+            }
+
+            $start = ($start-1) * $limit;
+            $items = $table->getAll($start, $limit, $sort, $dir);
+            $totalcount = $table->countAll();
+
+            $data['rows'] = $items;
+            $data['success'] = true;
+            $data['total'] = $totalcount;
+
+        }catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+
+        return $data;
+    }
+
+
     function crud() {
 
         $data = array();
