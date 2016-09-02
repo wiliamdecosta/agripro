@@ -12,6 +12,7 @@ class Shipping_detail extends Abstract_model {
 
     public $fields          = array(
                                 'shipdet_id'            => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Packaging'),
+                                'shipping_id'           => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'ID Shipping'),
                                 'packing_id'            => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'ID Packing'),
 
                                 'created_date'          => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Created Date'),

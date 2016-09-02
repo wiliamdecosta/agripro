@@ -38,7 +38,7 @@
 </div>
 
 <script>
-    function viewShipping(rowId) {
+    function editShipping(rowId) {
         var rowData = jQuery("#grid-table").getRowData(rowId);
         loadContentWithParams('agripro.shipping_edit_form', {
             shipping_id : rowData.shipping_id,
@@ -69,9 +69,10 @@
                 {label: 'ID', name: 'shipping_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'Shipping Date', name: 'shipping_date', width: 120, align: "center", editable: false},
                 {label: 'Driver Name', name: 'shipping_driver_name', width: 100, align: "left", editable: false},
-                {label: 'View Shipping',name: '',width: 120, align: "center",editable: false,
+                {label: 'Notes', name: 'shipping_notes', width: 100, align: "left", editable: false, hidden:true},
+                {label: 'Edit Shipping',name: '',width: 120, align: "center",editable: false,
                     formatter:function(cellvalue, options, rowObject) {
-                        return '<a class="btn green-meadow btn-xs" href="#" onclick="viewShipping('+rowObject['shipping_id']+')"><i class="fa fa-search-plus"></i>View</a>';
+                        return '<a class="btn green-meadow btn-xs" href="#" onclick="editShipping('+rowObject['shipping_id']+')"><i class="fa fa-pencil"></i>Edit</a>';
                     }
                 }
             ],

@@ -291,6 +291,159 @@ class Shipping_controller {
         return $data;
     }
 
+
+    function createForm() {
+
+        $ci = & get_instance();
+        $ci->load->model('agripro/shipping');
+        $table = $ci->shipping;
+
+        $data = array('success' => false, 'message' => '');
+        $table->actionType = 'CREATE';
+
+        /**
+         * Data master
+         */
+        $shipping_date = getVarClean('shipping_date','str','');
+        $shipping_driver_name = getVarClean('shipping_driver_name','str','');
+        $shipping_notes = getVarClean('shipping_notes','str','');
+
+
+        /**
+         * Data details
+         */
+        $packing_ids = (array)$ci->input->post('packing_id');
+
+        try{
+
+            $table->db->trans_begin(); //Begin Trans
+
+                $items = array(
+                    'shipping_date' => $shipping_date,
+                    'shipping_driver_name' => $shipping_driver_name,
+                    'shipping_notes' => $shipping_notes
+                );
+
+                $table->setRecord($items);
+                $table->record[$table->pkey] = $table->generate_id($table->table,$table->pkey);
+
+
+                $record_detail = array();
+                $ci->load->model('agripro/shipping_detail');
+                $tableDetail = $ci->shipping_detail;
+                $tableDetail->actionType = 'CREATE';
+
+
+                for($i = 0; $i < count($packing_ids); $i++) {
+                    $record_detail[] = array(
+                        'shipping_id' => $table->record[$table->pkey],
+                        'packing_id' => $packing_ids[$i]
+                    );
+                }
+
+                $table->create();
+                foreach($record_detail as $item_detail) {
+                    $tableDetail->setRecord($item_detail);
+                    $tableDetail->create();
+                }
+
+                //$table->insertStock($table->record);
+
+            $table->db->trans_commit(); //Commit Trans
+
+            $data['success'] = true;
+            $data['message'] = 'Data added successfully';
+
+        }catch (Exception $e) {
+            $table->db->trans_rollback(); //Rollback Trans
+
+            $data['message'] = $e->getMessage();
+        }
+
+
+        echo json_encode($data);
+        exit;
+
+    }
+
+
+    function updateForm() {
+
+        $ci = & get_instance();
+        $ci->load->model('agripro/shipping');
+        $table = $ci->shipping;
+
+        $data = array('success' => false, 'message' => '');
+        $table->actionType = 'UDATE';
+
+        /**
+         * Data master
+         */
+        $shipping_id = getVarClean('shipping_id','int',0);
+        $shipping_date = getVarClean('shipping_date','str','');
+        $shipping_driver_name = getVarClean('shipping_driver_name','str','');
+        $shipping_notes = getVarClean('shipping_notes','str','');
+
+
+        /**
+         * Data details
+         */
+        $shipdet_ids = (array)$ci->input->post('shipdet_id');
+        $packing_ids = (array)$ci->input->post('packing_id');
+
+        try{
+
+            $table->db->trans_begin(); //Begin Trans
+
+                $items = array(
+                    'shipping_id' => $shipping_id,
+                    'shipping_date' => $shipping_date,
+                    'shipping_driver_name' => $shipping_driver_name,
+                    'shipping_notes' => $shipping_notes
+                );
+                $table->setRecord($items);
+
+
+                $record_detail = array();
+                $ci->load->model('agripro/shipping_detail');
+                $tableDetail = $ci->shipping_detail;
+                $tableDetail->actionType = 'CREATE';
+
+
+                for($i = 0; $i < count($packing_ids); $i++) {
+                    if($shipdet_ids[$i] == "") {
+                        $record_detail[] = array(
+                            'shipping_id' => $shipping_id,
+                            'packing_id' => $packing_ids[$i]
+                        );
+                    }
+                }
+
+                $table->update();
+                foreach($record_detail as $item_detail) {
+                    $tableDetail->setRecord($item_detail);
+                    $tableDetail->create();
+                }
+
+                //$table->insertStock($table->record);
+
+            $table->db->trans_commit(); //Commit Trans
+
+            $data['success'] = true;
+            $data['message'] = 'Data added successfully';
+
+        }catch (Exception $e) {
+            $table->db->trans_rollback(); //Rollback Trans
+
+            $data['message'] = $e->getMessage();
+        }
+
+
+        echo json_encode($data);
+        exit;
+
+    }
+
 }
 
 /* End of file Shipping_controller.php */

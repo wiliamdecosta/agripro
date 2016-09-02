@@ -24,7 +24,7 @@ class Shipping extends Abstract_model {
                             );
 
 
-    public $selectClause    = "ship.*";
+    public $selectClause    = "ship.shipping_id, to_char(ship.shipping_date,'yyyy-mm-dd') as shipping_date, ship.shipping_driver_name, ship.shipping_notes";
     public $fromClause      = "shipping as ship";
 
     public $refs            = array();

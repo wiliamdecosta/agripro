@@ -72,6 +72,41 @@ class Shipping_detail_controller {
     }
 
 
+    function getDetail() {
+
+        $shipping_id = getVarClean('shipping_id','int',0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/shipping_detail');
+            $table = $ci->shipping_detail;
+
+            $table->setCriteria('shipdet.shipping_id = '.$shipping_id);
+            $items = $table->getAll(0,-1);
+
+            $output = '';
+            $no = 1;
+            foreach($items as $item) {
+                $output .= '
+                    <tr>
+                        <td>'.$no++.'</td>
+                        <td><input type="hidden" name="shipdet_id[]" value="'.$item['shipdet_id'].'"> <input type="hidden" name="packing_id[]" value="'.$item['packing_id'].'">'.$item['packing_batch_number'].'</td>
+                        <td>'.$item['product_code'].'</td>
+                        <td><button type="button" onclick="deleteDataRow(this,'.$item['shipdet_id'].');"><i class="fa fa-trash"></i> Delete </button></td>
+                    </tr>
+                ';
+            }
+
+        }catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+        echo $output;
+        exit;
+
+    }
+
     function crud() {
 
         $data = array();

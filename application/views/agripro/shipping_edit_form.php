@@ -10,7 +10,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Add Shipping Form</span>
+            <span>Edit Shipping Form</span>
         </li>
     </ul>
 </div>
@@ -20,33 +20,35 @@
     <div class="col-md-12">
         <div class="portlet box green">
             <div class="portlet-title">
-                <div class="caption">Add Shipping Form</div>
+                <div class="caption">Edit Shipping Form</div>
             </div>
 
             <div class="portlet-body form">
                 <!-- BEGIN FORM-->
                 <form method="post" action="" class="form-horizontal" id="form-shipping">
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                    <input type="hidden" name="shipping_id" value="<?php echo $this->input->post('shipping_id'); ?>">
+
                     <div class="form-body">
 
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="shipping_date">Shipping Date</label>
                             <div class="col-md-2">
-                                <input type="text" name="shipping_date" id="shipping_date" class="form-control required">
+                                <input type="text" name="shipping_date" id="shipping_date" class="form-control required" value="<?php echo $this->input->post('shipping_date'); ?>">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="shipping_driver_name">Driver Name:</label>
                             <div class="col-md-3">
-                                <input type="text" name="shipping_driver_name" id="shipping_driver_name" class="form-control required">
+                                <input type="text" name="shipping_driver_name" id="shipping_driver_name" class="form-control required" value="<?php echo $this->input->post('shipping_driver_name'); ?>">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="shipping_notes">Notes:</label>
                             <div class="col-md-6">
-                                <textarea name="shipping_notes" id="shipping_notes" class="form-control"></textarea>
+                                <textarea name="shipping_notes" id="shipping_notes" class="form-control"><?php echo $this->input->post('shipping_notes'); ?></textarea>
                             </div>
                         </div>
 
@@ -85,7 +87,7 @@
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="tbody-shipping-detail">
 
                                     </tbody>
                                 </table>
@@ -135,22 +137,52 @@
         var tdAction = tr.insertCell(3);
 
         tdNo.innerHTML = jumlah_baris;
-        tdSerialNumber.innerHTML = '<input type="hidden" name="packing_id[]" value="'+ packing_id +'">'+ packing_batch_number;
+        tdSerialNumber.innerHTML = '<input type="hidden" name="shipdet_id[]"><input type="hidden" name="packing_id[]" value="'+ packing_id +'">'+ packing_batch_number;
         tdProduct.innerHTML = product_code;
-        tdAction.innerHTML = '<button type="button" onclick="deleteDataRow(this);"><i class="fa fa-trash"></i> Delete </button>';
+        tdAction.innerHTML = '<button type="button" onclick="deleteDataRow(this, null);"><i class="fa fa-trash"></i> Delete </button>';
 
         document.getElementById('box_packing_id').value = "";
         document.getElementById('box_packing_batch_number').value = "";
         document.getElementById('box_product_code').value = "";
     }
 
-    function deleteDataRow(sender) {
-        $(sender).parent().parent().remove();
+    function deleteDataRow(sender, shipdet_id) {
+        if(shipdet_id != null) {
+            $.ajax({
+                type: "POST",
+                url: '<?php echo WS_JQGRID."agripro.shipping_detail_controller/destroy"; ?>',
+                dataType : 'json',
+                data: {items:shipdet_id},
+                success: function(response) {
+                    if(response.success)
+                        $(sender).parent().parent().remove();
+                }
+            });
+        }else {
+            $(sender).parent().parent().remove();
+        }
     }
 
 </script>
 
 <script>
+
+    $(function() {
+
+        $.ajax({
+            url: '<?php echo WS_JQGRID."agripro.shipping_detail_controller/getDetail"; ?>',
+            type: "POST",
+            data: {shipping_id : <?php echo $this->input->post('shipping_id'); ?>},
+            success: function (response) {
+                $( "#tbody-shipping-detail" ).html( response );
+            },
+            error: function (xhr, status, error) {
+                swal({title: "Error!", text: xhr.responseText, html: true, type: "error"});
+            }
+        });
+
+    });
+
     $(function() {
         $("#shipping_date").datepicker({
             autoclose: true,
@@ -162,7 +194,6 @@
         $("#btn-back").on('click', function(e) {
             loadContentWithParams('agripro.shipping',{});
         });
-
 
         $("#btn-add-box").on('click', function(e) {
             var packing_id = $('#box_packing_id').val();
@@ -192,7 +223,7 @@
             e.preventDefault(); // avoid to execute the actual submit of the form.
 
             if($("#form-shipping").valid() == true){
-                var url = '<?php echo WS_JQGRID."agripro.shipping_controller/createForm"; ?>';
+                var url = '<?php echo WS_JQGRID."agripro.shipping_controller/updateForm"; ?>';
                 $.ajax({
                     type: "POST",
                     url: url,
