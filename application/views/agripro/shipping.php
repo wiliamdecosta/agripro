@@ -210,7 +210,7 @@
                 serializeDelData: serializeJSON,
                 recreateForm: true,
                 width:400,
-                caption:'Delete data packing',
+                caption:'Delete data shipping',
                 msg: "Once You delete selected record, it cannot be restored.<br>Are You sure to delete selected record?",
                 beforeShowForm: function (e) {
                     var form = $(e[0]);
