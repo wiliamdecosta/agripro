@@ -21,10 +21,11 @@ class Sortir extends Abstract_model {
 
                             );
 
-    public $selectClause    = "sr.sortir_id, sr.product_id, sr.sm_id, sr.sortir_tgl, sr.sortir_qty, fm.fm_code, fm.fm_name,
+    public $selectClause    = "sr.sortir_id, sr.product_id, sr.sm_id, sr.production_id, sr.sortir_tgl, sr.sortir_qty, fm.fm_code, fm.fm_name,
 								sm.sm_no_trans, sm.sm_qty_bersih, pr.product_id, pr.product_name, pr.product_code";
     public $fromClause      = "sortir sr
 								left join stock_material sm on sr.sm_id = sm.sm_id
+                                left join production on sr.production_id = production.production_id
 								left join product pr on sr.product_id = pr.product_id
 								left join farmer fm on sm.fm_id = fm.fm_id
 								";
