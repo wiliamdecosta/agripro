@@ -80,11 +80,11 @@
                                     <label class="col-md-3 control-label">Source Material</label>
                                     <div class="col-md-3">
                                         <div class="input-group">
-                                            <input type="hidden" name="source_sortir_id" id="source_sortir_id" class="form-control">
+                                            <input type="hidden" name="source_sortir_detail_id" id="source_sortir_detail_id" class="form-control">
                                             <input type="hidden" name="source_product_id" id="source_product_id" class="form-control">
                                             <input type="text" name="source_product_code" id="source_product_code" readonly="" class="form-control" placeholder="Choose Source">
                                             <span class="input-group-btn">
-                                                <button class="btn btn-success" type="button" onclick="showLovSortir('source_sortir_id','source_product_code','product_weight_compare','source_product_id')">
+                                                <button class="btn btn-success" type="button" onclick="showLovSortir('source_sortir_detail_id','source_product_code','product_weight_compare','source_product_id')">
                                                     <span class="fa fa-search icon-on-right bigger-110"></span>
                                                 </button>
                                             </span>
@@ -135,7 +135,7 @@
 </div>
 
 <?php $this->load->view('lov/lov_product_packing.php'); ?>
-<?php $this->load->view('lov/lov_sortir.php'); ?>
+<?php $this->load->view('lov/lov_sortir_detail.php'); ?>
 
 <script>
     function showLovProduct(id, code) {
@@ -147,7 +147,7 @@
             swal("Information","Choose product first","info");
             return;
         }
-        modal_lov_sortir_show(id, code, qty_field, $('#packing_product_id').val(), source_product_id);
+        modal_lov_sortir_detail_show(id, code, qty_field, $('#packing_product_id').val(), source_product_id);
     }
 </script>
 
@@ -157,7 +157,7 @@
 
         var jumlah_baris = document.getElementById('tbl-packing-detail').rows.length;
 
-        var sortir_id = document.getElementById('source_sortir_id').value;
+        var sortir_detail_id = document.getElementById('source_sortir_detail_id').value;
         var product_id = document.getElementById('source_product_id').value;
         var product_code = document.getElementById('source_product_code').value;
         var weight = document.getElementById('source_product_weight').value;
@@ -169,11 +169,11 @@
         var tdAction = tr.insertCell(3);
 
         tdNo.innerHTML = jumlah_baris;
-        tdProduct.innerHTML = '<input type="hidden" name="sortir_id[]" value="'+ sortir_id +'"><input type="hidden" name="product_ids[]" value="'+ product_id +'">' + product_code;
+        tdProduct.innerHTML = '<input type="hidden" name="sortir_detail_id[]" value="'+ sortir_detail_id +'"><input type="hidden" name="product_ids[]" value="'+ product_id +'">' + product_code;
         tdWeight.innerHTML = '<input type="hidden" name="weight[]" value="'+ weight +'">' + weight;
         tdAction.innerHTML = '<button type="button" onclick="deleteDataRow(this);"><i class="fa fa-trash"></i> Delete </button>';
 
-        document.getElementById('source_sortir_id').value = "";
+        document.getElementById('source_sortir_detail_id').value = "";
         document.getElementById('source_product_id').value = "";
         document.getElementById('source_product_code').value = "";
         document.getElementById('source_product_weight').value = "";
@@ -210,11 +210,11 @@
                 return;
             }
 
-            var sortir_id = $('#source_sortir_id').val();
+            var sortir_detail_id = $('#source_sortir_detail_id').val();
             var packing_weight = $('#source_product_weight').val();
             var packing_weight_compact = $('#product_weight_compare').val();
 
-            if(sortir_id == "" || packing_weight == "") {
+            if(sortir_detail_id == "" || packing_weight == "") {
                 swal('Information','Source Material and Weight must be filled','info');
                 return;
             }
@@ -233,11 +233,11 @@
                 return;
             }
 
-            var source_sortir_ids = $('[name="sortir_id[]"]');
-            if(source_sortir_ids.length > 0) {
+            var source_sortir_detail_ids = $('[name="sortir_detail_id[]"]');
+            if(source_sortir_detail_ids.length > 0) {
                 var error = false;
-                $('[name="sortir_id[]"]').each(function(index) {
-                    if(sortir_id == $(this).val()) {
+                $('[name="sortir_detail_id[]"]').each(function(index) {
+                    if(sortir_detail_id == $(this).val()) {
                         swal('Information','Oops, we found double source package. choose another source','info');
                         error = true;
                     }

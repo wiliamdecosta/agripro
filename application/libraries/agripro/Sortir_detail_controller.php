@@ -1,26 +1,32 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
-* Json library
-* @class Packing_detail_controller
-* @version 07/05/2015 12:18:00
-*/
-class Packing_detail_controller {
+ * Json library
+ * @class sortir_controller
+ * @version 07/05/2015 12:18:00
+ */
+class Sortir_detail_controller
+{
 
-    function read() {
 
-        $page = getVarClean('page','int',1);
-        $limit = getVarClean('rows','int',5);
-        $sidx = getVarClean('sidx','str','pd_id');
-        $sord = getVarClean('sord','str','desc');
+    function read()
+    {
+
+        $page = getVarClean('page', 'int', 1);
+        $limit = getVarClean('rows', 'int', 5);
+        $sidx = getVarClean('sidx', 'str', 'sortir_detail_id');
+        $sord = getVarClean('sord', 'str', 'desc');
+
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
-        $packing_id = getVarClean('packing_id','int',0);
+
+        $sortir_id = getVarClean('sortir_id', 'int', 0);
 
         try {
 
-            $ci = & get_instance();
-            $ci->load->model('agripro/packing_detail');
-            $table = $ci->packing_detail;
+            $ci = &get_instance();
+            $ci->load->model('agripro/sortir_detail');
+            $table = $ci->sortir_detail;
 
             $req_param = array(
                 "sort_by" => $sidx,
@@ -37,7 +43,7 @@ class Packing_detail_controller {
             );
 
             // Filter Table
-            $req_param['where'] = array('pd.packing_id = '.$packing_id);
+            $req_param['where'] = array("sort_det.sortir_id = $sortir_id ");
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
@@ -64,7 +70,7 @@ class Packing_detail_controller {
             $data['rows'] = $table->getAll();
             $data['success'] = true;
 
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $data['message'] = $e->getMessage();
         }
 
@@ -72,52 +78,51 @@ class Packing_detail_controller {
     }
 
 
-    function getDetail() {
+    function readLov()
+    {
+        permission_check('view-tracking');
 
-        $packing_id = getVarClean('packing_id','int',0);
+        $start = getVarClean('current', 'int', 0);
+        $limit = getVarClean('rowCount', 'int', 5);
+
+        $sort = getVarClean('sort', 'str', 'product_name');
+        $dir = getVarClean('dir', 'str', 'asc');
+
+        $searchPhrase = getVarClean('searchPhrase', 'str', '');
+        $product_id = getVarClean('product_id', 'int', 0);
+
+        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
 
         try {
 
-            $ci = & get_instance();
-            $ci->load->model('agripro/packing_detail');
-            $table = $ci->packing_detail;
+            $ci = &get_instance();
+            $ci->load->model('agripro/sortir_detail');
+            $table = $ci->sortir_detail;
 
-            $table->setCriteria('pd.packing_id = '.$packing_id);
-            $items = $table->getAll(0,-1);
+            if(!empty($product_id))
+                $table->setCriteria("sort_det.product_id = ".$product_id);
 
-            $output = '';
-            $no = 1;
-            foreach($items as $item) {
-                /*$output .= '
-                    <tr>
-                        <td>'.$no++.'</td>
-                        <td><input type="hidden" name="pd_id[]" value="'.$item['pd_id'].'"> <input type="hidden" name="sortir_detail_id[]" value="'.$item['sortir_detail_id'].'"><input type="hidden" name="product_ids[]" value="'.$item['product_id'].'">'.$item['product_code'].'</td>
-                        <td><input type="hidden" name="weight[]" value="'.$item['pd_kg'].'">'.$item['pd_kg'].'</td>
-                        <td><button type="button" onclick="deleteDataRow(this,'.$item['pd_id'].');"><i class="fa fa-trash"></i> Delete </button></td>
-                    </tr>
-                ';*/
-                $output .= '
-                    <tr>
-                        <td>'.$no++.'</td>
-                        <td><input type="hidden" name="pd_id[]" value="'.$item['pd_id'].'"> <input type="hidden" name="sortir_detail_id[]" value="'.$item['sortir_detail_id'].'"><input type="hidden" name="product_ids[]" value="'.$item['product_id'].'">'.$item['product_code'].'</td>
-                        <td><input type="hidden" name="weight[]" value="'.$item['pd_kg'].'">'.$item['pd_kg'].'</td>
-                        <td>'.$item['fm_name'].'</td>
-                    </tr>
-                ';
-
+            if (!empty($searchPhrase)) {
+                $table->setCriteria("(pr.product_name ilike '%" . $searchPhrase . "%' or pr.product_code ilike '%" . $searchPhrase . "%')");
             }
 
-        }catch (Exception $e) {
-            echo $e->getMessage();
+            $start = ($start - 1) * $limit;
+            $items = $table->getAll($start, $limit, $sort, $dir);
+            $totalcount = $table->countAll();
+
+            $data['rows'] = $items;
+            $data['success'] = true;
+            $data['total'] = $totalcount;
+
+        } catch (Exception $e) {
+            $data['message'] = $e->getMessage();
         }
 
-        echo $output;
-        exit;
-
-
+        return $data;
     }
 
-    function crud() {
+    function crud()
+    {
 
         $data = array();
         $oper = getVarClean('oper', 'str', '');
@@ -125,40 +130,40 @@ class Packing_detail_controller {
             case 'add' :
                 permission_check('add-tracking');
                 $data = $this->create();
-            break;
+                break;
 
             case 'edit' :
                 permission_check('edit-tracking');
                 $data = $this->update();
-            break;
+                break;
 
             case 'del' :
                 permission_check('delete-tracking');
                 $data = $this->destroy();
-            break;
+                break;
 
             default :
                 permission_check('view-tracking');
                 $data = $this->read();
-            break;
+                break;
         }
 
         return $data;
     }
 
+    function create()
+    {
 
-    function create() {
-
-        $ci = & get_instance();
-        $ci->load->model('agripro/packing_detail');
-        $table = $ci->packing_detail;
+        $ci = &get_instance();
+        $ci->load->model('agripro/sortir_detail');
+        $table = $ci->sortir_detail;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
         $jsonItems = getVarClean('items', 'str', '');
         $items = jsonDecode($jsonItems);
 
-        if (!is_array($items)){
+        if (!is_array($items)) {
             $data['message'] = 'Invalid items parameter';
             return $data;
         }
@@ -166,19 +171,19 @@ class Packing_detail_controller {
         $table->actionType = 'CREATE';
         $errors = array();
 
-        if (isset($items[0])){
+        if (isset($items[0])) {
             $numItems = count($items);
-            for($i=0; $i < $numItems; $i++){
-                try{
+            for ($i = 0; $i < $numItems; $i++) {
+                try {
 
                     $table->db->trans_begin(); //Begin Trans
 
-                        $table->setRecord($items[$i]);
-                        $table->create();
+                    $table->setRecord($items[$i]);
+                    $table->create();
 
                     $table->db->trans_commit(); //Commit Trans
 
-                }catch(Exception $e){
+                } catch (Exception $e) {
 
                     $table->db->trans_rollback(); //Rollback Trans
                     $errors[] = $e->getMessage();
@@ -186,27 +191,27 @@ class Packing_detail_controller {
             }
 
             $numErrors = count($errors);
-            if ($numErrors > 0){
-                $data['message'] = $numErrors." from ".$numItems." record(s) failed to be saved.<br/><br/><b>System Response:</b><br/>- ".implode("<br/>- ", $errors)."";
-            }else{
+            if ($numErrors > 0) {
+                $data['message'] = $numErrors . " from " . $numItems . " record(s) failed to be saved.<br/><br/><b>System Response:</b><br/>- " . implode("<br/>- ", $errors) . "";
+            } else {
                 $data['success'] = true;
                 $data['message'] = 'Data added successfully';
             }
-            $data['rows'] =$items;
-        }else {
+            $data['rows'] = $items;
+        } else {
 
-            try{
+            try {
                 $table->db->trans_begin(); //Begin Trans
 
-                    $table->setRecord($items);
-                    $table->create();
+                $table->setRecord($items);
+                $table->create();
 
                 $table->db->trans_commit(); //Commit Trans
 
                 $data['success'] = true;
                 $data['message'] = 'Data added successfully';
 
-            }catch (Exception $e) {
+            } catch (Exception $e) {
                 $table->db->trans_rollback(); //Rollback Trans
 
                 $data['message'] = $e->getMessage();
@@ -218,38 +223,39 @@ class Packing_detail_controller {
 
     }
 
-    function update() {
+    function update()
+    {
 
-        $ci = & get_instance();
-        $ci->load->model('agripro/packing_detail');
-        $table = $ci->packing_detail;
+        $ci = &get_instance();
+        $ci->load->model('agripro/sortir_detail');
+        $table = $ci->sortir_detail;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
         $jsonItems = getVarClean('items', 'str', '');
         $items = jsonDecode($jsonItems);
 
-        if (!is_array($items)){
+        if (!is_array($items)) {
             $data['message'] = 'Invalid items parameter';
             return $data;
         }
 
         $table->actionType = 'UPDATE';
 
-        if (isset($items[0])){
+        if (isset($items[0])) {
             $errors = array();
             $numItems = count($items);
-            for($i=0; $i < $numItems; $i++){
-                try{
+            for ($i = 0; $i < $numItems; $i++) {
+                try {
                     $table->db->trans_begin(); //Begin Trans
 
-                        $table->setRecord($items[$i]);
-                        $table->update();
+                    $table->setRecord($items[$i]);
+                    $table->update();
 
                     $table->db->trans_commit(); //Commit Trans
 
                     $items[$i] = $table->get($items[$i][$table->pkey]);
-                }catch(Exception $e){
+                } catch (Exception $e) {
                     $table->db->trans_rollback(); //Rollback Trans
 
                     $errors[] = $e->getMessage();
@@ -257,20 +263,20 @@ class Packing_detail_controller {
             }
 
             $numErrors = count($errors);
-            if ($numErrors > 0){
-                $data['message'] = $numErrors." from ".$numItems." record(s) failed to be saved.<br/><br/><b>System Response:</b><br/>- ".implode("<br/>- ", $errors)."";
-            }else{
+            if ($numErrors > 0) {
+                $data['message'] = $numErrors . " from " . $numItems . " record(s) failed to be saved.<br/><br/><b>System Response:</b><br/>- " . implode("<br/>- ", $errors) . "";
+            } else {
                 $data['success'] = true;
                 $data['message'] = 'Data update successfully';
             }
-            $data['rows'] =$items;
-        }else {
+            $data['rows'] = $items;
+        } else {
 
-            try{
+            try {
                 $table->db->trans_begin(); //Begin Trans
 
-                    $table->setRecord($items);
-                    $table->update();
+                $table->setRecord($items);
+                $table->update();
 
                 $table->db->trans_commit(); //Commit Trans
 
@@ -278,7 +284,7 @@ class Packing_detail_controller {
                 $data['message'] = 'Data update successfully';
 
                 $data['rows'] = $table->get($items[$table->pkey]);
-            }catch (Exception $e) {
+            } catch (Exception $e) {
                 $table->db->trans_rollback(); //Rollback Trans
 
                 $data['message'] = $e->getMessage();
@@ -290,31 +296,32 @@ class Packing_detail_controller {
 
     }
 
-    function destroy() {
-        $ci = & get_instance();
-        $ci->load->model('agripro/packing_detail');
-        $table = $ci->packing_detail;
+    function destroy()
+    {
+        $ci = &get_instance();
+        $ci->load->model('agripro/sortir_detail');
+        $table = $ci->sortir_detail;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
         $jsonItems = getVarClean('items', 'str', '');
         $items = jsonDecode($jsonItems);
 
-        try{
+        try {
             $table->db->trans_begin(); //Begin Trans
 
             $total = 0;
-            if (is_array($items)){
-                foreach ($items as $key => $value){
+            if (is_array($items)) {
+                foreach ($items as $key => $value) {
                     if (empty($value)) throw new Exception('Empty parameter');
 
                     $table->remove($value);
                     $data['rows'][] = array($table->pkey => $value);
                     $total++;
                 }
-            }else{
-                $items = (int) $items;
-                if (empty($items)){
+            } else {
+                $items = (int)$items;
+                if (empty($items)) {
                     throw new Exception('Empty parameter');
                 };
 
@@ -324,11 +331,11 @@ class Packing_detail_controller {
             }
 
             $data['success'] = true;
-            $data['message'] = $total.' Data deleted successfully';
+            $data['message'] = $total . ' Data deleted successfully';
 
             $table->db->trans_commit(); //Commit Trans
 
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $table->db->trans_rollback(); //Rollback Trans
             $data['message'] = $e->getMessage();
             $data['rows'] = array();
@@ -336,6 +343,7 @@ class Packing_detail_controller {
         }
         return $data;
     }
+
 
 }
 

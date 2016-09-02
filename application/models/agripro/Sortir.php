@@ -11,9 +11,11 @@ class Sortir extends Abstract_model {
     public $alias           = "sr";
 
     public $fields          = array(
-                                'sortir_id'  => array('pkey' => true, 'type' => 'int', 'nullable' => false, 'unique' => true, 'display' => 'ID Sortir'),
-                                'product_id'       => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product ID'),
-                                'sm_id'      => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'Stock Material ID'),
+                                'sortir_id'     => array('pkey' => true, 'type' => 'int', 'nullable' => false, 'unique' => true, 'display' => 'ID Sortir'),
+                                'product_id'    => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product ID'),
+                                'sm_id'         => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Stock Material ID'),
+                                'production_id' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Production ID'),
+
                                 'sortir_tgl'      => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'Tanggal'),
                                 'sortir_qty'      => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'QTY')
 
@@ -22,9 +24,9 @@ class Sortir extends Abstract_model {
     public $selectClause    = "sr.sortir_id, sr.product_id, sr.sm_id, sr.sortir_tgl, sr.sortir_qty, fm.fm_code, fm.fm_name,
 								sm.sm_no_trans, sm.sm_qty_bersih, pr.product_id, pr.product_name, pr.product_code";
     public $fromClause      = "sortir sr
-								JOIN stock_material sm ON sr.sm_id = sm.sm_id
-								JOIN product pr ON sr.product_id = pr.product_id
-								left join farmer fm ON sm.fm_id = fm.fm_id
+								left join stock_material sm on sr.sm_id = sm.sm_id
+								left join product pr on sr.product_id = pr.product_id
+								left join farmer fm on sm.fm_id = fm.fm_id
 								";
 
     public $refs            = array();

@@ -344,10 +344,11 @@ class Shipping_controller {
                 $table->create();
                 foreach($record_detail as $item_detail) {
                     $tableDetail->setRecord($item_detail);
+                    $tableDetail->record[$tableDetail->pkey] = $tableDetail->generate_id($tableDetail->table,$tableDetail->pkey);
                     $tableDetail->create();
-                }
 
-                //$table->insertStock($table->record);
+                    $tableDetail->insertStock($tableDetail->record, $table->record);
+                }
 
             $table->db->trans_commit(); //Commit Trans
 
@@ -420,9 +421,13 @@ class Shipping_controller {
                 }
 
                 $table->update();
+
                 foreach($record_detail as $item_detail) {
                     $tableDetail->setRecord($item_detail);
+                    $tableDetail->record[$tableDetail->pkey] = $tableDetail->generate_id($tableDetail->table,$tableDetail->pkey);
                     $tableDetail->create();
+
+                    $tableDetail->insertStock($tableDetail->record, $table->record);
                 }
 
                 //$table->insertStock($table->record);

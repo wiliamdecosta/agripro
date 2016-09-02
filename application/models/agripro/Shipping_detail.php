@@ -62,5 +62,35 @@ class Shipping_detail extends Abstract_model {
         return true;
     }
 
+
+    function insertStock($item_detail, $itemShipping) {
+
+        $ci = & get_instance();
+
+        $ci->load->model('agripro/stock');
+        $tStock = $ci->stock;
+
+        $ci->load->model('agripro/stock_category');
+        $tStockCategory = $ci->stock_category;
+
+        $ci->load->model('agripro/packing');
+        $tPacking = $ci->packing;
+
+        $record_stock = array();
+        $item_packing = $tPacking->get($item_detail['packing_id']);
+
+        $record_stock['stock_tgl_keluar'] = $itemShipping['shipping_date']; //base on shipping_date
+        $record_stock['stock_kg'] = $item_packing['packing_kg'];
+        $record_stock['stock_ref_id'] = $item_detail['shipdet_id'];
+        $record_stock['stock_ref_code'] = 'SHIPPING';
+        $record_stock['sc_id'] = $tStockCategory->getIDByCode('PACKING_STOCK');
+        $record_stock['wh_id'] = $item_packing['warehouse_id'];
+        $record_stock['product_id'] = $item_packing['product_id'];
+        $record_stock['stock_description'] = 'packing_kg out for shipping_detail used';
+        $tStock->setRecord($record_stock);
+        $tStock->create();
+
+    }
+
 }
 /* End of file Groups.php */

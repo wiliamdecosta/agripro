@@ -109,8 +109,8 @@ class Packing extends Abstract_model {
         $ci->load->model('agripro/packing_detail');
         $tPackingDetail = $ci->packing_detail;
 
-        $ci->load->model('agripro/sortir');
-        $tSortir = $ci->sortir;
+        $ci->load->model('agripro/sortir_detail');
+        $tSortirDetail = $ci->sortir_detail;
 
         /**
          * Steps :
@@ -145,12 +145,12 @@ class Packing extends Abstract_model {
             $record_stock = array();
             $record_stock['stock_tgl_keluar'] = $stock_date; //base on packing_tgl
             $record_stock['stock_kg'] = $packing_detail['pd_kg'];
-            $record_stock['stock_ref_id'] = $packing_detail['sortir_id']; //sortir id become reference on stock
+            $record_stock['stock_ref_id'] = $packing_detail['sortir_detail_id']; //sortir_detail id become reference on stock
             $record_stock['stock_ref_code'] = 'SORTIR';
             $record_stock['sc_id'] = $tStockCategory->getIDByCode('SORTIR_STOCK');
             $record_stock['wh_id'] = $packing_master['warehouse_id'];
             $record_stock['product_id'] = $packing_detail['product_id'];
-            $record_stock['stock_description'] = 'sortir_qty has used for packing_detail';
+            $record_stock['stock_description'] = 'sortir_detail_qty has used for packing_detail';
             $tStock->setRecord($record_stock);
             $tStock->create();
         }
@@ -162,9 +162,9 @@ class Packing extends Abstract_model {
         foreach($details as $packing_detail) {
 
             $decrease_kg = (float) $packing_detail['pd_kg'];
-            $sql = "UPDATE sortir SET sortir_qty = sortir_qty - ".$decrease_kg."
-                        WHERE sortir_id = ".$packing_detail['sortir_id'];
-            $tSortir->db->query($sql);
+            $sql = "UPDATE sortir_detail SET sortir_detail_qty = sortir_detail_qty - ".$decrease_kg."
+                        WHERE sortir_detail_id = ".$packing_detail['sortir_detail_id'];
+            $tSortirDetail->db->query($sql);
         }
     }
 
@@ -179,8 +179,8 @@ class Packing extends Abstract_model {
         $ci->load->model('agripro/packing_detail');
         $tPackingDetail = $ci->packing_detail;
 
-        $ci->load->model('agripro/sortir');
-        $tSortir = $ci->sortir;
+        $ci->load->model('agripro/sortir_detail');
+        $tSortirDetail = $ci->sortir_detail;
 
         /**
          * Steps to Delete Packing
@@ -197,7 +197,7 @@ class Packing extends Abstract_model {
         $details = $tPackingDetail->getAll();
         $loop = 0;
         foreach($details as $packing_detail) {
-            $data_sortir[$loop]['sortir_id'] = $packing_detail['sortir_id'];
+            $data_sortir[$loop]['sortir_detail_id'] = $packing_detail['sortir_detail_id'];
             $data_sortir[$loop]['restore_store_qty'] = $packing_detail['pd_kg'];
             $loop++;
 
@@ -210,18 +210,18 @@ class Packing extends Abstract_model {
         $tStock->deleteByReference($packing_id, 'PACKING');
 
         /**
-         * loop for delete data stock by sortir_id and restore store_qty in table sortir
+         * loop for delete data stock by sortir_detail_id and restore store_qty in table sortir
          */
         foreach($data_sortir as $sortir) {
-            //delete data stock by sortir_id
-            $tStock->deleteByReference($sortir['sortir_id'], 'SORTIR');
+            //delete data stock by sortir_detail_id
+            $tStock->deleteByReference($sortir['sortir_detail_id'], 'SORTIR');
 
             //restore store qty
             $increase_kg = (float) $sortir['restore_store_qty'];
-            $sql = "UPDATE sortir SET sortir_qty = sortir_qty + ".$increase_kg."
-                        WHERE sortir_id = ".$sortir['sortir_id'];
+            $sql = "UPDATE sortir_detail SET sortir_detail_qty = sortir_detail_qty + ".$increase_kg."
+                        WHERE sortir_detail_id = ".$sortir['sortir_detail_id'];
 
-            $tSortir->db->query($sql);
+            $tSortirDetail->db->query($sql);
 
         }
 

@@ -76,7 +76,6 @@ class Shipping extends Abstract_model {
         }
 
         $this->remove($shipping_id);
-
     }
 
 }

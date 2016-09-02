@@ -361,13 +361,13 @@ class Packing_controller {
         /**
          * Data details
          */
-        $sortir_ids = (array)$ci->input->post('sortir_id');
+        $sortir_detail_ids = (array)$ci->input->post('sortir_detail_id');
         $weights = (array)$ci->input->post('weight');
         $product_ids = (array)$ci->input->post('product_ids');
 
         try{
 
-            if(count($sortir_ids) == 0) {
+            if(count($sortir_detail_ids) == 0) {
                 throw new Exception('Data source material must be filled');
             }
 
@@ -397,10 +397,10 @@ class Packing_controller {
 
                 $total_source_kg = 0;
 
-                for($i = 0; $i < count($sortir_ids); $i++) {
+                for($i = 0; $i < count($sortir_detail_ids); $i++) {
                     $record_detail[] = array(
                         'packing_id' => $table->record[$table->pkey],
-                        'sortir_id' => $sortir_ids[$i],
+                        'sortir_detail_id' => $sortir_detail_ids[$i],
                         'pd_kg' => $weights[$i]
                     );
 
@@ -464,7 +464,7 @@ class Packing_controller {
 
 
         $pd_id = (array) $ci->input->post('pd_id');
-        $sortir_ids = (array) $ci->input->post('sortir_id');
+        $sortir_detail_ids = (array) $ci->input->post('sortir_id');
         $weights = (array) $ci->input->post('weight');
 
         try{
