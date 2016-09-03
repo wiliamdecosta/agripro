@@ -92,5 +92,20 @@ class Shipping_detail extends Abstract_model {
 
     }
 
+
+    function removeItems($shipdet_id) {
+        $this->remove($shipdet_id); //delete data detail
+
+        /**
+         * Remove stock with
+         * @var [type]
+         */
+        $ci = & get_instance();
+        $ci->load->model('agripro/stock');
+        $tStock = $ci->stock;
+        $tStock->deleteByReference($shipdet_id, 'SHIPPING');
+    }
+
+
 }
 /* End of file Groups.php */

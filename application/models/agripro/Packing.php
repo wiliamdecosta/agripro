@@ -31,7 +31,7 @@ class Packing extends Abstract_model {
                                 left join product prod
                                 on pack.product_id = prod.product_id";
 
-    public $refs            = array();
+    public $refs            = array('shipping_detail' => 'packing_id');
 
     function __construct() {
         parent::__construct();
@@ -146,7 +146,7 @@ class Packing extends Abstract_model {
             $record_stock['stock_tgl_keluar'] = $stock_date; //base on packing_tgl
             $record_stock['stock_kg'] = $packing_detail['pd_kg'];
             $record_stock['stock_ref_id'] = $packing_detail['sortir_detail_id']; //sortir_detail id become reference on stock
-            $record_stock['stock_ref_code'] = 'SORTIR';
+            $record_stock['stock_ref_code'] = 'SORTIR_PACKING';
             $record_stock['sc_id'] = $tStockCategory->getIDByCode('SORTIR_STOCK');
             $record_stock['wh_id'] = $packing_master['warehouse_id'];
             $record_stock['product_id'] = $packing_detail['product_id'];
@@ -170,6 +170,12 @@ class Packing extends Abstract_model {
 
 
     public function removePacking($packing_id) {
+
+        if ($this->isRefferenced($packing_id)){
+            throw new Exception('Data has been used for shipping. Please delete data on shipping first.');
+            return;
+        }
+
 
         $ci = & get_instance();
 
@@ -214,7 +220,7 @@ class Packing extends Abstract_model {
          */
         foreach($data_sortir as $sortir) {
             //delete data stock by sortir_detail_id
-            $tStock->deleteByReference($sortir['sortir_detail_id'], 'SORTIR');
+            $tStock->deleteByReference($sortir['sortir_detail_id'], 'SORTIR_PACKING');
 
             //restore store qty
             $increase_kg = (float) $sortir['restore_store_qty'];

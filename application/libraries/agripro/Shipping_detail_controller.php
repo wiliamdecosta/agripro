@@ -298,7 +298,7 @@ class Shipping_detail_controller {
                 foreach ($items as $key => $value){
                     if (empty($value)) throw new Exception('Empty parameter');
 
-                    $table->remove($value);
+                    $table->removeItems($value);
                     $data['rows'][] = array($table->pkey => $value);
                     $total++;
                 }
@@ -308,7 +308,7 @@ class Shipping_detail_controller {
                     throw new Exception('Empty parameter');
                 };
 
-                $table->remove($items);
+                $table->removeItems($items);
                 $data['rows'][] = array($table->pkey => $items);
                 $data['total'] = $total = 1;
             }

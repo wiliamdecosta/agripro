@@ -72,7 +72,7 @@ class Shipping extends Abstract_model {
         $details = $tShippingDetail->getAll();
 
         foreach($details as $shipping_detail) {
-            $tShippingDetail->remove($shipping_detail['shipdet_id']);
+            $tShippingDetail->removeItems($shipping_detail['shipdet_id']);
         }
 
         $this->remove($shipping_id);
