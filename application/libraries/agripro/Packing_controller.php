@@ -36,7 +36,7 @@ class Packing_controller {
             );
 
             // Filter Table
-            $req_param['where'] = array();
+            $req_param['where'] = array('pack.packing_id NOT IN (select packing_id from shipping_detail)');
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();

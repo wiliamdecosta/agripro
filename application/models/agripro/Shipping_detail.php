@@ -92,6 +92,18 @@ class Shipping_detail extends Abstract_model {
 
     }
 
+    /**
+     * [removeByPackingID called by Packing Model]
+     * @param  [type] $packing_id [description]
+     * @return [type]             [description]
+     */
+    function removeByPackingID($packing_id) {
+        $sql = "SELECT shipdet_id FROM shipping_detail WHERE packing_id = ".$packing_id;
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+
+        $this->removeItems($row['shipdet_id']);
+    }
 
     function removeItems($shipdet_id) {
         $this->remove($shipdet_id); //delete data detail

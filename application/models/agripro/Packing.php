@@ -171,13 +171,14 @@ class Packing extends Abstract_model {
 
     public function removePacking($packing_id) {
 
-        if ($this->isRefferenced($packing_id)){
-            throw new Exception('Data has been used for shipping. Please delete data on shipping first.');
-            return;
-        }
-
-
         $ci = & get_instance();
+        /*if ($this->isRefferenced($packing_id)){
+            //if packing_id is used in shipping_detail then delete data shipping also
+            $ci->load->model('agripro/shipping_detail');
+            $tShippingDetail = $ci->shipping_detail;
+
+            $tShippingDetail->removeByPackingID($packing_id);
+        }*/
 
         $ci->load->model('agripro/stock');
         $tStock = $ci->stock;
