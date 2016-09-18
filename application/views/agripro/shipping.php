@@ -47,6 +47,16 @@
             shipping_notes : rowData.shipping_notes
         });
     }
+
+    function costShipping(rowId) {
+        var rowData = jQuery("#grid-table").getRowData(rowId);
+        loadContentWithParams('agripro.shipping_cost_form', {
+            shipping_id : rowData.shipping_id,
+            shipping_date : rowData.shipping_date,
+            shipping_driver_name : rowData.shipping_driver_name,
+            shipping_notes : rowData.shipping_notes
+        });
+    }
 </script>
 
 <script>
@@ -70,9 +80,15 @@
                 {label: 'Shipping Date', name: 'shipping_date', width: 120, align: "center", editable: false},
                 {label: 'Driver Name', name: 'shipping_driver_name', width: 100, align: "left", editable: false},
                 {label: 'Notes', name: 'shipping_notes', width: 100, align: "left", editable: false, hidden:true},
+                {label: 'Shipping Cost (Rp)', name: 'shipping_cost', formatter:'currency', formatoptions: {prefix:'Rp. ', thousandsSeparator : '.', decimalPlaces: 0}, align:'right', width: 150, align: "right", editable: false, hidden:false},
                 {label: 'Edit Shipping',name: '',width: 120, align: "center",editable: false,
                     formatter:function(cellvalue, options, rowObject) {
                         return '<a class="btn green-meadow btn-xs" href="#" onclick="editShipping('+rowObject['shipping_id']+')"><i class="fa fa-pencil"></i>Edit</a>';
+                    }
+                },
+                {label: 'Cost',name: '',width: 120, align: "center",editable: false,
+                    formatter:function(cellvalue, options, rowObject) {
+                        return '<a class="btn btn-warning btn-xs" href="#" onclick="costShipping('+rowObject['shipping_id']+')"><i class="fa fa-dollar"></i>Cost</a>';
                     }
                 }
             ],

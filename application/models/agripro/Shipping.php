@@ -78,5 +78,25 @@ class Shipping extends Abstract_model {
         $this->remove($shipping_id);
     }
 
+    function getTotalCost($shipping_id) {
+        $sql = "select sum(shipping_cost_value) as total
+                    from shipping_cost
+                    where shipping_id = ?";
+
+        $query = $this->db->query($sql, array($shipping_id));
+        $row = $query->row_array();
+
+        return $row['total'];
+    }
+
+    function getAllItems() {
+        $items = $this->getAll();
+
+        for($record = 0; $record < count($items); $record++) {
+            $items[$record]['shipping_cost'] = $this->getTotalCost($items[$record][$this->pkey]);
+        }
+        return $items;
+    }
+
 }
 /* End of file Shipping.php */

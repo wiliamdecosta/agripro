@@ -1,16 +1,16 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
 * Json library
-* @class Shipping_controller
+* @class Parameter_cost_controller
 * @version 07/05/2015 12:18:00
 */
-class Shipping_controller {
+class Parameter_cost_controller {
 
     function read() {
 
         $page = getVarClean('page','int',1);
         $limit = getVarClean('rows','int',5);
-        $sidx = getVarClean('sidx','str','shipping_id');
+        $sidx = getVarClean('sidx','str','parameter_cost_id');
         $sord = getVarClean('sord','str','asc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
@@ -18,8 +18,8 @@ class Shipping_controller {
         try {
 
             $ci = & get_instance();
-            $ci->load->model('agripro/shipping');
-            $table = $ci->shipping;
+            $ci->load->model('agripro/parameter_cost');
+            $table = $ci->parameter_cost;
 
             $req_param = array(
                 "sort_by" => $sidx,
@@ -60,7 +60,7 @@ class Shipping_controller {
             $data['total'] = $total_pages;
             $data['records'] = $count;
 
-            $data['rows'] = $table->getAllItems();
+            $data['rows'] = $table->getAll();
             $data['success'] = true;
 
         }catch (Exception $e) {
@@ -70,6 +70,44 @@ class Shipping_controller {
         return $data;
     }
 
+
+    function readLov() {
+        permission_check('view-tracking');
+
+        $start = getVarClean('current','int',0);
+        $limit = getVarClean('rowCount','int',5);
+
+        $sort = getVarClean('sort','str','parameter_cost_id');
+        $dir  = getVarClean('dir','str','asc');
+
+        $searchPhrase = getVarClean('searchPhrase', 'str', '');
+
+        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/parameter_cost');
+            $table = $ci->parameter_cost;
+
+            if(!empty($searchPhrase)) {
+                $table->setCriteria("parameter_cost_code ilike '%".$searchPhrase."%'");
+            }
+
+            $start = ($start-1) * $limit;
+            $items = $table->getAll($start, $limit, $sort, $dir);
+            $totalcount = $table->countAll();
+
+            $data['rows'] = $items;
+            $data['success'] = true;
+            $data['total'] = $totalcount;
+
+        }catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+
+        return $data;
+    }
 
     function crud() {
 
@@ -104,8 +142,8 @@ class Shipping_controller {
     function create() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
+        $ci->load->model('agripro/parameter_cost');
+        $table = $ci->parameter_cost;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -175,8 +213,8 @@ class Shipping_controller {
     function update() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
+        $ci->load->model('agripro/parameter_cost');
+        $table = $ci->parameter_cost;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -246,8 +284,8 @@ class Shipping_controller {
 
     function destroy() {
         $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
+        $ci->load->model('agripro/parameter_cost');
+        $table = $ci->parameter_cost;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -262,7 +300,7 @@ class Shipping_controller {
                 foreach ($items as $key => $value){
                     if (empty($value)) throw new Exception('Empty parameter');
 
-                    $table->removeShipping($value);
+                    $table->remove($value);
                     $data['rows'][] = array($table->pkey => $value);
                     $total++;
                 }
@@ -272,7 +310,7 @@ class Shipping_controller {
                     throw new Exception('Empty parameter');
                 };
 
-                $table->removeShipping($items);
+                $table->remove($items);
                 $data['rows'][] = array($table->pkey => $items);
                 $data['total'] = $total = 1;
             }
@@ -291,164 +329,6 @@ class Shipping_controller {
         return $data;
     }
 
-
-    function createForm() {
-
-        $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
-
-        $data = array('success' => false, 'message' => '');
-        $table->actionType = 'CREATE';
-
-        /**
-         * Data master
-         */
-        $shipping_date = getVarClean('shipping_date','str','');
-        $shipping_driver_name = getVarClean('shipping_driver_name','str','');
-        $shipping_notes = getVarClean('shipping_notes','str','');
-
-
-        /**
-         * Data details
-         */
-        $packing_ids = (array)$ci->input->post('packing_id');
-
-        try{
-
-            $table->db->trans_begin(); //Begin Trans
-
-                $items = array(
-                    'shipping_date' => $shipping_date,
-                    'shipping_driver_name' => $shipping_driver_name,
-                    'shipping_notes' => $shipping_notes
-                );
-
-                $table->setRecord($items);
-                $table->record[$table->pkey] = $table->generate_id($table->table,$table->pkey);
-
-
-                $record_detail = array();
-                $ci->load->model('agripro/shipping_detail');
-                $tableDetail = $ci->shipping_detail;
-                $tableDetail->actionType = 'CREATE';
-
-
-                for($i = 0; $i < count($packing_ids); $i++) {
-                    $record_detail[] = array(
-                        'shipping_id' => $table->record[$table->pkey],
-                        'packing_id' => $packing_ids[$i]
-                    );
-                }
-
-                $table->create();
-                foreach($record_detail as $item_detail) {
-                    $tableDetail->setRecord($item_detail);
-                    $tableDetail->record[$tableDetail->pkey] = $tableDetail->generate_id($tableDetail->table,$tableDetail->pkey);
-                    $tableDetail->create();
-
-                    $tableDetail->insertStock($tableDetail->record, $table->record);
-                }
-
-            $table->db->trans_commit(); //Commit Trans
-
-            $data['success'] = true;
-            $data['message'] = 'Data added successfully';
-
-        }catch (Exception $e) {
-            $table->db->trans_rollback(); //Rollback Trans
-
-            $data['message'] = $e->getMessage();
-        }
-
-
-        echo json_encode($data);
-        exit;
-
-    }
-
-
-    function updateForm() {
-
-        $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
-
-        $data = array('success' => false, 'message' => '');
-        $table->actionType = 'UDATE';
-
-        /**
-         * Data master
-         */
-        $shipping_id = getVarClean('shipping_id','int',0);
-        $shipping_date = getVarClean('shipping_date','str','');
-        $shipping_driver_name = getVarClean('shipping_driver_name','str','');
-        $shipping_notes = getVarClean('shipping_notes','str','');
-
-
-        /**
-         * Data details
-         */
-        $shipdet_ids = (array)$ci->input->post('shipdet_id');
-        $packing_ids = (array)$ci->input->post('packing_id');
-
-        try{
-
-            $table->db->trans_begin(); //Begin Trans
-
-                $items = array(
-                    'shipping_id' => $shipping_id,
-                    'shipping_date' => $shipping_date,
-                    'shipping_driver_name' => $shipping_driver_name,
-                    'shipping_notes' => $shipping_notes
-                );
-                $table->setRecord($items);
-
-
-                $record_detail = array();
-                $ci->load->model('agripro/shipping_detail');
-                $tableDetail = $ci->shipping_detail;
-                $tableDetail->actionType = 'CREATE';
-
-
-                for($i = 0; $i < count($packing_ids); $i++) {
-                    if($shipdet_ids[$i] == "") {
-                        $record_detail[] = array(
-                            'shipping_id' => $shipping_id,
-                            'packing_id' => $packing_ids[$i]
-                        );
-                    }
-                }
-
-                $table->update();
-
-                foreach($record_detail as $item_detail) {
-                    $tableDetail->setRecord($item_detail);
-                    $tableDetail->record[$tableDetail->pkey] = $tableDetail->generate_id($tableDetail->table,$tableDetail->pkey);
-                    $tableDetail->create();
-
-                    $tableDetail->insertStock($tableDetail->record, $table->record);
-                }
-
-                //$table->insertStock($table->record);
-
-            $table->db->trans_commit(); //Commit Trans
-
-            $data['success'] = true;
-            $data['message'] = 'Data added successfully';
-
-        }catch (Exception $e) {
-            $table->db->trans_rollback(); //Rollback Trans
-
-            $data['message'] = $e->getMessage();
-        }
-
-
-        echo json_encode($data);
-        exit;
-
-    }
-
 }
 
-/* End of file Shipping_controller.php */
+/* End of file Warehouse_controller.php */
