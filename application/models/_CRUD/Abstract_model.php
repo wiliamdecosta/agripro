@@ -87,7 +87,7 @@ class Abstract_model extends  CI_Model {
 
     public function afterWrite(){} // <-- tobe implemented
 
-	public function getAll($start = 0, $limit = 30, $orderby = '', $ordertype = 'ASC') {
+	public function getAll($start = 0, $limit = -1, $orderby = '', $ordertype = 'ASC') {
 
 		$this->db->select($this->selectClause);
 		$this->db->from($this->fromClause);

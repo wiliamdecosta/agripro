@@ -1,25 +1,27 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
 * Json library
-* @class Stock_material_controller
+* @class Packing_detail_controller
 * @version 07/05/2015 12:18:00
 */
-class Drying_controller {
+class Production_detail_controller {
 
     function read() {
 
         $page = getVarClean('page','int',1);
-        $limit = getVarClean('rows','int',10);
-        $sidx = getVarClean('sidx','str','sm_id');
+        $limit = getVarClean('rows','int',5);
+        $sidx = getVarClean('sidx','str','production_detail_id');
         $sord = getVarClean('sord','str','desc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
+        $production_id = getVarClean('production_id','int',0);
+
 
         try {
 
             $ci = & get_instance();
-            $ci->load->model('agripro/drying');
-            $table = $ci->drying;
+            $ci->load->model('agripro/production_detail');
+            $table = $ci->production_detail;
 
             $req_param = array(
                 "sort_by" => $sidx,
@@ -36,12 +38,7 @@ class Drying_controller {
             );
 
             // Filter Table
-            $report = getVarClean('report','int',0);
-            if($report != 1){
-                $req_param['where'][] = 'sm.sm_qty_bersih is null ' ;
-            }else{
-                $req_param['where'][] = 'sm.sm_qty_bersih is not null ' ;
-            }
+            $req_param['where'] = array('pd.production_id = '.$production_id);
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
@@ -76,6 +73,51 @@ class Drying_controller {
     }
 
 
+    function getDetail() {
+
+        $production_id = getVarClean('production_id','int',0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/production_detail');
+            $table = $ci->production_detail;
+
+            $table->setCriteria('pd.production_id = '.$production_id);
+            $items = $table->getAll(0,-1);
+
+            $output = '';
+            $no = 1;
+            foreach($items as $item) {
+                /*$output .= '
+                    <tr>
+                        <td>'.$no++.'</td>
+                        <td><input type="hidden" name="pd_id[]" value="'.$item['pd_id'].'"> <input type="hidden" name="sortir_id[]" value="'.$item['sortir_id'].'"><input type="hidden" name="product_ids[]" value="'.$item['product_id'].'">'.$item['product_code'].'</td>
+                        <td><input type="hidden" name="weight[]" value="'.$item['pd_kg'].'">'.$item['pd_kg'].'</td>
+                        <td><button type="button" onclick="deleteDataRow(this,'.$item['pd_id'].');"><i class="fa fa-trash"></i> Delete </button></td>
+                    </tr>
+                ';*/
+                $output .= '
+                    <tr>
+                        <td>'.$no++.'</td>
+                        <td><input type="hidden" name="pd_id[]" value="'.$item['pd_id'].'"> <input type="hidden" name="sortir_id[]" value="'.$item['sortir_id'].'"><input type="hidden" name="product_ids[]" value="'.$item['product_id'].'">'.$item['product_code'].'</td>
+                        <td><input type="hidden" name="weight[]" value="'.$item['pd_kg'].'">'.$item['pd_kg'].'</td>
+                        <td>'.$item['fm_name'].'</td>
+                    </tr>
+                ';
+
+            }
+
+        }catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+        echo $output;
+        exit;
+
+
+    }
+
     function crud() {
 
         $data = array();
@@ -83,7 +125,7 @@ class Drying_controller {
         switch ($oper) {
             case 'add' :
                 permission_check('add-tracking');
-                //$data = $this->create();
+                $data = $this->create();
             break;
 
             case 'edit' :
@@ -93,7 +135,7 @@ class Drying_controller {
 
             case 'del' :
                 permission_check('delete-tracking');
-               // $data = $this->destroy();
+                $data = $this->destroy();
             break;
 
             default :
@@ -109,8 +151,8 @@ class Drying_controller {
     function create() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/drying');
-        $table = $ci->drying;
+        $ci->load->model('agripro/packing_detail');
+        $table = $ci->packing_detail;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -180,8 +222,8 @@ class Drying_controller {
     function update() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/drying');
-        $table = $ci->drying;
+        $ci->load->model('agripro/packing_detail');
+        $table = $ci->packing_detail;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -251,8 +293,8 @@ class Drying_controller {
 
     function destroy() {
         $ci = & get_instance();
-        $ci->load->model('agripro/drying');
-        $table = $ci->drying;
+        $ci->load->model('agripro/packing_detail');
+        $table = $ci->packing_detail;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 

@@ -71,7 +71,7 @@
                     <?php echo $detail->rm_name;?>
                 </td>
                 <td>
-                    <?php echo $detail->pd_kg;?>
+                    <?php echo $detail->pd_kg;?> Kgs
                 </td>
                 <td>
                     <?php echo $detail->fm_name;?>
@@ -80,7 +80,7 @@
                     <?php echo $detail->fm_code;?>
                 </td>
                 <td>
-                    <?php echo $detail->fm_jk;?>
+                    <?php if($detail->fm_jk == 'L'){ echo "Male";} else echo "Female";?>
                 </td>
                 <td>
                     <?php echo $detail->fm_address;?>

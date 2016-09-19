@@ -7,20 +7,17 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="#">Tracking</a>
+            <a href="#">Drying</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Drying Raw Material</span>
+            <span>Drying Report</span>
         </li>
     </ul>
 </div>
 <!-- end breadcrumb -->
 <div class="space-4"></div>
-<div class="alert alert-info">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
-    <strong>Info!</strong> Proses pengeringan hanya menimbang ulang berat Raw Material!
-</div>
+
 <div class="row">
     <div class="col-md-12">
         <table id="grid-table"></table>
@@ -35,46 +32,7 @@
     </div>
 </div>
 
-<?php $this->load->view('lov/lov_farmer.php'); ?>
-<?php $this->load->view('lov/lov_raw_material.php'); ?>
-<?php $this->load->view('lov/lov_plantation.php'); ?>
-
 <script>
-
-    function showLovFarmer(id, code) {
-        modal_lov_farmer_show(id, code);
-    }
-
-    function clearLovFarmer() {
-        $('#form_fm_id').val('');
-        $('#form_fm_code').val('');
-    }
-
-
-    function showLovRawMaterial(id, code) {
-        modal_lov_raw_material_show(id, code);
-    }
-
-    function clearLovRawMaterial() {
-        $('#form_rm_id').val('');
-        $('#form_rm_code').val('');
-    }
-
-    function showLovPlantation(id, code) {
-
-        selRowId = $('#grid-table').jqGrid('getGridParam', 'selrow');
-        // fm_id = $('#grid-table').jqGrid('getCell', selRowId, 'fm_id');
-        if ($('#form_fm_id').val() == "") {
-            swal({title: 'Attention', text: 'Please choose farmer', html: true, type: "info"});
-            return;
-        }
-        modal_lov_plantation_show(id, code, $('#form_fm_id').val());
-    }
-
-    function clearLovPlantation() {
-        $('#form_plt_id').val('');
-        $('#form_plt_code').val('');
-    }
 
     jQuery(function ($) {
         var grid_selector = "#grid-table";
@@ -84,6 +42,7 @@
             url: '<?php echo WS_JQGRID . "agripro.drying_controller/crud"; ?>',
             datatype: "json",
             mtype: "POST",
+            postData : {report: 1},
             colModel: [
                 {label: 'ID', name: 'sm_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
                 {
@@ -106,7 +65,7 @@
                         size: 10,
                         maxlength: 4
                     },
-                    editrules: {required: false}
+                    editrules: {required: true}
                 },
                 {
                     label: 'Netto (Kgs)', name: 'sm_qty_bersih', width: 120, align: "left", editable: true,
@@ -117,7 +76,24 @@
                     editrules: {required: true}
                 },
                 {
+                    label: 'Lose %',
+                    name: '',
+                    width: 100,
+                    align: "right",
+                    editable: false,
+                    formatter: function (cellvalue, options, rowObject) {
+                        var bruto = rowObject.sm_qty_kotor;
+                        var netto = rowObject.sm_qty_bersih;
+                        var percentage =  ((bruto-netto)/bruto) * 100;
+                        var percen =  percentage.toFixed(2) + " %";
+                        //return percentage.toFixed(2) + "%";
+                        return '<b><span style="color:red"> ' +percen+ ' </span></b>';
+
+                    }
+                },
+                {
                     label: 'Drying Date', name: 'sm_tgl_pengeringan', width: 120, editable: true,
+                    align: "right",
                     edittype: "text",
                     editrules: {required: true},
                     editoptions: {
@@ -156,6 +132,7 @@
                 id: 'id',
                 repeatitems: false
             },
+
             loadComplete: function (response) {
                 if (response.success == false) {
                     swal({title: 'Attention', text: response.message, html: true, type: "warning"});
@@ -163,13 +140,13 @@
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID . "agripro.drying_controller/crud"; ?>',
-            caption: "Drying Raw Material"
+            caption: "Drying Report"
 
         });
 
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
             {   //navbar options
-                edit: true,
+                edit: false,
                 editicon: 'fa fa-pencil blue bigger-120',
                 add: false,
                 addicon: 'fa fa-plus-circle purple bigger-120',
@@ -184,10 +161,9 @@
                 },
 
                 refreshicon: 'fa fa-refresh green bigger-120',
-                view: false,
+                view: true,
                 viewicon: 'fa fa-search-plus grey bigger-120'
             },
-
             {
                 // options for the Edit Dialog
                 closeAfterEdit: true,
@@ -202,32 +178,12 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
-                    var bruto = $("#sm_qty_kotor");
-                    var netto = $("#sm_qty_bersih");
                     $("#sm_no_trans").prop("readonly", true);
-                    bruto.prop("readonly", true);
-                    netto.val(bruto.val());
-
-
-
+                    clearLovFarmer();
+                    clearLovPlantation();
                 },
-
                 afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
-                },
-                beforeSubmit: function (response, postdata) {
-                    var bruto = $("#sm_qty_kotor").val();
-                    var netto = $("#sm_qty_bersih").val();
-                    if(netto > bruto){
-                        if(confirm('Netto greater then bruto, are you sure ?')){
-                            return [true, "", response.responseText];
-                        }else{
-                            return false;
-                        }
-                    }else{
-                        return [true, "", response.responseText];
-                    }
-
                 },
                 afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
@@ -253,7 +209,7 @@
                     var form = $(e[0]);
                     style_edit_form(form);
                     /*form.css({"height": 0.70 * screen.height + "px"});
-                     form.css({"width": 0.60 * screen.width + "px"});*/
+                    form.css({"width": 0.60 * screen.width + "px"});*/
 
                     $("#sm_no_trans").prop("readonly", true);
                     setTimeout(function () {

@@ -1,16 +1,16 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
 * Json library
-* @class Stock_material_controller
+* @class Product_controller
 * @version 07/05/2015 12:18:00
 */
-class Drying_controller {
+class Production_controller {
 
     function read() {
 
         $page = getVarClean('page','int',1);
-        $limit = getVarClean('rows','int',10);
-        $sidx = getVarClean('sidx','str','sm_id');
+        $limit = getVarClean('rows','int',5);
+        $sidx = getVarClean('sidx','str','');
         $sord = getVarClean('sord','str','desc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
@@ -18,8 +18,8 @@ class Drying_controller {
         try {
 
             $ci = & get_instance();
-            $ci->load->model('agripro/drying');
-            $table = $ci->drying;
+            $ci->load->model('agripro/production');
+            $table = $ci->production;
 
             $req_param = array(
                 "sort_by" => $sidx,
@@ -36,12 +36,7 @@ class Drying_controller {
             );
 
             // Filter Table
-            $report = getVarClean('report','int',0);
-            if($report != 1){
-                $req_param['where'][] = 'sm.sm_qty_bersih is null ' ;
-            }else{
-                $req_param['where'][] = 'sm.sm_qty_bersih is not null ' ;
-            }
+            $req_param['where'] = array("");
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
@@ -74,7 +69,44 @@ class Drying_controller {
 
         return $data;
     }
+    
+    function readLov() {
+        permission_check('view-tracking');
 
+        $start = getVarClean('current','int',0);
+        $limit = getVarClean('rowCount','int',5);
+
+        $sort = getVarClean('sort','str','category_id');
+        $dir  = getVarClean('dir','str','asc');
+
+        $searchPhrase = getVarClean('searchPhrase', 'str', '');
+
+        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/category');
+            $table = $ci->category;
+
+            if(!empty($searchPhrase)) {
+                $table->setCriteria("(category_id ilike '%".$searchPhrase."%' or category_name ilike '%".$searchPhrase."%')");
+            }
+
+            $start = ($start-1) * $limit;
+            $items = $table->getAll($start, $limit, $sort, $dir);
+            $totalcount = $table->countAll();
+
+            $data['rows'] = $items;
+            $data['success'] = true;
+            $data['total'] = $totalcount;
+
+        }catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+
+        return $data;
+    }
 
     function crud() {
 
@@ -83,7 +115,7 @@ class Drying_controller {
         switch ($oper) {
             case 'add' :
                 permission_check('add-tracking');
-                //$data = $this->create();
+                $data = $this->create();
             break;
 
             case 'edit' :
@@ -93,7 +125,7 @@ class Drying_controller {
 
             case 'del' :
                 permission_check('delete-tracking');
-               // $data = $this->destroy();
+                $data = $this->destroy();
             break;
 
             default :
@@ -109,8 +141,8 @@ class Drying_controller {
     function create() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/drying');
-        $table = $ci->drying;
+        $ci->load->model('agripro/category');
+        $table = $ci->category;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -180,8 +212,8 @@ class Drying_controller {
     function update() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/drying');
-        $table = $ci->drying;
+        $ci->load->model('agripro/category');
+        $table = $ci->category;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -251,8 +283,8 @@ class Drying_controller {
 
     function destroy() {
         $ci = & get_instance();
-        $ci->load->model('agripro/drying');
-        $table = $ci->drying;
+        $ci->load->model('agripro/category');
+        $table = $ci->category;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
