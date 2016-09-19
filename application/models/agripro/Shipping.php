@@ -75,7 +75,14 @@ class Shipping extends Abstract_model {
             $tShippingDetail->removeItems($shipping_detail['shipdet_id']);
         }
 
+        $this->removeShippingCost($shipping_id);
         $this->remove($shipping_id);
+    }
+
+    function removeShippingCost($shipping_id) {
+        $sql = "delete from shipping_cost where shipping_id = ?";
+        $this->db->query($sql, array($shipping_id));
+        return true;
     }
 
     function getTotalCost($shipping_id) {

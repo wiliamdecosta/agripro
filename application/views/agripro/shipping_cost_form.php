@@ -150,7 +150,7 @@
                         }
                     }
                 },
-                {label: 'Cost Value (Rp)',name: 'shipping_cost_value',width: 150, align: "left",editable: true,
+                {label: 'Cost Value (Rp)',name: 'shipping_cost_value',width: 150, align: "right",editable: true,
                     editoptions: {
                         size: 30,
                         maxlength:32
