@@ -10,7 +10,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Cost Parameter</span>
+            <span>Cost Category</span>
         </li>
     </ul>
 </div>
@@ -23,19 +23,6 @@
     </div>
 </div>
 
-<?php $this->load->view('lov/lov_cost_category.php'); ?>
-
-<script>
-    function showLovCostCategory(id, code) {
-        modal_lov_cost_category_show(id, code);
-    }
-
-    function clearLovCostCategory() {
-        $('#form_cost_category_id').val('');
-        $('#form_cost_category_code').val('');
-    }
-</script>
-
 <script>
 
     jQuery(function($) {
@@ -43,62 +30,17 @@
         var pager_selector = "#grid-pager";
 
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo WS_JQGRID."agripro.parameter_cost_controller/crud"; ?>',
+            url: '<?php echo WS_JQGRID."agripro.cost_category_controller/crud"; ?>',
             datatype: "json",
             mtype: "POST",
             colModel: [
-                {label: 'ID', name: 'parameter_cost_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Code',name: 'parameter_cost_code',width: 150, align: "left",editable: true,
+                {label: 'ID', name: 'cost_category_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'Code',name: 'cost_category_code',width: 150, align: "left",editable: true,
                     editoptions: {
                         size: 30,
                         maxlength:32
                     },
                     editrules: {required: true}
-                },
-                {label: 'Category', name: 'cost_category_code', width: 200, align: "left", editable: false},
-                {label: 'Category',
-                    name: 'cost_category_id',
-                    width: 200,
-                    sortable: true,
-                    editable: true,
-                    hidden: true,
-                    editrules: {edithidden: true, number:true, required:true},
-                    edittype: 'custom',
-                    editoptions: {
-                        "custom_element":function( value  , options) {
-                            var elm = $('<span></span>');
-
-                            // give the editor time to initialize
-                            setTimeout( function() {
-                                elm.append('<input id="form_cost_category_id" type="text"  style="display:none;">'+
-                                        '<input id="form_cost_category_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Choose Category">'+
-                                        '<button class="btn btn-success" type="button" onclick="showLovCostCategory(\'form_cost_category_id\',\'form_cost_category_code\')">'+
-                                        '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
-                                        '</button>');
-                                $("#form_cost_category_id").val(value);
-                                elm.parent().removeClass('jqgrid-required');
-                            }, 100);
-
-                            return elm;
-                        },
-                        "custom_value":function( element, oper, gridval) {
-
-                            if(oper === 'get') {
-                                return $("#form_cost_category_id").val();
-                            } else if( oper === 'set') {
-                                $("#form_cost_category_id").val(gridval);
-                                var gridId = this.id;
-                                // give the editor time to set display
-                                setTimeout(function(){
-                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
-                                    if(selectedRowId != null) {
-                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'cost_category_code');
-                                        $("#form_cost_category_code").val( code_display );
-                                    }
-                                },100);
-                            }
-                        }
-                    }
                 }
             ],
             height: '100%',
@@ -129,8 +71,8 @@
 
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID."agripro.parameter_cost_controller/crud"; ?>',
-            caption: "Cost Parameter"
+            editurl: '<?php echo WS_JQGRID."agripro.cost_category_controller/crud"; ?>',
+            caption: "Cost Category"
 
         });
 
@@ -168,6 +110,7 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
+
                 },
                 afterShowForm: function(form) {
                     form.closest('.ui-jqdialog').center();
@@ -195,11 +138,6 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
-
-
-                    setTimeout(function() {
-                        clearLovCostCategory();
-                    },100);
                 },
                 afterShowForm: function(form) {
                     form.closest('.ui-jqdialog').center();
@@ -214,7 +152,6 @@
                     var tinfoel = $(".tinfo").show();
                     tinfoel.delay(3000).fadeOut();
 
-                    clearLovCostCategory();
 
                     return [true,"",response.responseText];
                 }

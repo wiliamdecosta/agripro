@@ -23,6 +23,7 @@
                      <th data-column-id="parameter_cost_id" data-sortable="false" data-visible="false">ID Parameter Cost</th>
                      <th data-header-align="center" data-align="center" data-formatter="opt-edit" data-sortable="false" data-width="100">Options</th>
                      <th data-column-id="parameter_cost_code">Cost Code</th>
+                     <th data-column-id="cost_category_code">Cost Category</th>
                   </tr>
                 </thead>
                 </table>

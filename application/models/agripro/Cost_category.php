@@ -4,16 +4,15 @@
  * Provinsi Model
  *
  */
-class Parameter_cost extends Abstract_model {
+class Cost_category extends Abstract_model {
 
-    public $table           = "parameter_cost";
-    public $pkey            = "parameter_cost_id";
-    public $alias           = "pcost";
+    public $table           = "cost_category";
+    public $pkey            = "cost_category_id";
+    public $alias           = "costcat";
 
     public $fields          = array(
-                                'parameter_cost_id'     => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Parameter Cost'),
-                                'cost_category_id'      => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'ID Cost Category'),
-                                'parameter_cost_code'   => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Code'),
+                                'cost_category_id'     => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Cost Category'),
+                                'cost_category_code'   => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Category Code'),
                                 'created_date'          => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Created Date'),
                                 'created_by'            => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Created By'),
                                 'updated_date'          => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Updated Date'),
@@ -21,11 +20,10 @@ class Parameter_cost extends Abstract_model {
 
                             );
 
-    public $selectClause    = "pcost.*, costcat.cost_category_code";
-    public $fromClause      = "parameter_cost pcost
-                                left join cost_category costcat on pcost.cost_category_id = costcat.cost_category_id";
+    public $selectClause    = "costcat.*";
+    public $fromClause      = "cost_category costcat";
 
-    public $refs            = array('shipping_cost' => 'parameter_cost_id');
+    public $refs            = array('parameter_cost' => 'cost_category_id');
 
     function __construct() {
         parent::__construct();

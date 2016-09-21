@@ -23,7 +23,7 @@ class Admin extends CI_Controller
         $ci = & get_instance();
         $ci->load->model('administration/menus');
         $table = $ci->menus;
-        $result = $table->getAll();
+        $result = $table->getAll(0,-1);
 
 
         $i = 0;
