@@ -137,7 +137,8 @@ class Sortir_controller
                 $table->create();
 
                 $table->db->trans_commit(); //Commit Trans
-
+                //$table->insert_stock($type='sm_id', $sortir_det_id=);
+                
                 $data['success'] = true;
                 $data['message'] = 'Data added successfully';
 
@@ -203,6 +204,14 @@ class Sortir_controller
         } else {
 
             try {
+               
+                //  check if sortir id already packed 
+                $check = $table->is_packing($items[$table->pkey]);
+                
+                if($check > 0){
+                    throw new Exception('Update Failed, This items already packed !');
+                };
+                
                 $table->db->trans_begin(); //Begin Trans
 
                 $table->setRecord($items);
@@ -214,6 +223,7 @@ class Sortir_controller
                 $data['message'] = 'Data update successfully';
 
                 $data['rows'] = $table->get($items[$table->pkey]);
+                        
             } catch (Exception $e) {
                 $table->db->trans_rollback(); //Rollback Trans
 
@@ -238,6 +248,7 @@ class Sortir_controller
         $items = jsonDecode($jsonItems);
 
         try {
+            
             $table->db->trans_begin(); //Begin Trans
 
             $total = 0;
@@ -254,7 +265,11 @@ class Sortir_controller
                 if (empty($items)) {
                     throw new Exception('Empty parameter');
                 };
-
+                
+                //  check if sortir id already packed 
+                if($table->is_packing($items) > 0){
+                    throw new Exception('Delete Failed, Item Already Packed !');
+                };
                 $table->remove($items);
                 $data['rows'][] = array($table->pkey => $items);
                 $data['total'] = $total = 1;
@@ -264,7 +279,7 @@ class Sortir_controller
             $data['message'] = $total . ' Data deleted successfully';
 
             $table->db->trans_commit(); //Commit Trans
-
+                    
         } catch (Exception $e) {
             $table->db->trans_rollback(); //Rollback Trans
             $data['message'] = $e->getMessage();
@@ -308,7 +323,7 @@ class Sortir_controller
             );
 
             // Filter Table
-            $req_param['where'] = array(" sr.sm_id = $sm_id ");
+            $req_param['where'] = array("sr.sm_id is not null and sr.production_id is null");
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
@@ -362,6 +377,27 @@ class Sortir_controller
         exit;
     }
 
+    function get_availableqty_detail()
+    {
+
+        $ci = &get_instance();
+        $ci->load->model('agripro/sortir');
+        $table = $ci->sortir;
+
+        $sm_id = getVarClean('sm_id', 'int', 0);
+        $sortir_id = getVarClean('sortir_id', 'int', 0);
+
+        $qty = explode('|',$table->get_availableqty_detail($sm_id, $sortir_id));
+
+        $out['avaqty'] = $qty[0];
+        $out['srqty'] = $qty[1];
+        $out['qty_bersih'] = $qty[2];
+        $out['tgl_prod'] = $qty[3];
+
+        echo json_encode($out);
+        exit;
+    }
+
     function list_product()
     {
 
@@ -370,8 +406,9 @@ class Sortir_controller
         $table = $ci->sortir;
 
         $sm_id = getVarClean('sm_id', 'int', 0);
+        $sortir_id = getVarClean('sortir_id', 'int', 0);
 
-        $result = $table->list_product($sm_id);
+        $result = $table->list_product($sm_id, $sortir_id);
         echo "<select>";
         foreach ($result as $value) {
             echo "<option value=" . $value['product_id'] . ">" . strtoupper($value['product_code']) . "</option>";

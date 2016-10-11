@@ -25,8 +25,8 @@ class Production extends Abstract_model {
                             );
 
 
-    public $selectClause    = "a.production_code,to_char(a.production_date,'yyyy-mm-dd') as production_date,a.production_qty,
-                               b.product_name,b.product_code
+    public $selectClause    = "a.production_id, a.production_code,to_char(a.production_date,'yyyy-mm-dd') as production_date,a.production_qty,
+                               b.product_id, b.product_name,b.product_code, a.production_qty
                                 ";
     public $fromClause      = "production a
                                 left join product b

@@ -181,6 +181,7 @@ class Sortir_detail_controller
                     $table->setRecord($items[$i]);
                     $table->create();
 
+                    $table->insertStock($table->record);
                     $table->db->trans_commit(); //Commit Trans
 
                 } catch (Exception $e) {
@@ -196,6 +197,7 @@ class Sortir_detail_controller
             } else {
                 $data['success'] = true;
                 $data['message'] = 'Data added successfully';
+                
             }
             $data['rows'] = $items;
         } else {
@@ -205,9 +207,11 @@ class Sortir_detail_controller
 
                 $table->setRecord($items);
                 $table->create();
-
+                
+                $table->insertStock($table->record);
+                
                 $table->db->trans_commit(); //Commit Trans
-
+                
                 $data['success'] = true;
                 $data['message'] = 'Data added successfully';
 
@@ -268,6 +272,8 @@ class Sortir_detail_controller
             } else {
                 $data['success'] = true;
                 $data['message'] = 'Data update successfully';
+                $table->insert_stock($type='sm_id', $sortir_id=$items['sortir_id']);
+                $table->insert_stock($type='production_id', $sortir_id=$items['sortir_id']);
             }
             $data['rows'] = $items;
         } else {
@@ -282,7 +288,10 @@ class Sortir_detail_controller
 
                 $data['success'] = true;
                 $data['message'] = 'Data update successfully';
-
+                
+                $table->insert_stock($type='sm_id', $sortir_id=$items['sortir_id']);
+                $table->insert_stock($type='production_id', $sortir_id=$items['sortir_id']);
+                
                 $data['rows'] = $table->get($items[$table->pkey]);
             } catch (Exception $e) {
                 $table->db->trans_rollback(); //Rollback Trans
@@ -334,7 +343,9 @@ class Sortir_detail_controller
             $data['message'] = $total . ' Data deleted successfully';
 
             $table->db->trans_commit(); //Commit Trans
-
+            $table->insert_stock_del($type='sm_id', $sortir_id=$items);
+            $table->insert_stock_del($type='production_id', $sortir_id=$items);
+        
         } catch (Exception $e) {
             $table->db->trans_rollback(); //Rollback Trans
             $data['message'] = $e->getMessage();

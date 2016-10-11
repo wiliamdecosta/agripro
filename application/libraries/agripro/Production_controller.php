@@ -107,7 +107,48 @@ class Production_controller {
 
         return $data;
     }
+    
+     function readLov_sortir() {
+        permission_check('view-tracking');
 
+        $start = getVarClean('current','int',0);
+        $limit = getVarClean('rowCount','int',5);
+
+        $sort = getVarClean('sort','str','production_id');
+        $dir  = getVarClean('dir','str','asc');
+
+        $searchPhrase = getVarClean('searchPhrase', 'str', '');
+
+        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/production');
+            $table = $ci->production;
+            
+            $table->setCriteria(" production_qty is not null 
+                                    AND production_id not in (select distinct production_id 
+                                                                        from sortir 
+                                                                            where production_id is not null) ");
+            if(!empty($searchPhrase)) {
+                $table->setCriteria(" (production_id ilike '%".$searchPhrase."%' or production_code ilike '%".$searchPhrase."%')");
+            }
+
+            $start = ($start-1) * $limit;
+            $items = $table->getAll($start, $limit, $sort, $dir);
+            $totalcount = $table->countAll();
+
+            $data['rows'] = $items;
+            $data['success'] = true;
+            $data['total'] = $totalcount;
+
+        }catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+
+        return $data;
+    }
     function crud() {
 
         $data = array();

@@ -73,7 +73,84 @@ class Stock_material_controller {
 
         return $data;
     }
+    
+    function readLov() {
+        permission_check('view-tracking');
 
+        $start = getVarClean('current','int',0);
+        $limit = getVarClean('rowCount','int',5);
+
+        $sort = getVarClean('sort','str','sm_id');
+        $dir  = getVarClean('dir','str','asc');
+
+        $searchPhrase = getVarClean('searchPhrase', 'str', '');
+
+        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/stock_material');
+            $table = $ci->stock_material;
+
+            if(!empty($searchPhrase)) {
+                $table->setCriteria("(sm_id ilike '%".$searchPhrase."%' or sm_no_trans ilike '%".$searchPhrase."%')
+                                     ");
+            }
+
+            $start = ($start-1) * $limit;
+            $items = $table->getAll($start, $limit, $sort, $dir);
+            $totalcount = $table->countAll();
+
+            $data['rows'] = $items;
+            $data['success'] = true;
+            $data['total'] = $totalcount;
+
+        }catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+
+        return $data;
+    }
+    
+     function readLov_sortir() {
+        permission_check('view-tracking');
+
+        $start = getVarClean('current','int',0);
+        $limit = getVarClean('rowCount','int',5);
+
+        $sort = getVarClean('sort','str','sm_id');
+        $dir  = getVarClean('dir','str','asc');
+
+        $searchPhrase = getVarClean('searchPhrase', 'str', '');
+
+        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/stock_material');
+            $table = $ci->stock_material;
+            
+            $table->setCriteria(" sm_qty_bersih is not null AND sm_id not in (select distinct sm_id from sortir where sm_id is not null) ");
+            if(!empty($searchPhrase)) {
+                $table->setCriteria(" (sm_id ilike '%".$searchPhrase."%' or sm_no_trans ilike '%".$searchPhrase."%')");
+            }
+
+            $start = ($start-1) * $limit;
+            $items = $table->getAll($start, $limit, $sort, $dir);
+            $totalcount = $table->countAll();
+
+            $data['rows'] = $items;
+            $data['success'] = true;
+            $data['total'] = $totalcount;
+
+        }catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+
+        return $data;
+    }
 
     function crud() {
 

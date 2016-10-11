@@ -22,7 +22,7 @@ class Sortir extends Abstract_model {
                             );
 
     public $selectClause    = "sr.sortir_id, sr.product_id, sr.sm_id, sr.production_id, sr.sortir_tgl, sr.sortir_qty, fm.fm_code, fm.fm_name,
-								sm.sm_no_trans, sm.sm_qty_bersih, pr.product_id, pr.product_name, pr.product_code";
+								sm.sm_no_trans, sm.sm_qty_bersih, pr.product_id, pr.product_name, pr.product_code, production.production_code";
     public $fromClause      = "sortir sr
 								left join stock_material sm on sr.sm_id = sm.sm_id
                                 left join production on sr.production_id = production.production_id
@@ -30,7 +30,7 @@ class Sortir extends Abstract_model {
 								left join farmer fm on sm.fm_id = fm.fm_id
 								";
 
-    public $refs            = array();
+    public $refs            = array("sortir_detail"=>"sortir_id");
 
     function __construct() {
         parent::__construct();
@@ -68,9 +68,42 @@ class Sortir extends Abstract_model {
         return floatval($row['avaqty']) .'|'. floatval($row['srtqty']).'|'. floatval($row['qty_bersih']).'|'. $row['tgl_prod'];
 
 	}
+    
+    function get_availableqty_detail($sm_id, $sortir_id){
 
+		$sql = " SELECT (select sm_qty_bersih from stock_material where sm_id = $sm_id ) -
+						COALESCE (sum(sortir_detail_qty),0) as avaqty, 
+                        COALESCE (sum(sortir_detail_qty),0) as srtqty ,
+						COALESCE((select sm_qty_bersih from stock_material where sm_id = $sm_id ),0) qty_bersih,
+						(select sm_tgl_produksi from stock_material where sm_id = $sm_id ) tgl_prod
+						from sortir_detail 
+                        where sortir_id = $sortir_id ";
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        $query->free_result();
 
-	function list_product($sm_id){
+        return floatval($row['avaqty']) .'|'. floatval($row['srtqty']).'|'. floatval($row['qty_bersih']).'|'. $row['tgl_prod'];
+
+	}
+    
+    function get_availableqty_detail_prd($sm_id, $sortir_id){
+
+		$sql = " SELECT (select production_qty from production where production_id = $sm_id ) -
+						COALESCE (sum(sortir_detail_qty),0) as avaqty, 
+                        COALESCE (sum(sortir_detail_qty),0) as srtqty ,
+						COALESCE((select production_qty from production where production_id = $sm_id ),0) qty_bersih,
+						(select production_date from production where production_id = $sm_id ) tgl_prod
+						from sortir_detail 
+                        where sortir_id = $sortir_id ";
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        $query->free_result();
+
+        return floatval($row['avaqty']) .'|'. floatval($row['srtqty']).'|'. floatval($row['qty_bersih']).'|'. $row['tgl_prod'];
+
+	}
+
+	function list_product($sm_id, $sortir_id){
 
         $sql = "
 				SELECT *
@@ -89,8 +122,44 @@ class Sortir extends Abstract_model {
 								WHERE product_code IN ('LOST')
 						) as a
 					WHERE a.product_id not in (select distinct product_id
+														from sortir_detail
+															where sortir_id = $sortir_id 
+                                                            union all 
+                                                            select distinct product_id
 														from sortir
-															where sm_id = $sm_id )
+															where sortir_id = $sortir_id 
+                                                            )
+				";
+        $q = $this->db->query($sql);
+        return $q->result_array();
+
+    }
+    function list_product_prd($sm_id, $sortir_id){
+
+        $sql = "
+				SELECT *
+				FROM (
+						SELECT *
+							FROM product
+								WHERE parent_id = (	select  coalesce(parent_id,product_id)
+														from product
+															where product_id = (select product_id
+																					from production
+																					where production_id = $sm_id)
+															)
+						UNION ALL
+						SELECT *
+							FROM product
+								WHERE product_code IN ('LOST')
+						) as a
+					WHERE a.product_id not in (select distinct product_id
+														from sortir_detail
+															where sortir_id = $sortir_id 
+                                                            union all
+                                                            select distinct product_id
+														from sortir
+															where sortir_id = $sortir_id 
+                                                            )
 				";
         $q = $this->db->query($sql);
         return $q->result_array();
@@ -106,7 +175,19 @@ class Sortir extends Abstract_model {
         $q = $this->db->query($sql);
 
     }
-
+    
+    function is_packing($sm_id){
+    
+        $sql = " SELECT COUNT(*) total 
+                        from packing_detail 
+                            where sortir_detail_id = $sm_id";
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        $query->free_result();
+        
+        return $row['total'];
+    }
+    
 }
 
 /* End of file Groups.php */
