@@ -10,7 +10,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Raw Material Purchesing</span>
+            <span>Raw Material</span>
         </li>
     </ul>
 </div>
@@ -30,9 +30,6 @@
     </div>
 </div>
 
-<?php $this->load->view('lov/lov_farmer.php'); ?>
-<?php $this->load->view('lov/lov_raw_material.php'); ?>
-<?php $this->load->view('lov/lov_plantation.php'); ?>
 
 <script>
 

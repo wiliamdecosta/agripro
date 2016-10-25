@@ -16,12 +16,111 @@
 </div>
 <!-- end breadcrumb -->
 <div class="space-4"></div>
-<div class="row">
-    <div class="col-md-12">
-        <table id="grid-table"></table>
-        <div id="grid-pager"></div>
+<div class="portlet-body">
+<ul class="nav nav-tabs">
+    <li class="active">
+        <a href="#tab_1_1" data-toggle="tab"> <b>Sumamry View</b> </a>
+    </li>
+    <li>
+        <a href="#tab_1_2" data-toggle="tab"> <b>Detail View </b></a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="tab_1_1">
+          <div class="row widget-row">
+                        <div class="col-md-3">
+                            <!-- BEGIN WIDGET THUMB -->
+                            <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
+                                <h4 class="widget-thumb-heading">Warehouse Kerinci</h4>
+                                <div class="widget-thumb-wrap">
+                                    <i class="widget-thumb-icon bg-green icon-bulb fa fa-cube fa-1x"></i>
+                                    <div class="widget-thumb-body">
+                                        <span class="widget-thumb-subtitle">Stock bahan mentah</span>
+                                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="7,644">0</span>
+                                    </div>
+                                </div>
+                                <div class="widget-thumb-wrap">
+                                    <i class="widget-thumb-icon bg-green icon-bulb"></i>
+                                    <div class="widget-thumb-body">
+                                        <span class="widget-thumb-subtitle">Stok pengeringan</span>
+                                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="7,644">0</span>
+                                    </div>
+                                </div>
+                                <div class="widget-thumb-wrap">
+                                    <i class="widget-thumb-icon bg-green icon-bulb"></i>
+                                    <div class="widget-thumb-body">
+                                        <span class="widget-thumb-subtitle">Stok packing</span>
+                                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="7,644">0</span>
+                                    </div>
+                                </div>
+                                <div class="widget-thumb-wrap">
+                                    <i class="widget-thumb-icon bg-green icon-bulb"></i>
+                                    <div class="widget-thumb-body">
+                                        <span class="widget-thumb-subtitle">Stok sortir</span>
+                                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="7,644">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END WIDGET THUMB -->
+                        </div>
+                        <div class="col-md-3">
+                            <!-- BEGIN WIDGET THUMB -->
+                            <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
+                                <h4 class="widget-thumb-heading">Weekly Sales</h4>
+                                <div class="widget-thumb-wrap">
+                                    <i class="widget-thumb-icon bg-red icon-layers"></i>
+                                    <div class="widget-thumb-body">
+                                        <span class="widget-thumb-subtitle">USD</span>
+                                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="1,293">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END WIDGET THUMB -->
+                        </div>
+                        <div class="col-md-3">
+                            <!-- BEGIN WIDGET THUMB -->
+                            <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
+                                <h4 class="widget-thumb-heading">Biggest Purchase</h4>
+                                <div class="widget-thumb-wrap">
+                                    <i class="widget-thumb-icon bg-purple icon-screen-desktop"></i>
+                                    <div class="widget-thumb-body">
+                                        <span class="widget-thumb-subtitle">USD</span>
+                                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="815">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END WIDGET THUMB -->
+                        </div>
+                        <div class="col-md-3">
+                            <!-- BEGIN WIDGET THUMB -->
+                            <div class="widget-thumb widget-bg-color-white text-uppercase margin-bottom-20 bordered">
+                                <h4 class="widget-thumb-heading">Average Monthly</h4>
+                                <div class="widget-thumb-wrap">
+                                    <i class="widget-thumb-icon bg-blue icon-bar-chart"></i>
+                                    <div class="widget-thumb-body">
+                                        <span class="widget-thumb-subtitle">USD</span>
+                                        <span class="widget-thumb-body-stat" data-counter="counterup" data-value="5,071">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END WIDGET THUMB -->
+                        </div>
+                    </div>
     </div>
+    <div class="tab-pane fade" id="tab_1_2">
+        <div class="row">
+                <div class="col-md-12">
+                    <table id="grid-table"></table>
+                    <div id="grid-pager"></div>
+                </div>
+            </div>
+    </div>
+   
 </div>
+</div>
+
+
+<div class="space-4"></div>
 
 <script>
 
@@ -204,7 +303,7 @@
 
     function responsive_jqgrid(grid_selector, pager_selector) {
         var parent_column = $(grid_selector).closest('[class*="col-"]');
-        $(grid_selector).jqGrid( 'setGridWidth', $(".page-content").width() );
+        $(grid_selector).jqGrid( 'setGridWidth', $(".tab-pane").width() );
         $(pager_selector).jqGrid( 'setGridWidth', parent_column.width() );
     }
 
