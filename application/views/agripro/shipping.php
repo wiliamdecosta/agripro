@@ -85,11 +85,6 @@
                     formatter:function(cellvalue, options, rowObject) {
                         return '<a class="btn green-meadow btn-xs" href="#" onclick="editShipping('+rowObject['shipping_id']+')"><i class="fa fa-pencil"></i>Edit</a>';
                     }
-                },
-                {label: 'Cost',name: '',width: 120, align: "center",editable: false,
-                    formatter:function(cellvalue, options, rowObject) {
-                        return '<a class="btn btn-warning btn-xs" href="#" onclick="costShipping('+rowObject['shipping_id']+')"><i class="fa fa-dollar"></i>Cost</a>';
-                    }
                 }
             ],
             height: '100%',
