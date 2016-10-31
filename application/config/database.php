@@ -78,9 +78,9 @@ $active_record = TRUE;
 $db['default']['hostname'] ='localhost';
 
 $db['default']['username'] = 'agripro';
-$db['default']['password'] = 'agripro';
-$db['default']['database'] = 'db_agripro';
-$db['default']['port']     = 5444;
+$db['default']['password'] = 'agripro2016';
+$db['default']['database'] = 'agripro_db';
+$db['default']['port']     = 5432;
 $db['default']['dbdriver'] = 'postgre';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = FALSE;

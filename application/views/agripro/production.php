@@ -19,7 +19,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <button class="btn blue-madison" id="add-packing"><i class="fa fa-dropbox bigger-120"></i> Add Production</button>
+        <button class="btn blue-madison" id="add-production"><i class="fa fa-dropbox bigger-120"></i> Add Production</button>
     </div>
 </div>
 <div class="space-4"></div>
@@ -56,8 +56,8 @@
 <script>
 
     jQuery(function($) {
-        $('#add-packing').on('click',function(e) {
-            loadContentWithParams('agripro.packing_add_form',{});
+        $('#add-production').on('click',function(e) {
+            loadContentWithParams('agripro.production_add_form',{});
         });
     });
 
