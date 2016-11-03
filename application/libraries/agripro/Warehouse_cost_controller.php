@@ -322,6 +322,10 @@ class Warehouse_cost_controller {
 
             $table->db->trans_begin(); //Begin Trans
 
+                if(compareDate($whcost_start_date, $whcost_end_date) == 2) {
+                    throw new Exception("Start Date must be lesser that End Date");
+                }
+
                 $items = array(
                     'whcost_start_date' => $whcost_start_date,
                     'whcost_end_date' => $whcost_end_date,
@@ -350,7 +354,7 @@ class Warehouse_cost_controller {
                         $record_detail[] = array(
                             'whcost_id' => $table->record[$table->pkey],
                             'parameter_cost_id' => $parameter_cost_ids[$i],
-                            'whcost_det_value' => 999
+                            'whcost_det_value' => $table->getStockMaterialValue($whcost_start_date, $whcost_end_date)
                         );
                     }
                 }
@@ -403,6 +407,7 @@ class Warehouse_cost_controller {
         $whcost_det_ids = (array)$ci->input->post('whcost_det_id');
         $parameter_cost_ids = (array)$ci->input->post('parameter_cost_id');
         $whcost_det_values = (array)$ci->input->post('whcost_det_values');
+        $parameter_cost_codes = (array)$ci->input->post('parameter_cost_code');
 
         try{
 
@@ -423,11 +428,19 @@ class Warehouse_cost_controller {
 
                 for($i = 0; $i < count($parameter_cost_ids); $i++) {
                     if($whcost_det_ids[$i] == "") {
-                        $record_detail[] = array(
-                            'whcost_id' => $whcost_id,
-                            'parameter_cost_id' => $parameter_cost_ids[$i],
-                            'whcost_det_value' => $whcost_det_values[$i]
-                        );
+                        if($parameter_cost_codes[$i] != 'STOCK MATERIAL') {
+                            $record_detail[] = array(
+                                'whcost_id' => $whcost_id,
+                                'parameter_cost_id' => $parameter_cost_ids[$i],
+                                'whcost_det_value' => $whcost_det_values[$i]
+                            );
+                        }else {
+                            $record_detail[] = array(
+                                'whcost_id' => $whcost_id,
+                                'parameter_cost_id' => $parameter_cost_ids[$i],
+                                'whcost_det_value' => $table->getStockMaterialValue($whcost_start_date, $whcost_end_date)
+                            );
+                        }
                     }
                 }
 

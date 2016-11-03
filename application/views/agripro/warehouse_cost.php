@@ -263,7 +263,7 @@
             colModel: [
                 {label: 'ID', key:true, name: 'whcost_det_id', width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'Parameter Cost', name: 'parameter_cost_code', width: 200, align: "left", editable: false},
-                {label: 'Cost Value (Rp)', name: 'whcost_det_value', width: 120, align: "right", editable: false}
+                {label: 'Cost Value (Rp)', name: 'whcost_det_value', width: 120, formatter:'currency', formatoptions: {thousandsSeparator : '.', decimalPlaces: 0}, align:'right', editable: false}
             ],
             height: '100%',
             width:500,
@@ -304,7 +304,7 @@
                 editicon: 'fa fa-pencil blue bigger-120',
                 add: false,
                 addicon: 'fa fa-plus-circle purple bigger-120',
-                del: false,
+                del: true,
                 delicon: 'fa fa-trash-o red bigger-120',
                 search: true,
                 searchicon: 'fa fa-search orange bigger-120',

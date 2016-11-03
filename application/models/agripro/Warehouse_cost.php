@@ -69,6 +69,16 @@ class Warehouse_cost extends Abstract_model {
         }
         $this->remove($whcost_id);
     }
+
+    function getStockMaterialValue($start_date, $end_date) {
+        $sql = "select sum(sm_harga_total) as total from stock_material
+                    where sm_tgl_masuk between ? and ?";
+
+        $query = $this->db->query($sql, array($start_date, $end_date));
+        $item = $query->row_array();
+
+        return $item['total'];
+    }
 }
 
 /* End of file Groups.php */
