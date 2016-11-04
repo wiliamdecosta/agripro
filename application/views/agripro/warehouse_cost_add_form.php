@@ -1,3 +1,4 @@
+<script src="<?php echo base_url(); ?>assets/js/jquery.number.min.js"></script>
 <!-- breadcrumb -->
 <div class="page-bar">
     <ul class="page-breadcrumb">
@@ -132,9 +133,9 @@
 
         var jumlah_baris = document.getElementById('tbl-parameter').rows.length;
 
-        var parameter_cost_id = document.getElementById('parameter_cost_id').value;
-        var parameter_cost_code = document.getElementById('parameter_cost_code').value;
-        var whcost_det_value = document.getElementById('whcost_det_value').value;
+        var parameter_cost_id = $('#parameter_cost_id').val();
+        var parameter_cost_code = $('#parameter_cost_code').val();
+        var whcost_det_value = $('#whcost_det_value').val();
 
         var tr = document.getElementById('tbl-parameter').insertRow(jumlah_baris);
         var tdNo = tr.insertCell(0);
@@ -144,12 +145,12 @@
 
         tdNo.innerHTML = jumlah_baris;
         tdCostCode.innerHTML = '<input type="hidden" name="parameter_cost_id[]" value="'+ parameter_cost_id +'"> <input type="hidden" name="parameter_cost_code[]" value="'+ parameter_cost_code +'">'+ parameter_cost_code;
-        tdCostValue.innerHTML = '<input type="hidden" name="whcost_det_values[]" value="'+ whcost_det_value +'">'+ whcost_det_value;
+        tdCostValue.innerHTML = '<input type="hidden" name="whcost_det_values[]" value="'+ whcost_det_value +'">'+ $.number(whcost_det_value, 2, '.', ',');
         tdAction.innerHTML = '<button type="button" onclick="deleteDataRow(this);"><i class="fa fa-trash"></i> Delete </button>';
 
-        document.getElementById('parameter_cost_id').value = "";
-        document.getElementById('parameter_cost_code').value = "";
-        document.getElementById('whcost_det_value').value = "";
+        $('#parameter_cost_id').val("");
+        $('#parameter_cost_code').val("");
+        $('#whcost_det_value').val("");
         $("#whcost_det_value").prop("disabled", false);
     }
 
@@ -161,6 +162,7 @@
 
 <script>
     $(function() {
+        $(".priceformat").number( true, 2 , '.',','); /* price number format */
         $(".datepicker").datepicker({
             autoclose: true,
             format: 'yyyy-mm-dd',

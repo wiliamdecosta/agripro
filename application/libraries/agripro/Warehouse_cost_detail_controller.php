@@ -92,7 +92,7 @@ class Warehouse_cost_detail_controller {
                     <tr>
                         <td>'.$no++.'</td>
                         <td><input type="hidden" name="whcost_det_id[]" value="'.$item['whcost_det_id'].'"> <input type="hidden" name="parameter_cost_id[]" value="'.$item['parameter_cost_id'].'"><input type="hidden" name="parameter_cost_code[]" value="'.$item['parameter_cost_code'].'">'.$item['parameter_cost_code'].'</td>
-                        <td><input type="hidden" name="whcost_det_values[]" value="'.$item['whcost_det_value'].'">'.$item['whcost_det_value'].'</td>
+                        <td align="right"><input type="hidden" name="whcost_det_values[]" value="'.$item['whcost_det_value'].'">'.numberFormat($item['whcost_det_value'],2).'</td>
                         <td><button type="button" onclick="deleteDataRow(this,'.$item['whcost_det_id'].');"><i class="fa fa-trash"></i> Delete </button></td>
                     </tr>
                 ';

@@ -70,8 +70,8 @@
             colModel: [
                 {label: 'ID', name: 'whcost_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'Warehouse', name: 'wh_name', width: 120, align: "left", editable: false},
-                {label: 'Start Date', name: 'whcost_start_date', width: 100, align: "left", editable: false},
-                {label: 'End Date', name: 'whcost_end_date', width: 100, align: "left", editable: false},
+                {label: 'Start Date', name: 'whcost_start_date', width: 100, align: "center", editable: false},
+                {label: 'End Date', name: 'whcost_end_date', width: 100, align: "center", editable: false},
                 {label: 'Description', name: 'whcost_description', width: 100, hidden:true, align: "left", editable: false},
                 {label: 'Edit Cost',name: '',width: 120, align: "center",editable: false,
                     formatter:function(cellvalue, options, rowObject) {

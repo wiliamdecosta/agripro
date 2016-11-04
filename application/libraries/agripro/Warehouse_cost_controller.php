@@ -413,6 +413,10 @@ class Warehouse_cost_controller {
 
             $table->db->trans_begin(); //Begin Trans
 
+                if(compareDate($whcost_start_date, $whcost_end_date) == 2) {
+                    throw new Exception("Start Date must be lesser that End Date");
+                }
+
                 $items = array(
                     'whcost_id' => $whcost_id,
                     'whcost_start_date' => $whcost_start_date,
@@ -426,6 +430,9 @@ class Warehouse_cost_controller {
                 $tableDetail = $ci->warehouse_cost_detail;
                 $tableDetail->actionType = 'CREATE';
 
+                $stockMaterialFoundCreate = false;
+                $stockMaterialFoundUpdate = array();
+
                 for($i = 0; $i < count($parameter_cost_ids); $i++) {
                     if($whcost_det_ids[$i] == "") {
                         if($parameter_cost_codes[$i] != 'STOCK MATERIAL') {
@@ -435,12 +442,20 @@ class Warehouse_cost_controller {
                                 'whcost_det_value' => $whcost_det_values[$i]
                             );
                         }else {
+                            $stockMaterialFoundCreate = true;
                             $record_detail[] = array(
                                 'whcost_id' => $whcost_id,
                                 'parameter_cost_id' => $parameter_cost_ids[$i],
                                 'whcost_det_value' => $table->getStockMaterialValue($whcost_start_date, $whcost_end_date)
                             );
                         }
+                    }
+
+                    if($whcost_det_ids[$i] != "" and $parameter_cost_codes[$i] == 'STOCK MATERIAL') {
+                        $stockMaterialFoundUpdate['whcost_det_id'] = $whcost_det_ids[$i];
+                        $stockMaterialFoundUpdate['whcost_id'] = $whcost_id;
+                        $stockMaterialFoundUpdate['parameter_cost_id'] = $parameter_cost_ids[$i];
+                        $stockMaterialFoundUpdate['whcost_det_value'] = $table->getStockMaterialValue($whcost_start_date, $whcost_end_date);
                     }
                 }
 
@@ -452,6 +467,11 @@ class Warehouse_cost_controller {
                     $tableDetail->create();
                 }
 
+                if( count($stockMaterialFoundUpdate) > 0) { //update cost value for stock material
+                    $tableDetail->actionType = 'UPDATE';
+                    $tableDetail->setRecord($stockMaterialFoundUpdate);
+                    $tableDetail->update();
+                }
                 //$table->insertStock($table->record);
 
             $table->db->trans_commit(); //Commit Trans

@@ -14,7 +14,7 @@ class Warehouse_cost_detail extends Abstract_model {
                                 'whcost_det_id'             => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID WHCost Detail'),
                                 'whcost_id'                 => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'ID Warehouse'),
                                 'parameter_cost_id'         => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'ID Parameter Cost'),
-                                'whcost_det_value'          => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'Cost Value'),
+                                'whcost_det_value'          => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Cost Value'),
 
                                 'created_date'              => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Created Date'),
                                 'created_by'                => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Created By'),
