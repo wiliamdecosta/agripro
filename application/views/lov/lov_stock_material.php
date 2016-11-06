@@ -1,16 +1,15 @@
 <div id="modal_lov_stock_material" class="modal fade" tabindex="-1" style="overflow-y: scroll;">
-    <div class="modal-dialog" style="width:1000px;">
+    <div class="modal-dialog" style="width:900px;">
         <div class="modal-content">
             <!-- modal title -->
             <div class="modal-header no-padding">
                 <div class="table-header">
-                    <span class="form-add-edit-title"> Data Produk</span>
+                    <span class="form-add-edit-title">Stok Material</span>
                 </div>
             </div>
-            <input type="hidden" id="modal_lov_stock_material_id_val" value="" />
-            <input type="hidden" id="modal_lov_stock_material_code_val" value="" />
-            <input type="hidden" id="modal_lov_stock_material_id2_val" value="" />
-            <input type="hidden" id="modal_lov_stock_material_code2_val" value="" />
+            <input type="hidden" id="modal_lov_smd_id_val" value="" />
+            <input type="hidden" id="modal_lov_smd_trx_code_val" value="" />
+            <input type="hidden" id="modal_lov_smd_qty_val" value="" />
 
             <!-- modal body -->
             <div class="modal-body">
@@ -19,16 +18,15 @@
                     <span class="fa fa-pencil-square-o" aria-hidden="true"></span> BLANK
                   </button>
                 </div>
-                <table id="modal_lov_stock_material_grid_selection" class="table table-striped table-bordered table-hover">
+                <table id="modal_lov_stock_material_detail_grid_selection" class="table table-striped table-bordered table-hover">
                 <thead>
                   <tr>
-                     <th data-column-id="sm_id" data-sortable="false" data-visible="false">ID Produk</th>
+                     <th data-column-id="sm_id" data-sortable="false" data-visible="false" data-width="300">ID SMD</th>
                      <th data-header-align="center" data-align="center" data-formatter="opt-edit" data-sortable="false" data-width="100">Options</th>
+                     <th data-column-id="fm_name" data-width="150">Farmer</th>
                      <th data-column-id="sm_no_trans" data-width="300">Transaction Code</th>
-                     <th data-column-id="product_code">Raw Material Name</th>
-                     <th data-column-id="sm_qty_bersih">Weight(Kg)</th>
-                     <th data-column-id="fm_name">Farmer Name</th>
-                     <th data-column-id="sm_tgl_masuk">Transaction Date</th>
+                     <th data-column-id="product_code" data-width="150">Raw Material</th>
+                     <th data-column-id="sm_qty_bersih" data-width="100">Qty(Kg)</th>
                   </tr>
                 </thead>
                 </table>
@@ -53,55 +51,44 @@
 
     jQuery(function($) {
         $("#modal_lov_stock_material_btn_blank").on('click', function() {
-            $("#"+ $("#modal_lov_stock_material_id_val").val()).val("");
-            $("#"+ $("#modal_lov_stock_material_id2_val").val()).val("");
-            $("#"+ $("#modal_lov_stock_material_code_val").val()).val("");
-            $("#"+ $("#modal_lov_stock_material_code2_val").val()).val("");
-            $("#form_qty_id").val("");
-            $("#form_qty_name").val("");
+            $("#"+ $("#modal_lov_smd_id_val").val()).val("");
+            $("#"+ $("#modal_lov_smd_trx_code_val").val()).val("");
             $("#modal_lov_stock_material").modal("toggle");
         });
     });
 
-    function modal_lov_stock_material_show(the_id_field, the_code_field, the_id_field2, the_code_field2) {
-        modal_lov_stock_material_set_field_value(the_id_field, the_code_field, the_id_field2, the_code_field2);
+    function modal_lov_stock_material_show(id, trx_code, qty,production_product_id,parent_id) {
+
+        modal_lov_stock_material_set_field_value(id, trx_code,qty);
         $("#modal_lov_stock_material").modal({backdrop: 'static'});
-        modal_lov_stock_material_prepare_table();
+        modal_lov_stock_material_prepare_table(parent_id);
+       // $("#modal_lov_stock_material_detail_grid_selection").bootgrid("reload");
     }
 
 
-    function modal_lov_stock_material_set_field_value(the_id_field, the_code_field, the_id_field2, the_code_field2, qty) {
-         $("#modal_lov_stock_material_id_val").val(the_id_field);
-         $("#modal_lov_stock_material_id2_val").val(the_id_field2);
-         $("#modal_lov_stock_material_code_val").val(the_code_field);
-         $("#modal_lov_stock_material_code2_val").val(the_code_field2);
-         $("#form_qty_name").val(qty);
-         $("#form_qty_id").val(qty);
+    function modal_lov_stock_material_set_field_value(the_id_field, the_code_field,qty) {
+         $("#modal_lov_smd_id_val").val(the_id_field);
+         $("#modal_lov_smd_trx_code_val").val(the_code_field);
+         $("#modal_lov_smd_qty_val").val(qty);
+
     }
 
-    function modal_lov_stock_material_set_value(the_id_val, the_code_val, the_id_val2, the_code_val2, qty) {
-        
-         $("#"+ $("#modal_lov_stock_material_id_val").val()).val(the_id_val);
-         $("#"+ $("#modal_lov_stock_material_id2_val").val()).val(the_id_val2);
-         $("#"+ $("#modal_lov_stock_material_code_val").val()).val(the_code_val);
-         $("#"+ $("#modal_lov_stock_material_code2_val").val()).val(the_code_val2);
-         $("#form_qty_name").val(qty);
-         $("#form_qty_id").val(qty);
+    function modal_lov_stock_material_set_value(the_id_val, the_code_val,the_qty) {
+         $("#"+ $("#modal_lov_smd_id_val").val()).val(the_id_val);
+         $("#"+ $("#modal_lov_smd_trx_code_val").val()).val(the_code_val);
+         $("#"+ $("#modal_lov_smd_qty_val").val()).val(the_qty);
          $("#modal_lov_stock_material").modal("toggle");
 
-         $("#"+ $("#modal_lov_stock_material_id_val").val()).change();
-         $("#"+ $("#modal_lov_stock_material_code_val").val()).change();
-
-        // console.log($('#form_sm_no_trans').val()+' hahahahah'+the_id_val+' - '+the_code_val+' - '+$("#modal_lov_stock_material_code_val").val());
-        
-         
+         $("#"+ $("#modal_lov_smd_id_val").val()).change();
+         $("#"+ $("#modal_lov_smd_trx_code_val").val()).change();
     }
 
-    function modal_lov_stock_material_prepare_table() {
-        $("#modal_lov_stock_material_grid_selection").bootgrid({
+    function modal_lov_stock_material_prepare_table(parent_id) {
+        $("#modal_lov_stock_material_detail_grid_selection").bootgrid("destroy");
+        $("#modal_lov_stock_material_detail_grid_selection").bootgrid({
              formatters: {
                 "opt-edit" : function(col, row) {
-                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_stock_material_set_value(\''+ row.sm_id +'\', \''+ row.sm_no_trans +'\', \''+ row.product_id +'\', \''+ row.product_code +'\', \''+ row.sm_qty_bersih +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
+                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_stock_material_set_value(\''+ row.sm_id +'\', \''+ row.sm_no_trans +'\',\''+ row.sm_qty_bersih +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
                 }
              },
              rowCount:[5,10],
@@ -122,7 +109,10 @@
                 }
                 return response;
              },
-             url: '<?php echo WS_BOOTGRID."agripro.stock_material_controller/readLov_sortir"; ?>',
+            post: {
+                parent_id: parent_id
+            },
+             url: '<?php echo WS_BOOTGRID."agripro.production_controller/readLovSM"; ?>',
              selection: true,
              sorting:true
         });

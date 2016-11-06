@@ -13,6 +13,8 @@ class Production extends Abstract_model {
     public $fields          = array(
                                 'production_id'         => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Packaging'),
                                 'product_id'            => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product ID'),
+                                'warehouse_id'           => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'WH ID'),
+                               // 'product_category_id'   => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product Category ID'),
                                 'production_code'       => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Production Code'),
                                 'production_date'       => array('nullable' => false, 'type' => 'date', 'unique' => false, 'display' => 'Production Date'),
                                 'production_qty'        => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Production Quantity'),
@@ -26,7 +28,7 @@ class Production extends Abstract_model {
 
 
     public $selectClause    = "a.production_id, a.production_code,to_char(a.production_date,'yyyy-mm-dd') as production_date,a.production_qty,
-                               b.product_id, b.product_name,b.product_code, a.production_qty
+                               b.product_id, b.product_name,b.product_code,b.product_category_id, a.production_qty
                                 ";
     public $fromClause      = "production a
                                 left join product b
@@ -44,55 +46,38 @@ class Production extends Abstract_model {
 
         if($this->actionType == 'CREATE') {
 
-            $this->record['created_date'] = date('Y-m-d');
+            /*$this->record['created_date'] = date('Y-m-d');
             $this->record['created_by'] = $userdata->username;
             $this->record['updated_date'] = date('Y-m-d');
-            $this->record['updated_by'] = $userdata->username;
+            $this->record['updated_by'] = $userdata->username;*/
 
             //$this->record['pkg_serial_number'] = $this->getSerialNumber();
             //$this->record['pkg_batch_number'] = $this->getBatchNumber($this->record['pkg_serial_number'] );
         }else {
             //do something
             //example:
-            $this->record['updated_date'] = date('Y-m-d');
-            $this->record['updated_by'] = $userdata->username;
+            /*$this->record['updated_date'] = date('Y-m-d');
+            $this->record['updated_by'] = $userdata->username;*/
             //if false please throw new Exception
         }
         return true;
     }
 
-   function getBatchNumber() {
+    function genProductionCode()
+    {
 
-        $format_serial = 'WHKODE-PRODUCTCODE-DATE-XXXX';
+        $sql = "select max(substring(production_code, 5 )) as total from production
+                    where to_char(production_date,'yyyymm') = '" . substr(str_replace('-', '', $this->record['production_date']),0,6) . "'";
 
-        $sql = "select coalesce(max(substr(packing_batch_number, length(packing_batch_number)-4 + 1 )::integer),0) as total from packing
-                    where to_char(packing_tgl,'yyyymmdd') = '".str_replace('-','',$this->record['packing_tgl'])."'";
         $query = $this->db->query($sql);
+
         $row = $query->row_array();
-        if(empty($row)) {
+        if (empty($row)) {
             $row = array('total' => 0);
         }
 
-        $ci = & get_instance();
-        $ci->load->model('agripro/warehouse');
-        $tWarehouse = $ci->warehouse;
-
-        $itemwh = $tWarehouse->get($this->record['warehouse_id']);
-
-        $format_serial = str_replace('XXXX', str_pad(($row['total']+1), 4, '0', STR_PAD_LEFT), $format_serial);
-        $format_serial = str_replace('DATE', str_replace('-','',$this->record['packing_tgl']), $format_serial);
-        $format_serial = str_replace('WHKODE', $itemwh['wh_code'], $format_serial);
-
-        $ci->load->model('agripro/product');
-        $tProduct = $ci->product;
-
-        $itemproduct = $tProduct->get( $this->record['product_id'] );
-        $format_serial = str_replace('PRODUCTCODE', $itemproduct['product_code'], $format_serial);
-
-        return array(
-            'batch_number' => $format_serial,
-            'serial_number' => str_pad(($row['total']+1), 4, '0', STR_PAD_LEFT)
-        );
+        $production_code =   substr(str_replace('-', '', $this->record['production_date']),2,4) ."".str_pad(($row['total'] + 1), 4, '0', STR_PAD_LEFT);
+        return $production_code;
     }
 
     function insertStock($packing_master) {

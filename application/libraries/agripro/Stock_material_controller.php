@@ -16,6 +16,7 @@ class Stock_material_controller {
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
 		$is_sortir = getVarClean('is_sortir','str',0);
+		$purchasing = getVarClean('purchasing','int',0);
 
 		try {
 
@@ -37,7 +38,10 @@ class Stock_material_controller {
                 "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
             );
 
-            // Filter Table
+            // 1 = RM Purchasing
+            if($purchasing == 1){
+                $req_param['where'] = array( "sm.sm_qty_bersih is null" );
+            }
 			if($is_sortir == '1'){
 				$req_param['where'] = array( "sm.sm_qty_bersih *1 > 0 " );
 			}
@@ -200,7 +204,6 @@ class Stock_material_controller {
 
         $table->actionType = 'CREATE';
         $errors = array();
-
         if (isset($items[0])){
             $numItems = count($items);
             for($i=0; $i < $numItems; $i++){
@@ -234,7 +237,14 @@ class Stock_material_controller {
                 $table->db->trans_begin(); //Begin Trans
 
                     $table->setRecord($items);
+                    $table->record[$table->pkey] = $table->generate_id($table->table,$table->pkey);
                     $table->create();
+
+
+                ##############################
+                ## Insert Stock
+                ##############################
+                $table->insertStock($table->record);
 
                 $table->db->trans_commit(); //Commit Trans
 
@@ -307,6 +317,11 @@ class Stock_material_controller {
                     $table->setRecord($items);
                     $table->update();
 
+                    ##############################
+                    ## Update Stock
+                    ##############################
+                    $table->updateStock($table->record);
+
                 $table->db->trans_commit(); //Commit Trans
 
                 $data['success'] = true;
@@ -354,6 +369,11 @@ class Stock_material_controller {
                 };
 
                 $table->remove($items);
+                ##############################
+                ## Update Stock
+                ##############################
+                $table->deleteStock($items);
+
                 $data['rows'][] = array($table->pkey => $items);
                 $data['total'] = $total = 1;
             }

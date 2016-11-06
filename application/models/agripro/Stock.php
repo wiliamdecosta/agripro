@@ -73,6 +73,11 @@ class Stock extends Abstract_model {
 
     }
 
+    public function deleteByReference2($ref) {
+        $this->db->where($ref);
+        $this->db->delete('stock');
+    }
+
 }
 
 /* End of file Groups.php */

@@ -4,7 +4,7 @@
 * @class Product_controller
 * @version 07/05/2015 12:18:00
 */
-class Production_controller {
+class Production_stick_controller {
 
     function read() {
 
@@ -36,14 +36,7 @@ class Production_controller {
             );
 
             // Filter Table
-            $p_cat = getVarClean('p_cat','str','');
-
-            if($p_cat === 'stick'){
-                $req_param['where'] = array("b.parent_id = 1 and b.product_category_id = 2 ");
-            }elseif ($p_cat === 'asalan'){
-                $req_param['where'] = array("b.parent_id = 2 and b.product_category_id = 3 ");
-            }
-
+            $req_param['where'] = array("");
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
@@ -395,14 +388,7 @@ class Production_controller {
             $ci->load->model('agripro/product');
             $table = $ci->product;
 
-            // Filter Table
-            $p_cat = getVarClean('p_cat','str','');
-
-            if($p_cat === 'stick'){
-                $table->setCriteria("prod.parent_id = 1 and prod.product_category_id = 2 ");
-            }elseif ($p_cat === 'asalan'){
-                $table->setCriteria("prod.parent_id = 2 and prod.product_category_id = 3 ");
-            }
+            $table->setCriteria("prod.product_category_id = 2 or prod.product_code in('KABC','KBBC')");
 
             if(!empty($searchPhrase)) {
                 $table->setCriteria("(product_code ilike '%".$searchPhrase."%' or product_name ilike '%".$searchPhrase."%')");
@@ -467,102 +453,6 @@ class Production_controller {
         }
 
         return $data;
-    }
-
-    function createForm() {
-        $ci = & get_instance();
-        $ci->load->model('agripro/production');
-        $table = $ci->production;
-
-        $data = array('success' => false, 'message' => '');
-        $table->actionType = 'CREATE';
-
-        /**
-         * Data master
-         */
-        $product_id = getVarClean('product_id','int',0);
-        $product_qty = getVarClean('qty','float',0);
-        $product_date = getVarClean('tgl','str',0);
-
-        $userdata = $ci->ion_auth->user()->row();
-
-        /**
-         * Data details
-         */
-        $array_sm_id = (array)$ci->input->post('row_sm_id');
-        $array_weight= (array)$ci->input->post('weight');
-
-
-        try{
-
-            // Step
-            // 1. Generate Production Code
-            // 2. Insert Header
-            // 3. Insert Detail
-            // 4. Update SM
-            // 5. Insert Stock
-
-            if(count($array_sm_id) == 0) {
-                throw new Exception('Data source material must be filled');
-            }
-
-            $table->db->trans_begin(); //Begin Trans
-            $items = array(
-                'product_id' => $product_id,
-                'warehouse_id' => $userdata->wh_id,
-                'production_qty' => $product_qty,
-                'production_code' => ' ',
-                'production_date' => $product_date
-            );
-
-            $table->setRecord($items);
-
-            $table->record['production_date'] = $product_date;
-
-            #######################
-            ## Step 1. Generate Production Code
-            #######################
-            // . 1. Generate production code
-            $table->record['production_code'] = $table->genProductionCode();
-            $table->record[$table->pkey] = $table->generate_id($table->table,$table->pkey);
-
-            $record_detail = array();
-            $ci->load->model('agripro/production_detail');
-            $tableDetail = $ci->production_detail;
-            $tableDetail->actionType = 'CREATE';
-
-            for($i = 0; $i < count($array_sm_id); $i++) {
-                $record_detail[] = array(
-                    'production_id' => $table->record[$table->pkey],
-                    'sm_id' => $array_sm_id[$i],
-                    'production_detail_qty' => $array_weight[$i]
-                );
-
-            }
-
-            $table->create();
-            foreach($record_detail as $item_detail) {
-                $tableDetail->setRecord($item_detail);
-                $tableDetail->create();
-            }
-
-          //  $table->insertStock($table->record);
-
-            $table->db->trans_commit(); //Commit Trans
-
-            $data['success'] = true;
-            $data['message'] = 'Data added successfully';
-
-        }catch (Exception $e) {
-            $table->db->trans_rollback(); //Rollback Trans
-
-            $data['message'] = $e->getMessage();
-        }
-
-
-        echo json_encode($data);
-        exit;
-
     }
 
 }

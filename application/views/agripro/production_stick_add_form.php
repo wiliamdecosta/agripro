@@ -25,7 +25,7 @@
 
             <div class="portlet light portlet-fit portlet-form bordered">
                 <!-- BEGIN FORM-->
-                <form method="post" action="" class="form-horizontal" id="form-production">
+                <form method="post" action="#" class="form-horizontal" id="form-production">
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>"
                            value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <div class="form-body">
@@ -44,7 +44,7 @@
                                            class="form-control" placeholder="Choose Product">
                                     <span class="input-group-btn">
                                         <button class="btn btn-success" type="button"
-                                                onclick="showLovProduct('production_product_id','production_product_code','parent_id')">
+                                                onclick="showLovProduct('production_product_id','production_product_code','parent_id','stick')">
                                             <span class="fa fa-search icon-on-right bigger-110"></span>
                                         </button>
                                     </span>
@@ -88,8 +88,8 @@
                                     <div class="col-md-4">
                                         <div class="input-group">
                                             <input class="form-control" placeholder="" type="text" name="new_source_trx_code" id="new_source_trx_code" disabled>
-                                            <input type="text" name="source_sm_id" id="source_sm_id" class="form-control">
-                                            <input type="text" name="new_source_qty" id="new_source_qty" class="form-control">
+                                            <input type="hidden" name="source_sm_id" id="source_sm_id" class="form-control">
+                                            <input type="hidden" name="new_source_qty" id="new_source_qty" class="form-control">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-success" type="button" onclick="showLovRM('source_sm_id','new_source_trx_code','new_source_qty')">
                                                     <span class="fa fa-search icon-on-right bigger-110"></span>
@@ -99,15 +99,14 @@
                                     </div>
 
                                     <div class="col-md-2">
-                                        <input type="text" id="source_product_weight" name="source_product_weight" class="form-control" placeholder="Weight(Kg)">
-                                        <input type="hidden" id="product_weight_compare">
+                                        <input type="text" id="in_source_qty" name="in_source_qty" class="form-control" placeholder="Weight(Kg)">
                                     </div>
                                     <div class="col-md-1">
                                         <button class="btn btn-primary" type="button" id="btn-add-source"> <i class="fa fa-plus"></i>Add Source </button>
                                     </div>
                                 </div>
 
-                                <table class="table table-bordered table-striped" id="tbl-packing-detail">
+                                <table class="table table-bordered table-striped" id="tbl-production-detail">
                                     <thead>
                                     <tr>
                                         <th>#</th>
@@ -245,8 +244,8 @@
 </script>
 
 <script>
-    function showLovProduct(id, code, parent_id) {
-        modal_lov_product_show(id, code, parent_id);
+    function showLovProduct(id, code, parent_id,p_cat) {
+        modal_lov_product_show(id, code, parent_id,p_cat);
     }
 
     function showLovRM(id, code, qty_field) {
@@ -268,30 +267,29 @@
 <script>
     function insertDataRow() {
 
-        var jumlah_baris = document.getElementById('tbl-packing-detail').rows.length;
+        var jumlah_baris = document.getElementById('tbl-production-detail').rows.length;
 
-        var sortir_detail_id = document.getElementById('source_sortir_detail_id').value;
-        var product_id = document.getElementById('source_product_id').value;
-        var product_code = document.getElementById('source_product_code').value;
-        var weight = document.getElementById('source_product_weight').value;
+        var source_sm_id = document.getElementById('source_sm_id').value;
+        var trx_code = document.getElementById('new_source_trx_code').value;
+       // var product_code = document.getElementById('source_product_code').value;
+        var weight = document.getElementById('in_source_qty').value;
 
-        var tr = document.getElementById('tbl-packing-detail').insertRow(jumlah_baris);
+        var tr = document.getElementById('tbl-production-detail').insertRow(jumlah_baris);
         var tdNo = tr.insertCell(0);
         var tdProduct = tr.insertCell(1);
         var tdWeight = tr.insertCell(2);
         var tdAction = tr.insertCell(3);
 
         tdNo.innerHTML = jumlah_baris;
-        tdProduct.innerHTML = '<input type="hidden" name="sortir_detail_id[]" value="' + sortir_detail_id + '"><input type="hidden" name="product_ids[]" value="' + product_id + '">' + product_code;
+        tdProduct.innerHTML = '<input type="hidden" name="row_sm_id[]" value="' + source_sm_id + '">' + trx_code;
         tdWeight.innerHTML = '<input type="hidden" name="weight[]" value="' + weight + '">' + weight;
         tdAction.innerHTML = '<button type="button" onclick="deleteDataRow(this);"><i class="fa fa-trash"></i> Delete </button>';
 
 
-        /* document.getElementById('source_sortir_detail_id').value = "";
-         document.getElementById('source_product_id').value = "";
-         document.getElementById('source_product_code').value = "";
-         document.getElementById('source_product_weight').value = "";
-         document.getElementById('product_weight_compare').value = "";*/
+         document.getElementById('new_source_trx_code').value = "";
+         document.getElementById('source_sm_id').value = "";
+         document.getElementById('new_source_qty').value = "";
+         document.getElementById('in_source_qty').value = "";
     }
 
     function deleteDataRow(sender) {
@@ -310,7 +308,7 @@
         });
 
         $("#btn-back").on('click', function (e) {
-            loadContentWithParams('agripro.production', {});
+            loadContentWithParams('agripro.production_stick', {});
         });
 
         $("#btn-add-source").on('click', function (e) {
@@ -324,34 +322,27 @@
                 return;
             }
 
-            var sortir_detail_id = $('#source_sortir_detail_id').val();
-            var packing_weight = $('#source_product_weight').val();
-            var packing_weight_compact = $('#product_weight_compare').val();
+            var source_sm_id = $('#source_sm_id').val();
+            var in_source_qty = $('#in_source_qty').val();
+            var sm_source_qty = $('#new_source_qty').val();
 
-            if (sortir_detail_id == "" || packing_weight == "") {
+            if (source_sm_id == "" || in_source_qty == "") {
                 swal('Information', 'Source Material and Weight must be filled', 'info');
                 return;
             }
 
-            var packing_kg_float = parseFloat(packing_kg);
-            var packing_weight_float = parseFloat(packing_weight);
-            var packing_weight_compact_float = parseFloat(packing_weight_compact);
-
-            if (packing_weight_float > packing_weight_compact_float) {
-                swal('Information', 'Weight greater than source weight', 'info');
+            // Compare with stock source
+            if (parseFloat(in_source_qty) > parseFloat(sm_source_qty)) {
+                swal('Information', 'Not Enough Stock. Current Stok is '+sm_source_qty, 'info');
                 return;
             }
 
-            if (packing_weight_float > packing_kg_float) {
-                swal('Information', 'Weight greater than packing capacity weight', 'info');
-                return;
-            }
 
-            var source_sortir_detail_ids = $('[name="sortir_detail_id[]"]');
-            if (source_sortir_detail_ids.length > 0) {
+            var row_sm_id = $('[name="row_sm_id[]"]');
+            if (row_sm_id.length > 0) {
                 var error = false;
-                $('[name="sortir_detail_id[]"]').each(function (index) {
-                    if (sortir_detail_id == $(this).val()) {
+                row_sm_id.each(function (index) {
+                    if (source_sm_id == $(this).val()) {
                         swal('Information', 'Oops, we found double source package. choose another source', 'info');
                         error = true;
                     }
@@ -363,26 +354,26 @@
         });
 
 
-        $('#product_weight_compare').on('change', function (e) {
+        /*$('#product_weight_compare').on('change', function (e) {
             $('#source_product_weight').val(this.value);
-        });
+        });*/
 
-        $("#form-packing").submit(function (e) {
+        $("#form-production").submit(function (e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
 
-            if ($("#form-packing").valid() == true) {
-                var url = '<?php echo WS_JQGRID . "agripro.packing_controller/createForm"; ?>';
+            if ($("#form-production").valid() == true) {
+                var url = '<?php echo WS_JQGRID . "agripro.production_controller/createForm"; ?>';
                 $.ajax({
                     type: "POST",
                     url: url,
                     dataType: 'json',
-                    data: $("#form-packing").serialize(),
+                    data: $("#form-production").serialize(),
                     success: function (response) {
 
                         if (response.success != true) {
                             swal('Warning', response.message, 'warning');
                         } else {
-                            loadContentWithParams('agripro.packing', {});
+                            loadContentWithParams('agripro.production_stick', {});
                         }
 
                     }

@@ -6,11 +6,11 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="#">Tracking</a>
+            <a href="#">Purchasing</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Raw Material</span>
+            <span>History Purchasing</span>
         </li>
     </ul>
 </div>
@@ -31,6 +31,7 @@
 </div>
 
 <?php $this->load->view('lov/lov_farmer.php'); ?>
+<?php $this->load->view('lov/lov_raw_material.php'); ?>
 <?php $this->load->view('lov/lov_plantation.php'); ?>
 <script>
 
@@ -77,7 +78,7 @@
             url: '<?php echo WS_JQGRID . "agripro.stock_material_controller/crud"; ?>',
             datatype: "json",
             mtype: "POST",
-            postData: {purchasing:1},
+            postData: {purchasing:0},
             colModel: [
                 {label: 'ID', name: 'sm_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
                 {
@@ -263,7 +264,7 @@
                 {
                     label: 'Harvest Date', name: 'sm_tgl_panen', width: 120, editable: true,
                     edittype: "text",
-                    editrules: {required: true},
+                    editrules: {required: false},
                     editoptions: {
                         // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
                         // use it to place a third party control to customize the toolbar
@@ -340,11 +341,11 @@
 
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
             {   //navbar options
-                edit: true,
+                edit: false,
                 editicon: 'fa fa-pencil blue bigger-120',
-                add: true,
+                add: false,
                 addicon: 'fa fa-plus-circle purple bigger-120',
-                del: true,
+                del: false,
                 delicon: 'fa fa-trash-o red bigger-120',
                 search: true,
                 searchicon: 'fa fa-search orange bigger-120',

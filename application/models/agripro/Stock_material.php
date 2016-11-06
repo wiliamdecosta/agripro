@@ -44,7 +44,7 @@ class Stock_material extends Abstract_model
                                 inner join product as pr on sm.product_id = pr.product_id
                                 inner join plantation as plt on sm.plt_id = plt.plt_id";
 
-    public $refs = array('stock_material_detail' => 'sm_id');
+    public $refs = array();
 
     function __construct()
     {
@@ -66,6 +66,7 @@ class Stock_material extends Abstract_model
             $this->record['created_by'] = $userdata->username;
             $this->record['updated_date'] = date('Y-m-d');
             $this->record['updated_by'] = $userdata->username;
+            $this->record['wh_id'] = $userdata->wh_id;
 
         } else {
             //do something
@@ -111,6 +112,73 @@ class Stock_material extends Abstract_model
         $qty = $this->record['sm_qty_kotor'];
         $total_price = $price * $qty;
         return $total_price;
+    }
+
+    function insertStock($rmp) {
+        $ci = & get_instance();
+
+        $ci->load->model('agripro/stock');
+        $tStock = $ci->stock;
+        $tStock->actionType = 'CREATE';
+
+        $ci->load->model('agripro/stock_category');
+        $tStockCategory = $ci->stock_category;
+
+        $record_stock = array();
+        $record_stock['wh_id'] = $rmp['wh_id'];
+        $record_stock['product_id'] = $rmp['product_id'];
+        $record_stock['sc_id'] = $tStockCategory->getIDByCode('RAW_MATERIAL_STOCK');
+        $record_stock['stock_tgl_masuk'] = $rmp['sm_tgl_masuk'];; //base on packing_tgl
+        $record_stock['stock_kg'] = $rmp['sm_qty_kotor'];
+        $record_stock['stock_ref_id'] = $rmp['sm_id'];
+        $record_stock['stock_ref_code'] = 'RAW MATERIAL';
+
+        $tStock->setRecord($record_stock);
+        $tStock->create();
+    }
+
+    function updateStock($rmp) {
+        $ci = & get_instance();
+
+        $ci->load->model('agripro/stock');
+        $tStock = $ci->stock;
+        $tStock->actionType = 'UPDATE';
+
+        $ci->load->model('agripro/stock_category');
+        $tStockCategory = $ci->stock_category;
+
+        $record_stock = array();
+        $record_stock['product_id'] = $rmp['product_id'];
+        $record_stock['sc_id'] = $tStockCategory->getIDByCode('RAW_MATERIAL_STOCK');
+        $record_stock['stock_tgl_masuk'] = $rmp['sm_tgl_masuk'];; //base on packing_tgl
+        $record_stock['stock_kg'] = $rmp['sm_qty_kotor'];
+        $record_stock['stock_ref_code'] = 'RAW MATERIAL';
+
+        $this->db->where(array(
+            'stock_ref_id' => $rmp['sm_id'],
+            'sc_id' => $tStockCategory->getIDByCode('RAW_MATERIAL_STOCK')
+        ));
+        $this->db->update($tStock->table, $record_stock);
+
+        //$tStock->setRecord($record_stock);
+        //$tStock->create();
+    }
+
+    function deleteStock($items){
+        $ci = & get_instance();
+
+        $ci->load->model('agripro/stock');
+        $tStock = $ci->stock;
+
+        $ci->load->model('agripro/stock_category');
+        $tStockCategory = $ci->stock_category;
+
+        $ref = array(
+            'stock_ref_id' => $items,
+            'stock_ref_code' => 'RAW MATERIAL',
+            'sc_id' => $tStockCategory->getIDByCode('RAW_MATERIAL_STOCK')
+        );
+        $tStock->deleteByReference2($ref);
     }
 
 }

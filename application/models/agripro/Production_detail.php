@@ -43,10 +43,10 @@ class Production_detail extends Abstract_model {
             //do something
             // example :
 
-            $this->record['created_date'] = date('Y-m-d');
+            /*$this->record['created_date'] = date('Y-m-d');
             $this->record['created_by'] = $userdata->username;
             $this->record['updated_date'] = date('Y-m-d');
-            $this->record['updated_by'] = $userdata->username;
+            $this->record['updated_by'] = $userdata->username;*/
 
         }else {
             //do something

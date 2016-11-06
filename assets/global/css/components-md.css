@@ -5183,8 +5183,10 @@ Form Layouts
 
 .portlet-form .form-section,
 .form .form-section {
-  margin: 30px 0px 30px 0px;
-  padding-bottom: 5px; }
+  margin: 30px 0;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #e7ecf1;
+}
   .form-fit .portlet-form .form-section, .form-fit
   .form .form-section {
     margin-left: 20px;
