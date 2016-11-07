@@ -10,19 +10,13 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Packing</span>
+            <span>Packing History</span>
         </li>
     </ul>
 </div>
 <!-- end breadcrumb -->
 <div class="space-4"></div>
 
-<div class="row">
-    <div class="col-md-12">
-        <button class="btn blue-madison" id="add-packing"><i class="fa fa-dropbox bigger-120"></i> Add Packing</button>
-    </div>
-</div>
-<div class="space-4"></div>
 <div class="row">
     <div class="col-md-12">
         <table id="grid-table"></table>
@@ -56,17 +50,11 @@
 <script>
 
     jQuery(function($) {
-        $('#add-packing').on('click',function(e) {
-            loadContentWithParams('agripro.packing_add_form',{});
-        });
-    });
-
-    jQuery(function($) {
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
 
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo WS_JQGRID."agripro.packing_controller/crud"; ?>',
+            url: '<?php echo WS_JQGRID."agripro.packing_controller/readHistory"; ?>',
             datatype: "json",
             mtype: "POST",
             colModel: [
@@ -79,11 +67,6 @@
                 {label: 'Batch Number', name: 'packing_serial', width: 100, align: "left", editable: false},
                 {label: 'Weight(Kg)', name: 'packing_kg', width: 80, align: "right", editable: false},
                 {label: 'Packing Date', name: 'packing_tgl', width: 120, align: "center", editable: false},
-                {label: 'View Packing',name: '',width: 120, align: "center",editable: false,
-                    formatter:function(cellvalue, options, rowObject) {
-                        return '<a class="btn green-meadow btn-xs" href="#" onclick="viewPacking('+rowObject['packing_id']+')"><i class="fa fa-search-plus"></i>View</a>';
-                    }
-                },
                 {label: 'Print Label',name: '',width: 120, align: "center",editable: false,
                     formatter:function(cellvalue, options, rowObject) {
                         var val = rowObject['packing_id'];
@@ -146,7 +129,7 @@
                 editicon: 'fa fa-pencil blue bigger-120',
                 add: false,
                 addicon: 'fa fa-plus-circle purple bigger-120',
-                del: true,
+                del: false,
                 delicon: 'fa fa-trash-o red bigger-120',
                 search: true,
                 searchicon: 'fa fa-search orange bigger-120',
