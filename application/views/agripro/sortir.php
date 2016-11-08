@@ -421,7 +421,7 @@
 
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
             {   //navbar options
-                edit: true,
+                edit: false,
                 editicon: 'fa fa-pencil blue bigger-120',
                 add: true,
                 addicon: 'fa fa-plus-circle purple bigger-120',
@@ -561,7 +561,7 @@
             mtype: "POST",
             colModel: [
                 {label: 'ID', key: true, name: 'sortir_detail_id', width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'ID', key: true, name: 'sortir_id', width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'ID', key: false, name: 'sortir_id', width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'Product Code', name: 'product_code', width: 150, align: "left", editable: false},
                 {
                     label: 'Product Code',
@@ -640,7 +640,7 @@
 
         jQuery('#grid-table-detail').jqGrid('navGrid', '#grid-pager-detail',
             {   //navbar options
-                edit: true,
+                edit: false,
                 editicon: 'fa fa-pencil blue bigger-120',
                 add: true,
                 addicon: 'fa fa-plus-circle purple bigger-120',

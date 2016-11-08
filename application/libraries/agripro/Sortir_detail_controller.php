@@ -272,8 +272,8 @@ class Sortir_detail_controller
             } else {
                 $data['success'] = true;
                 $data['message'] = 'Data update successfully';
-                $table->insert_stock($type='sm_id', $sortir_id=$items['sortir_id']);
-                $table->insert_stock($type='production_id', $sortir_id=$items['sortir_id']);
+                //$table->insert_stock($type='sm_id', $sortir_id=$items['sortir_id']);
+                //$table->insert_stock($type='production_id', $sortir_id=$items['sortir_id']);
             }
             $data['rows'] = $items;
         } else {
@@ -289,8 +289,8 @@ class Sortir_detail_controller
                 $data['success'] = true;
                 $data['message'] = 'Data update successfully';
                 
-                $table->insert_stock($type='sm_id', $sortir_id=$items['sortir_id']);
-                $table->insert_stock($type='production_id', $sortir_id=$items['sortir_id']);
+                //$table->insert_stock($type='sm_id', $sortir_id=$items['sortir_id']);
+                //$table->insert_stock($type='production_id', $sortir_id=$items['sortir_id']);
                 
                 $data['rows'] = $table->get($items[$table->pkey]);
             } catch (Exception $e) {
@@ -323,8 +323,11 @@ class Sortir_detail_controller
             if (is_array($items)) {
                 foreach ($items as $key => $value) {
                     if (empty($value)) throw new Exception('Empty parameter');
-
-                    $table->remove($value);
+					
+					// delete stock 
+					$table->removeStock($value);
+                    
+					$table->remove($value);
                     $data['rows'][] = array($table->pkey => $value);
                     $total++;
                 }
@@ -333,18 +336,23 @@ class Sortir_detail_controller
                 if (empty($items)) {
                     throw new Exception('Empty parameter');
                 };
-
-                $table->remove($items);
+				
+				// delete stock 
+				$table->removeStock($items);
+                
+				$table->remove($items);
                 $data['rows'][] = array($table->pkey => $items);
-                $data['total'] = $total = 1;
+                //$data['total'] = $total = 1;
             }
-
+			
+			
+			
             $data['success'] = true;
-            $data['message'] = $total . ' Data deleted successfully';
+            $data['message'] = 'Data deleted successfully';
 
             $table->db->trans_commit(); //Commit Trans
-            $table->insert_stock_del($type='sm_id', $sortir_id=$items);
-            $table->insert_stock_del($type='production_id', $sortir_id=$items);
+            //$table->insert_stock_del($type='sm_id', $sortir_id=$items);
+            //$table->insert_stock_del($type='production_id', $sortir_id=$items);
         
         } catch (Exception $e) {
             $table->db->trans_rollback(); //Rollback Trans

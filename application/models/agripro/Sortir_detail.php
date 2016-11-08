@@ -59,99 +59,25 @@ class Sortir_detail extends Abstract_model {
         return floatval($row['avaqty']) .'|'. floatval($row['srtqty']).'|'. floatval($row['qty_bersih']).'|'. $row['tgl_prod'];
         
         }
-        
-    function insert_stock_del($type, $sortir_id){
-        $ci =& get_instance();
-        $userdata = $ci->ion_auth->user()->row();
-        
-        if($type == 'sm_id'){
-            
-                $table = 'stock_material';
-                $desc = 'Raw Material Selection Stock';
-                $wh  = 'wh_id';
-            }else{
-                $table = 'production';
-                $desc = 'Production Selection Stock';
-                $wh  = 'warehouse_id';
-                }
-        
-             $sql = " 
-                DELETE FROM stock 
-                    where stock_ref_id  = $sortir_id
-                and stock_ref_code = 'SORTIR'
-                and sc_id = 5 
-                and stock_description = '".$desc."' ";
-                            
-            $query = $this->db->query($sql);
-        
-        }
-    function insert_stock2($type, $sortir_id){
-        $ci =& get_instance();
-        $userdata = $ci->ion_auth->user()->row();
-        
-        if($type == 'sm_id'){
-            
-                $table = 'stock_material';
-                $desc = 'Raw Material Selection Stock';
-                $wh  = 'wh_id';
-            }else{
-                $table = 'production';
-                $desc = 'Production Selection Stock';
-                $wh  = 'warehouse_id';
-                }
-        
-             $sql = " 
-                DELETE FROM stock 
-                    where stock_ref_id in (select distinct sortir_detail_id from sortir_detail where sortir_id = $sortir_id) 
-                and stock_ref_code = 'SORTIR'
-                and sc_id = 5 
-                and stock_description = '".$desc."' ";
-                            
-            $query = $this->db->query($sql);
-        
-        
-         $sql = " 
-         
-                insert into stock (   stock_id,
-                                      wh_id,
-                                      product_id,
-                                      sc_id,
-                                      stock_tgl_masuk,
-                                      stock_kg,
-                                      stock_ref_id,
-                                      stock_ref_code,
-                                      stock_description,
-                                      created_date,
-                                      created_by)
-                                     SELECT nextval('stock_stock_id_seq'), 
-                                            c.$wh,  
-                                            a.product_id,
-                                            5,
-                                            current_date, 
-                                            a.sortir_detail_qty,
-                                            a.sortir_detail_id,
-                                            'SORTIR',
-                                            '".$desc."',
-                                            current_date, 
-                                            '".$userdata->username."'
-                                            from sortir_detail a 
-                                                 join sortir b on a.sortir_id = b.sortir_id
-                                                 join $table c on b.$type = c.$type
-                                            where a.sortir_id in (select distinct sortir_detail_id from sortir where sortir_id = $sortir_id) 
-                                            ";
-                            
-        $query = $this->db->query($sql);
-        
-        
-        }
-    function get_sm_id($sortir_id){
-    
-        $sql = " SELECT distinct sm_id from sortir where sortir_id = $sortir_id ";
+	
+	
+	
+    function get_sm_id($sortir_detail_id){
+		
+         $sql = " SELECT distinct coalesce(sm_id,production_id) ref_id, CASE WHEN sm_id IS NULL THEN 'PRODUCTION' ELSE 'MATERIAL' END as type
+                    FROM sortir 
+                        WHERE sortir_id = ( SELECT sortir_id 
+                                                FROM sortir_detail 
+													WHERE sortir_detail_id = $sortir_detail_id limit 1 ) ";
         $query = $this->db->query($sql);
         $row = $query->row_array();
         $query->free_result();
+		
+		$ret = array();
+        $ret['ref_id'] = $row['ref_id'];
+        $ret['type'] = $row['type'];
         
-        return $row['sm_id'];
+		return $ret;
     }
     
     function insertStock($sortir_detail) {
@@ -172,36 +98,50 @@ class Sortir_detail extends Abstract_model {
         
         $ci->load->model('agripro/stock_material');
         $tsm = $ci->stock_material;
-        /**
-         * Steps :
-         * 1. Insert master to Stock as PACKING_STOCK category (IN STOCK - PACKING)
-         * 2. Insert detail to Stock as SORTIR_STOCK category (OUT STOCK - SORTIR)
-         * 3. Decrease Sortir Weight by Detail packing weight
+		
+		$ci->load->model('agripro/production');
+        $tProduction = $ci->production;
+
+		// 	get ref id sm_id / production_id 
+        $ref = $this->get_sm_id($sortir_detail['sortir_detail_id']);
+		$ref_id = $ref['ref_id'];
+		$type = $ref['type'];
         
-         *  Steps sortir :
-         * 1. Insert master to Stock as SORTIR_STOCK category (IN STOCK SORTIR)
-         * 2. Insert detail to Stock as SORTIR_STOCK category (OUT STOCK - SORTIR)
-         * 3. Decrease Sortir Weight by Detail packing weight
-         */
-         
-         /**
-         * Step 1 - Insert master to stock as SORTIR_STOCK (IN STOCK - stock_tgl_masuk)
-         * Step 2 - Insert master to stock 
-         */
-         
-        $sm_id = $this->get_sm_id($sortir_detail['sortir_id']);
-        
-        $srt->setCriteria('sortir_id = '.$sortir_detail['sortir_id']);
+		// get data sortir 
+        $srt->setCriteria('sortir_id = '.$sortir_detail['sortir_id'] );
         $datasrt = $srt->getAll();
-        
-        $tsm->setCriteria('sm.sm_id = '.$sm_id);
-        $datatsm = $tsm->getAll();
-        foreach($datatsm as $datatsms) {
-            $whid = $datatsms['wh_id'];
-            }
         foreach($datasrt as $datasrts) {
             $sdate = $datasrts['sortir_tgl'];
             }
+		//$whid = 0;
+		if($type == 'PRODUCTION'){
+			// ref id = production_id 
+			$tProduction->setCriteria('a.production_id = '.$ref_id);
+			$dataprd = $tProduction->getAll();
+			foreach($dataprd as $dataprds) {
+				$whid = $dataprds['warehouse_id'];
+            }
+			
+			
+			$sql = "UPDATE production SET production_qty = production_qty - ".$sortir_detail['sortir_detail_qty']."
+                        WHERE production_id = ".$ref_id;
+
+			$stock_refcode = 'PRODUCTION_SORTIR';
+			
+		}else{
+			$tsm->setCriteria('sm.sm_id = '.$ref_id);
+			$datatsm = $tsm->getAll();
+			foreach($datatsm as $datatsms) {
+				$whid = $datatsms['wh_id'];
+				}
+			// ref id =  sm_id 
+			$sql = "UPDATE stock_material SET sm_qty_bersih = sm_qty_bersih - ".$sortir_detail['sortir_detail_qty']."
+                        WHERE sm_id = ".$ref_id;
+
+			$stock_refcode = 'DRYING_SORTIR';
+			
+		}
+		
         $record_stock = array();
         $stock_date = $sdate; //$datasrt['sortir_tgl'];
         $record_stock['stock_tgl_masuk'] = $stock_date; //base on sorting_date
@@ -213,118 +153,78 @@ class Sortir_detail extends Abstract_model {
         $record_stock['product_id'] = $sortir_detail['product_id'];
         $tStock->setRecord($record_stock);
         $tStock->create();
-
-         /**  
-        $sm_id = $this->get_sm_id($sortir_detail['sortir_id']);
-        
-        $srt->setCriteria('sortir_id = '.$sortir_detail['sortir_id']);
-        $datasrt = $srt->getAll();
-        
-        $tsm->setCriteria('sm.sm_id = '.$sm_id);
-        $details = $tsm->getAll();
-      
-        foreach($details as $datatsm) {
-            $record_stock = array();
-            $record_stock['stock_tgl_masuk'] = $srt['sortir_date']; //base on packing_tgl
-            $record_stock['stock_kg'] = $sortir_detail['sortir_detail_qty'];
-            $record_stock['stock_ref_id'] = $sortir_detail['sortir_detail_id']; //sortir_detail id become reference on stock
-            $record_stock['stock_ref_code'] = 'SORTIR_PACKING';
-            $record_stock['sc_id'] = $tStockCategory->getIDByCode('SORTIR_STOCK');
-            $record_stock['wh_id'] = $datatsm['wh_id'];
-            $record_stock['product_id'] = $sortir_detail['product_id'];
-            $record_stock['stock_description'] = 'Selection Stock';
-            $tStock->setRecord($record_stock);
-            $tStock->create();
-        }
-
-
-        
-         * Step 1 - Insert master to stock as PACKING_STOCK (IN STOCK - stock_tgl_masuk)
-         
-        $record_stock = array();
-        $stock_date = $packing_master['packing_tgl'];
-        $record_stock['stock_tgl_masuk'] = $stock_date; //base on packing_tgl
-        $record_stock['stock_kg'] = $packing_master['packing_kg'];
-        $record_stock['stock_ref_id'] = $packing_master['packing_id'];
-        $record_stock['stock_ref_code'] = 'PACKING';
-        $record_stock['sc_id'] = $tStockCategory->getIDByCode('PACKING_STOCK');
-        $record_stock['wh_id'] = $packing_master['warehouse_id'];
-        $record_stock['product_id'] = $packing_master['product_id'];
+		
+		$record_stock = array();
+        $stock_date = $sdate; //$datasrt['sortir_tgl'];
+        $record_stock['stock_tgl_masuk'] = $stock_date; //base on sorting_date
+        $record_stock['stock_kg'] = $sortir_detail['sortir_detail_qty'];
+        $record_stock['stock_ref_id'] = $sortir_detail['sortir_detail_id'];
+        $record_stock['stock_ref_code'] = $stock_refcode;
+        $record_stock['sc_id'] = $tStockCategory->getIDByCode('SORTIR_STOCK');
+        $record_stock['wh_id'] = $whid;
+        $record_stock['product_id'] = $sortir_detail['product_id'];
+        $record_stock['stock_description'] = 'sm_qty_bersih has used by sortir_detail';
         $tStock->setRecord($record_stock);
-        $tStock->create();*/
-
+        $tStock->create();
+		
+		$tsm->db->query($sql); 
        
     }
 
 
-    public function removePacking($packing_id) {
+    public function removeStock($sortir_detail_id) {
 
         $ci = & get_instance();
-        /*if ($this->isRefferenced($packing_id)){
-            //if packing_id is used in shipping_detail then delete data shipping also
-            $ci->load->model('agripro/shipping_detail');
-            $tShippingDetail = $ci->shipping_detail;
-
-            $tShippingDetail->removeByPackingID($packing_id);
-        }*/
-
+		
         $ci->load->model('agripro/stock');
         $tStock = $ci->stock;
-
-        $ci->load->model('agripro/packing_detail');
-        $tPackingDetail = $ci->packing_detail;
-
+		
         $ci->load->model('agripro/sortir_detail');
         $tSortirDetail = $ci->sortir_detail;
 
-        /**
-         * Steps to Delete Packing
-         *
-         * 1. Remove all stock_detail first
-         * 2. When loop for delete stock_detail, save data sortir in array
-         * 3. Delete data packing in stock
-         * 4. Loop data sortir for delete data sortir in stock and restore qty to sortir
-         * 5. Delete data master packing
-         */
-
-        $data_sortir = array();
-        $tPackingDetail->setCriteria('pd.packing_id = '.$packing_id);
-        $details = $tPackingDetail->getAll();
-        $loop = 0;
-        foreach($details as $packing_detail) {
-            $data_sortir[$loop]['sortir_detail_id'] = $packing_detail['sortir_detail_id'];
-            $data_sortir[$loop]['restore_store_qty'] = $packing_detail['pd_kg'];
-            $loop++;
-
-            $tPackingDetail->remove($packing_detail['pd_id']);
-        }
-
-        /**
-         * Delete data stock by packing_id
-         */
-        $tStock->deleteByReference($packing_id, 'PACKING');
-
-        /**
-         * loop for delete data stock by sortir_detail_id and restore store_qty in table sortir
-         */
-        foreach($data_sortir as $sortir) {
-            //delete data stock by sortir_detail_id
-            $tStock->deleteByReference($sortir['sortir_detail_id'], 'SORTIR_PACKING');
-
-            //restore store qty
-            $increase_kg = (float) $sortir['restore_store_qty'];
-            $sql = "UPDATE sortir_detail SET sortir_detail_qty = sortir_detail_qty + ".$increase_kg."
-                        WHERE sortir_detail_id = ".$sortir['sortir_detail_id'];
-
-            $tSortirDetail->db->query($sql);
-
-        }
-
-        /**
-         * Delete data master packing
-         */
-        $this->remove($packing_id);
-    }
+        $ci->load->model('agripro/stock_material');
+        $tStockMaterial = $ci->stock_material;
+		
+		/**
+			Step Delete Stock Sortir detail
+			1. delete sortir detail 
+			2. update stock_material qty_bersih + deleted qty_sortir  
+		**/
+		
+		// get qty detail 
+		$tSortirDetail->setCriteria('sortir_detail_id = '.$sortir_detail_id);
+        $datasrt = $tSortirDetail->getAll();
+		
+		$qty_detail = 0;
+		foreach($datasrt as $datasrts) {
+			$qty_detail = $datasrts['sortir_detail_qty'];
+		}
+		
+		$ref = $this->get_sm_id($sortir_detail_id);
+		$ref_id = $ref['ref_id'];
+		$type = $ref['type'];
+		
+		if($type == 'PRODUCTION'){
+			// ref id = production_id 
+		
+			$sql = "UPDATE production SET production_qty = production_qty - ".$sortir_detail_id."
+                        WHERE production_id = ".$ref_id;
+	
+			$stock_refcode = 'PRODUCTION_SORTIR';
+			
+		}else{
+			// ref id =  sm_id 
+			$sql = "UPDATE stock_material SET sm_qty_bersih = sm_qty_bersih + ".$qty_detail."
+                        WHERE sm_id = ".$ref_id;
+			
+			$stock_refcode = 'DRYING_SORTIR';
+			
+		}
+		
+		
+		$tStock->deleteByReference($sortir_detail_id, 'SORTIR_STOCK');
+		$tStock->deleteByReference($sortir_detail_id, $stock_refcode);
+		
+        $tStock->db->query($sql);
+	}
 }
-
-/* End of file Groups.php */
