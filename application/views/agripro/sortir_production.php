@@ -369,10 +369,12 @@
                 //show_detail_grid(rowid);
 				
 				var celValue = $('#grid-table').jqGrid('getCell', rowid, 'sortir_id');
+				var product_id = $('#grid-table').jqGrid('getCell', rowid, 'product_id');
 				var production_id = $('#grid-table').jqGrid('getCell', rowid, 'production_id');
 				var celCode = $('#grid-table').jqGrid('getCell', rowid, 'production_code');
 				var prod_date_1 = $('#grid-table').jqGrid('getCell', rowid, 'sm_tgl_produksi');
 
+				$("#temp_product_id").val(product_id);
 				$("#temp_production_id").val(production_id);
 				$("#temp_sortir_id").val(celValue);
 				
@@ -575,8 +577,8 @@
                     editoptions: {
                         dataUrl: '<?php echo WS_JQGRID . "agripro.sortir_production_controller/list_product"; ?>',
                         postData: {
-                            production_id: function () {
-                                return $('#temp_production_id').val()
+                            product_id: function () {
+                                return $('#temp_product_id').val()
                             }, sortir_id: function () {
                                 return $('#temp_sortir_id').val()
                             }

@@ -134,6 +134,30 @@ class Sortir extends Abstract_model {
         return $q->result_array();
 
     }
+	
+	function list_product_prd_id($sm_id,$product_id){
+
+        $sql = "
+				SELECT *
+				FROM (
+						SELECT *
+							FROM product
+								WHERE parent_id = $product_id
+						UNION ALL
+						SELECT *
+							FROM product
+								WHERE product_code IN ('LOST')
+						) as a
+					WHERE a.product_id not in (select distinct product_id
+														from sortir_detail
+															where sortir_id = $sm_id )
+				";
+        $q = $this->db->query($sql);
+        return $q->result_array();
+
+    }
+	
+	
     function list_product_prd($sm_id, $sortir_id){
 
         $sql = "
