@@ -1,23 +1,26 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
-* Json library
-* @class Stock_material_controller
-* @version 07/05/2015 12:18:00
-*/
-class Drying_controller {
+ * Json library
+ * @class Stock_material_controller
+ * @version 07/05/2015 12:18:00
+ */
+class Drying_controller
+{
 
-    function read() {
+    function read()
+    {
 
-        $page = getVarClean('page','int',1);
-        $limit = getVarClean('rows','int',10);
-        $sidx = getVarClean('sidx','str','sm_id');
-        $sord = getVarClean('sord','str','desc');
+        $page = getVarClean('page', 'int', 1);
+        $limit = getVarClean('rows', 'int', 10);
+        $sidx = getVarClean('sidx', 'str', 'sm_id');
+        $sord = getVarClean('sord', 'str', 'desc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
         try {
 
-            $ci = & get_instance();
+            $ci = &get_instance();
             $ci->load->model('agripro/drying');
             $table = $ci->drying;
 
@@ -36,11 +39,11 @@ class Drying_controller {
             );
 
             // Filter Table
-            $report = getVarClean('report','int',0);
-            if($report != 1){
-                $req_param['where'][] = 'sm.sm_qty_bersih is null ' ;
+            $report = getVarClean('report', 'int', 0);
+            if ($report == 1) {
+                $req_param['where'][] = 'sm.sm_qty_bersih_init is not null or sm.sm_qty_kotor > 0';
             }else{
-                $req_param['where'][] = 'sm.sm_qty_bersih is not null ' ;
+                $req_param['where'][] = 'sm.sm_qty_bersih is null  or sm.sm_qty_bersih > 0';
             }
 
             $table->setJQGridParam($req_param);
@@ -68,7 +71,7 @@ class Drying_controller {
             $data['rows'] = $table->getAll();
             $data['success'] = true;
 
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $data['message'] = $e->getMessage();
         }
 
@@ -76,7 +79,8 @@ class Drying_controller {
     }
 
 
-    function crud() {
+    function crud()
+    {
 
         $data = array();
         $oper = getVarClean('oper', 'str', '');
@@ -84,31 +88,32 @@ class Drying_controller {
             case 'add' :
                 permission_check('add-tracking');
                 //$data = $this->create();
-            break;
+                break;
 
             case 'edit' :
                 permission_check('edit-tracking');
                 $data = $this->update();
-            break;
+                break;
 
             case 'del' :
                 permission_check('delete-tracking');
-               // $data = $this->destroy();
-            break;
+                // $data = $this->destroy();
+                break;
 
             default :
                 permission_check('view-tracking');
                 $data = $this->read();
-            break;
+                break;
         }
 
         return $data;
     }
 
 
-    function create() {
+    function create()
+    {
 
-        $ci = & get_instance();
+        $ci = &get_instance();
         $ci->load->model('agripro/drying');
         $table = $ci->drying;
 
@@ -117,7 +122,7 @@ class Drying_controller {
         $jsonItems = getVarClean('items', 'str', '');
         $items = jsonDecode($jsonItems);
 
-        if (!is_array($items)){
+        if (!is_array($items)) {
             $data['message'] = 'Invalid items parameter';
             return $data;
         }
@@ -125,19 +130,19 @@ class Drying_controller {
         $table->actionType = 'CREATE';
         $errors = array();
 
-        if (isset($items[0])){
+        if (isset($items[0])) {
             $numItems = count($items);
-            for($i=0; $i < $numItems; $i++){
-                try{
+            for ($i = 0; $i < $numItems; $i++) {
+                try {
 
                     $table->db->trans_begin(); //Begin Trans
 
-                        $table->setRecord($items[$i]);
-                        $table->create();
+                    $table->setRecord($items[$i]);
+                    $table->create();
 
                     $table->db->trans_commit(); //Commit Trans
 
-                }catch(Exception $e){
+                } catch (Exception $e) {
 
                     $table->db->trans_rollback(); //Rollback Trans
                     $errors[] = $e->getMessage();
@@ -145,27 +150,27 @@ class Drying_controller {
             }
 
             $numErrors = count($errors);
-            if ($numErrors > 0){
-                $data['message'] = $numErrors." from ".$numItems." record(s) failed to be saved.<br/><br/><b>System Response:</b><br/>- ".implode("<br/>- ", $errors)."";
-            }else{
+            if ($numErrors > 0) {
+                $data['message'] = $numErrors . " from " . $numItems . " record(s) failed to be saved.<br/><br/><b>System Response:</b><br/>- " . implode("<br/>- ", $errors) . "";
+            } else {
                 $data['success'] = true;
                 $data['message'] = 'Data added successfully';
             }
-            $data['rows'] =$items;
-        }else {
+            $data['rows'] = $items;
+        } else {
 
-            try{
+            try {
                 $table->db->trans_begin(); //Begin Trans
 
-                    $table->setRecord($items);
-                    $table->create();
+                $table->setRecord($items);
+                $table->create();
 
                 $table->db->trans_commit(); //Commit Trans
 
                 $data['success'] = true;
                 $data['message'] = 'Data added successfully';
 
-            }catch (Exception $e) {
+            } catch (Exception $e) {
                 $table->db->trans_rollback(); //Rollback Trans
 
                 $data['message'] = $e->getMessage();
@@ -177,9 +182,10 @@ class Drying_controller {
 
     }
 
-    function update() {
+    function update()
+    {
 
-        $ci = & get_instance();
+        $ci = &get_instance();
         $ci->load->model('agripro/drying');
         $table = $ci->drying;
 
@@ -188,27 +194,27 @@ class Drying_controller {
         $jsonItems = getVarClean('items', 'str', '');
         $items = jsonDecode($jsonItems);
 
-        if (!is_array($items)){
+        if (!is_array($items)) {
             $data['message'] = 'Invalid items parameter';
             return $data;
         }
 
         $table->actionType = 'UPDATE';
 
-        if (isset($items[0])){
+        if (isset($items[0])) {
             $errors = array();
             $numItems = count($items);
-            for($i=0; $i < $numItems; $i++){
-                try{
+            for ($i = 0; $i < $numItems; $i++) {
+                try {
                     $table->db->trans_begin(); //Begin Trans
 
-                        $table->setRecord($items[$i]);
-                        $table->update();
+                    $table->setRecord($items[$i]);
+                    $table->update();
 
                     $table->db->trans_commit(); //Commit Trans
 
                     $items[$i] = $table->get($items[$i][$table->pkey]);
-                }catch(Exception $e){
+                } catch (Exception $e) {
                     $table->db->trans_rollback(); //Rollback Trans
 
                     $errors[] = $e->getMessage();
@@ -216,20 +222,42 @@ class Drying_controller {
             }
 
             $numErrors = count($errors);
-            if ($numErrors > 0){
-                $data['message'] = $numErrors." from ".$numItems." record(s) failed to be saved.<br/><br/><b>System Response:</b><br/>- ".implode("<br/>- ", $errors)."";
-            }else{
+            if ($numErrors > 0) {
+                $data['message'] = $numErrors . " from " . $numItems . " record(s) failed to be saved.<br/><br/><b>System Response:</b><br/>- " . implode("<br/>- ", $errors) . "";
+            } else {
                 $data['success'] = true;
                 $data['message'] = 'Data update successfully';
             }
-            $data['rows'] =$items;
-        }else {
+            $data['rows'] = $items;
+        } else {
 
-            try{
+            try {
                 $table->db->trans_begin(); //Begin Trans
 
-                    $table->setRecord($items);
-                    $table->update();
+
+                ######################################
+                ### 1. Insert Stok DRYING_STOCK (IN)
+                ### 2. Insert Stock RAW MATERIAL (Out)
+                ### 3. Update SM QTY
+                ######################################
+
+
+                $table->setRecord($items);
+                $is_null = $table->checkDryingQTY($table->record);
+
+
+                // Check  Drying QTY is null or not
+                // IF Null = Insert stock  else Update Stock
+
+                if($is_null == NULL){
+                    $table->InsertStock($table->record);
+                }else{
+                    $table->UpdateStock($table->record);
+                }
+
+                $table->update();
+
+                $table->updateQtyRM($table->record);
 
                 $table->db->trans_commit(); //Commit Trans
 
@@ -237,7 +265,7 @@ class Drying_controller {
                 $data['message'] = 'Data update successfully';
 
                 $data['rows'] = $table->get($items[$table->pkey]);
-            }catch (Exception $e) {
+            } catch (Exception $e) {
                 $table->db->trans_rollback(); //Rollback Trans
 
                 $data['message'] = $e->getMessage();
@@ -249,8 +277,9 @@ class Drying_controller {
 
     }
 
-    function destroy() {
-        $ci = & get_instance();
+    function destroy()
+    {
+        $ci = &get_instance();
         $ci->load->model('agripro/drying');
         $table = $ci->drying;
 
@@ -259,21 +288,21 @@ class Drying_controller {
         $jsonItems = getVarClean('items', 'str', '');
         $items = jsonDecode($jsonItems);
 
-        try{
+        try {
             $table->db->trans_begin(); //Begin Trans
 
             $total = 0;
-            if (is_array($items)){
-                foreach ($items as $key => $value){
+            if (is_array($items)) {
+                foreach ($items as $key => $value) {
                     if (empty($value)) throw new Exception('Empty parameter');
 
                     $table->remove($value);
                     $data['rows'][] = array($table->pkey => $value);
                     $total++;
                 }
-            }else{
-                $items = (int) $items;
-                if (empty($items)){
+            } else {
+                $items = (int)$items;
+                if (empty($items)) {
                     throw new Exception('Empty parameter');
                 };
 
@@ -283,11 +312,11 @@ class Drying_controller {
             }
 
             $data['success'] = true;
-            $data['message'] = $total.' Data deleted successfully';
+            $data['message'] = $total . ' Data deleted successfully';
 
             $table->db->trans_commit(); //Commit Trans
 
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $table->db->trans_rollback(); //Rollback Trans
             $data['message'] = $e->getMessage();
             $data['rows'] = array();

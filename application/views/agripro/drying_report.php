@@ -60,7 +60,7 @@
                     label: 'RM Name', name: 'product_code', width: 120, align: "left", editable: false
                 },
                 {
-                    label: 'Bruto (Kgs)', name: 'sm_qty_kotor', width: 120, align: "left", editable: true,
+                    label: 'Bruto (Kgs)', name: 'sm_qty_kotor_init', width: 120, align: "left", editable: true,
                     editoptions: {
                         size: 10,
                         maxlength: 4
@@ -68,7 +68,7 @@
                     editrules: {required: true}
                 },
                 {
-                    label: 'Netto (Kgs)', name: 'sm_qty_bersih', width: 120, align: "left", editable: true,
+                    label: 'Netto (Kgs)', name: 'sm_qty_bersih_init', width: 120, align: "left", editable: true,
                     editoptions: {
                         size: 10,
                         maxlength: 4
@@ -81,9 +81,10 @@
                     width: 100,
                     align: "right",
                     editable: false,
+                    hidden: false,
                     formatter: function (cellvalue, options, rowObject) {
-                        var bruto = rowObject.sm_qty_kotor;
-                        var netto = rowObject.sm_qty_bersih;
+                        var bruto = rowObject.sm_qty_kotor_init;
+                        var netto = rowObject.sm_qty_bersih_init;
                         var percentage =  ((bruto-netto)/bruto) * 100;
                         var percen =  percentage.toFixed(2) + " %";
                         //return percentage.toFixed(2) + "%";
@@ -139,7 +140,7 @@
                 }
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID . "agripro.drying_controller/crud"; ?>',
+            //editurl: '<?php echo WS_JQGRID . "agripro.drying_controller/crud"; ?>',
             caption: "Drying Report"
 
         });

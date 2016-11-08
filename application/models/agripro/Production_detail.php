@@ -14,13 +14,16 @@ class Production_detail extends Abstract_model {
                                 'production_detail_id'            => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Stock Material'),
                                 'production_id'                   => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'SM ID'),
                                 'sm_id'                           => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'RM ID'),
+                               // 'product_id'                           => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product ID'),
                                 'production_detail_qty'           => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Qty'),
 
                             );
 
     public $selectClause    = " pd.production_detail_id,pd.production_id,pd.sm_id,pd.production_detail_qty,pd.description,
                                  prd.product_name,
-                                 fm.fm_name
+                                 fm.fm_name,
+                                 prd.product_id,
+                                 sm.sm_no_trans
                                 ";
 
     public $fromClause      = " production_detail pd

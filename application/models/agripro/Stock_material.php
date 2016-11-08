@@ -16,7 +16,7 @@ class Stock_material extends Abstract_model
         'fm_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Warehouse'),
         'plt_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Plantation'),
         'product_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product ID'),
-        'sm_qty_kotor' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Total Weight (KGs)'),
+        'sm_qty_kotor' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Total Weight Init (KGs)'),
         'sm_harga_per_kg' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Price / Kgs'),
         'sm_tgl_masuk' => array('nullable' => false, 'type' => 'date', 'unique' => false, 'display' => 'Date'),
         'sm_tgl_panen' => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Harvest Date'),
@@ -35,6 +35,7 @@ class Stock_material extends Abstract_model
     public $selectClause = "sm.sm_id, sm.fm_id, to_char(sm.sm_tgl_masuk,'yyyy-mm-dd') as sm_tgl_masuk, sm.sm_no_trans, sm.sm_jenis_pembayaran,
                                     sm.sm_no_po,sm.sm_jml_karung,sm.product_id,pr.product_code,sm.sm_qty_kotor,sm.sm_harga_per_kg,sm.sm_harga_total,
                                     sm.sm_tgl_panen,sm.sm_harga_total,plt.plt_code,sm.plt_id,sm.sm_tgl_panen,
+                                    sm.sm_qty_kotor_init,sm.sm_qty_bersih_init,
                                     sm.sm_tgl_pengeringan,sm.sm_qty_bersih,sm.sm_tgl_produksi,sm.wh_id,
                                     to_char(sm.created_date,'yyyy-mm-dd') as created_date, sm.created_by,
                                     to_char(sm.updated_date,'yyyy-mm-dd') as updated_date, sm.updated_by,
@@ -62,18 +63,29 @@ class Stock_material extends Abstract_model
 
             $this->record['sm_no_trans'] = $this->getSerialNumber();
             $this->record['sm_harga_total'] = $this->getTotalPrice();
+            $this->record['sm_qty_kotor_init'] = $this->record['sm_qty_kotor'];
             $this->record['created_date'] = date('Y-m-d');
             $this->record['created_by'] = $userdata->username;
             $this->record['updated_date'] = date('Y-m-d');
             $this->record['updated_by'] = $userdata->username;
             $this->record['wh_id'] = $userdata->wh_id;
-
+            if($this->record['sm_tgl_panen'] == ""){
+                $this->record['sm_tgl_panen'] = NULL;
+            }
         } else {
             //do something
             //example:
             $this->record['sm_harga_total'] = $this->getTotalPrice();
+            $this->record['sm_qty_kotor_init'] = $this->record['sm_qty_kotor'];
             $this->record['updated_date'] = date('Y-m-d');
             $this->record['updated_by'] = $userdata->username;
+            if($this->record['sm_tgl_panen'] == ""){
+                $this->record['sm_tgl_panen'] = NULL;
+            }
+            if($this->checkSMIDProduction($this->record['sm_id']) > 0){
+                throw new Exception('Can not edit this record ! This record has been used in the production.');
+            }
+
             //if false please throw new Exception
         }
         return true;
@@ -131,7 +143,7 @@ class Stock_material extends Abstract_model
         $record_stock['stock_tgl_masuk'] = $rmp['sm_tgl_masuk'];; //base on packing_tgl
         $record_stock['stock_kg'] = $rmp['sm_qty_kotor'];
         $record_stock['stock_ref_id'] = $rmp['sm_id'];
-        $record_stock['stock_ref_code'] = 'RAW MATERIAL';
+        $record_stock['stock_ref_code'] = 'RAW MATERIAL IN';
 
         $tStock->setRecord($record_stock);
         $tStock->create();
@@ -152,7 +164,6 @@ class Stock_material extends Abstract_model
         $record_stock['sc_id'] = $tStockCategory->getIDByCode('RAW_MATERIAL_STOCK');
         $record_stock['stock_tgl_masuk'] = $rmp['sm_tgl_masuk'];; //base on packing_tgl
         $record_stock['stock_kg'] = $rmp['sm_qty_kotor'];
-        $record_stock['stock_ref_code'] = 'RAW MATERIAL';
 
         $this->db->where(array(
             'stock_ref_id' => $rmp['sm_id'],
@@ -175,10 +186,17 @@ class Stock_material extends Abstract_model
 
         $ref = array(
             'stock_ref_id' => $items,
-            'stock_ref_code' => 'RAW MATERIAL',
+            'stock_ref_code' => 'RAW MATERIAL IN',
             'sc_id' => $tStockCategory->getIDByCode('RAW_MATERIAL_STOCK')
         );
         $tStock->deleteByReference2($ref);
+    }
+
+    function checkSMIDProduction($sm_id){
+        $this->db->where('sm_id', $sm_id);
+        $query = $this->db->get('production_detail');
+
+        return $query->num_rows();
     }
 
 }

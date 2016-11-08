@@ -18,6 +18,7 @@ class Production extends Abstract_model {
                                 'production_code'       => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Production Code'),
                                 'production_date'       => array('nullable' => false, 'type' => 'date', 'unique' => false, 'display' => 'Production Date'),
                                 'production_qty'        => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Production Quantity'),
+                                'production_qty_init'        => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Production Quantity'),
 
                                /* 'created_date'          => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Created Date'),
                                 'created_by'            => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Created By'),
@@ -80,78 +81,53 @@ class Production extends Abstract_model {
         return $production_code;
     }
 
-    function insertStock($packing_master) {
+    function insertStock($prod) {
         $ci = & get_instance();
 
         $ci->load->model('agripro/stock');
         $tStock = $ci->stock;
         $tStock->actionType = 'CREATE';
 
+        $ci->load->model('agripro/production_detail');
+        $prod_det = $ci->production_detail;
+
         $ci->load->model('agripro/stock_category');
         $tStockCategory = $ci->stock_category;
 
-        $ci->load->model('agripro/packing_detail');
-        $tPackingDetail = $ci->packing_detail;
-
-        $ci->load->model('agripro/sortir');
-        $tSortir = $ci->sortir;
-
-        /**
-         * Steps :
-         * 1. Insert master to Stock as PACKING_STOCK category (IN STOCK - PACKING)
-         * 2. Insert detail to Stock as SORTIR_STOCK category (OUT STOCK - SORTIR)
-         * 3. Decrease Sortir Weight by Detail packing weight
-         */
+        $prod_det->setCriteria('pd.production_id = '.$prod['production_id']);
+        $details = $prod_det->getAll();
 
 
-        /**
-         * Step 1 - Insert master to stock as PACKING_STOCK (IN STOCK - stock_tgl_masuk)
-         */
-        $record_stock = array();
-        $stock_date = $packing_master['packing_tgl'];
-        $record_stock['stock_tgl_masuk'] = $stock_date; //base on packing_tgl
-        $record_stock['stock_kg'] = $packing_master['packing_kg'];
-        $record_stock['stock_ref_id'] = $packing_master['packing_id'];
-        $record_stock['stock_ref_code'] = 'PACKING';
-        $record_stock['sc_id'] = $tStockCategory->getIDByCode('PACKING_STOCK');
-        $record_stock['wh_id'] = $packing_master['warehouse_id'];
-        $record_stock['product_id'] = $packing_master['product_id'];
-        $tStock->setRecord($record_stock);
-        $tStock->create();
-
-        /**
-         * Step 2 - Insert detail to stock as SORTIR_STOCK (OUT STOCK - stock_tgl_keluar)
-         */
-
-        $tPackingDetail->setCriteria('pd.packing_id = '.$packing_master['packing_id']);
-        $details = $tPackingDetail->getAll();
-        foreach($details as $packing_detail) {
-            $record_stock = array();
-            $record_stock['stock_tgl_keluar'] = $stock_date; //base on packing_tgl
-            $record_stock['stock_kg'] = $packing_detail['pd_kg'];
-            $record_stock['stock_ref_id'] = $packing_detail['sortir_id']; //sortir id become reference on stock
-            $record_stock['stock_ref_code'] = 'SORTIR';
-            $record_stock['sc_id'] = $tStockCategory->getIDByCode('SORTIR_STOCK');
-            $record_stock['wh_id'] = $packing_master['warehouse_id'];
-            $record_stock['product_id'] = $packing_detail['product_id'];
-            $record_stock['stock_description'] = 'sortir_qty has used for packing_detail';
-            $tStock->setRecord($record_stock);
+        foreach($details as $production_detail) {
+            $record = array();
+            $record['stock_tgl_keluar'] = $prod['production_date'];
+            $record['stock_kg'] = $production_detail['production_detail_qty'];
+            $record['stock_ref_id'] = $production_detail['production_detail_id'];
+            $record['stock_ref_code'] = 'DRYING_OUT';
+            $record['sc_id'] = $tStockCategory->getIDByCode('DRYING_STOCK');
+            $record['wh_id'] = $prod['warehouse_id'];
+            $record['product_id'] = $production_detail['product_id'];
+            $record['stock_description'] = 'Drying Stock has used for Production Detail';
+            $tStock->setRecord($record);
             $tStock->create();
         }
 
-        /**
-         * Step 3 - Decrease sortir_qty by pd_kg
-         */
 
-        foreach($details as $packing_detail) {
 
-            $decrease_kg = (float) $packing_detail['pd_kg'];
-            $sql = "UPDATE sortir SET sortir_qty = sortir_qty - ".$decrease_kg."
-                        WHERE sortir_id = ".$packing_detail['sortir_id'];
-            $tSortir->db->query($sql);
+        ######################################
+        ### Update Raw Material Qty (Decrease)
+        ######################################
+
+        foreach($details as $pd_det) {
+
+            $decrease_kg = (float) $pd_det['production_detail_qty'];
+            $sql = "UPDATE stock_material SET 
+                      sm_qty_bersih = sm_qty_bersih - ".$decrease_kg."
+                        WHERE sm_id = ".$pd_det['sm_id'];
+            $prod_det->db->query($sql);
         }
-    }
 
+    }
 
     public function removePacking($packing_id) {
 

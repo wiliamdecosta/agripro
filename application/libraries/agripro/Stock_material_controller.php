@@ -1,26 +1,29 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+
 /**
-* Json library
-* @class Stock_material_controller
-* @version 07/05/2015 12:18:00
-*/
-class Stock_material_controller {
+ * Json library
+ * @class Stock_material_controller
+ * @version 07/05/2015 12:18:00
+ */
+class Stock_material_controller
+{
 
-    function read() {
+    function read()
+    {
 
-        $page = getVarClean('page','int',1);
-        $limit = getVarClean('rows','int',5);
-        $sidx = getVarClean('sidx','str','sm_id');
-        $sord = getVarClean('sord','str','desc');
+        $page = getVarClean('page', 'int', 1);
+        $limit = getVarClean('rows', 'int', 5);
+        $sidx = getVarClean('sidx', 'str', 'sm_id');
+        $sord = getVarClean('sord', 'str', 'desc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
-		$is_sortir = getVarClean('is_sortir','str',0);
-		$purchasing = getVarClean('purchasing','int',0);
+        $is_sortir = getVarClean('is_sortir', 'str', 0);
+        $purchasing = getVarClean('purchasing', 'int', 0);
 
-		try {
+        try {
 
-            $ci = & get_instance();
+            $ci = &get_instance();
             $ci->load->model('agripro/stock_material');
             $table = $ci->stock_material;
 
@@ -39,12 +42,12 @@ class Stock_material_controller {
             );
 
             // 1 = RM Purchasing
-            if($purchasing == 1){
-                $req_param['where'] = array( "sm.sm_qty_bersih is null" );
+            if ($purchasing == 1) {
+                $req_param['where'] = array("sm.sm_qty_bersih is null");
             }
-			if($is_sortir == '1'){
-				$req_param['where'] = array( "sm.sm_qty_bersih *1 > 0 " );
-			}
+            if ($is_sortir == '1') {
+                $req_param['where'] = array("sm.sm_qty_bersih *1 > 0 ");
+            }
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
@@ -71,21 +74,22 @@ class Stock_material_controller {
             $data['rows'] = $table->getAll();
             $data['success'] = true;
 
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $data['message'] = $e->getMessage();
         }
 
         return $data;
     }
-    
-    function readLov() {
+
+    function readLov()
+    {
         permission_check('view-tracking');
 
-        $start = getVarClean('current','int',0);
-        $limit = getVarClean('rowCount','int',5);
+        $start = getVarClean('current', 'int', 0);
+        $limit = getVarClean('rowCount', 'int', 5);
 
-        $sort = getVarClean('sort','str','sm_id');
-        $dir  = getVarClean('dir','str','asc');
+        $sort = getVarClean('sort', 'str', 'sm_id');
+        $dir = getVarClean('dir', 'str', 'asc');
 
         $searchPhrase = getVarClean('searchPhrase', 'str', '');
 
@@ -93,16 +97,16 @@ class Stock_material_controller {
 
         try {
 
-            $ci = & get_instance();
+            $ci = &get_instance();
             $ci->load->model('agripro/stock_material');
             $table = $ci->stock_material;
 
-            if(!empty($searchPhrase)) {
-                $table->setCriteria("(sm_id ilike '%".$searchPhrase."%' or sm_no_trans ilike '%".$searchPhrase."%')
+            if (!empty($searchPhrase)) {
+                $table->setCriteria("(sm_id ilike '%" . $searchPhrase . "%' or sm_no_trans ilike '%" . $searchPhrase . "%')
                                      ");
             }
 
-            $start = ($start-1) * $limit;
+            $start = ($start - 1) * $limit;
             $items = $table->getAll($start, $limit, $sort, $dir);
             $totalcount = $table->countAll();
 
@@ -110,21 +114,22 @@ class Stock_material_controller {
             $data['success'] = true;
             $data['total'] = $totalcount;
 
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $data['message'] = $e->getMessage();
         }
 
         return $data;
     }
-    
-     function readLov_sortir() {
+
+    function readLov_sortir()
+    {
         permission_check('view-tracking');
 
-        $start = getVarClean('current','int',0);
-        $limit = getVarClean('rowCount','int',5);
+        $start = getVarClean('current', 'int', 0);
+        $limit = getVarClean('rowCount', 'int', 5);
 
-        $sort = getVarClean('sort','str','sm_id');
-        $dir  = getVarClean('dir','str','asc');
+        $sort = getVarClean('sort', 'str', 'sm_id');
+        $dir = getVarClean('dir', 'str', 'asc');
 
         $searchPhrase = getVarClean('searchPhrase', 'str', '');
 
@@ -132,16 +137,16 @@ class Stock_material_controller {
 
         try {
 
-            $ci = & get_instance();
+            $ci = &get_instance();
             $ci->load->model('agripro/stock_material');
             $table = $ci->stock_material;
-            
+
             $table->setCriteria(" sm_qty_bersih is not null AND sm_id not in (select distinct sm_id from sortir where sm_id is not null) ");
-            if(!empty($searchPhrase)) {
-                $table->setCriteria(" (sm_id ilike '%".$searchPhrase."%' or sm_no_trans ilike '%".$searchPhrase."%')");
+            if (!empty($searchPhrase)) {
+                $table->setCriteria(" (sm_id ilike '%" . $searchPhrase . "%' or sm_no_trans ilike '%" . $searchPhrase . "%')");
             }
 
-            $start = ($start-1) * $limit;
+            $start = ($start - 1) * $limit;
             $items = $table->getAll($start, $limit, $sort, $dir);
             $totalcount = $table->countAll();
 
@@ -149,14 +154,15 @@ class Stock_material_controller {
             $data['success'] = true;
             $data['total'] = $totalcount;
 
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $data['message'] = $e->getMessage();
         }
 
         return $data;
     }
 
-    function crud() {
+    function crud()
+    {
 
         $data = array();
         $oper = getVarClean('oper', 'str', '');
@@ -164,31 +170,32 @@ class Stock_material_controller {
             case 'add' :
                 permission_check('add-tracking');
                 $data = $this->create();
-            break;
+                break;
 
             case 'edit' :
                 permission_check('edit-tracking');
                 $data = $this->update();
-            break;
+                break;
 
             case 'del' :
                 permission_check('delete-tracking');
                 $data = $this->destroy();
-            break;
+                break;
 
             default :
                 permission_check('view-tracking');
                 $data = $this->read();
-            break;
+                break;
         }
 
         return $data;
     }
 
 
-    function create() {
+    function create()
+    {
 
-        $ci = & get_instance();
+        $ci = &get_instance();
         $ci->load->model('agripro/stock_material');
         $table = $ci->stock_material;
 
@@ -197,26 +204,26 @@ class Stock_material_controller {
         $jsonItems = getVarClean('items', 'str', '');
         $items = jsonDecode($jsonItems);
 
-        if (!is_array($items)){
+        if (!is_array($items)) {
             $data['message'] = 'Invalid items parameter';
             return $data;
         }
 
         $table->actionType = 'CREATE';
         $errors = array();
-        if (isset($items[0])){
+        if (isset($items[0])) {
             $numItems = count($items);
-            for($i=0; $i < $numItems; $i++){
-                try{
+            for ($i = 0; $i < $numItems; $i++) {
+                try {
 
                     $table->db->trans_begin(); //Begin Trans
 
-                        $table->setRecord($items[$i]);
-                        $table->create();
+                    $table->setRecord($items[$i]);
+                    $table->create();
 
                     $table->db->trans_commit(); //Commit Trans
 
-                }catch(Exception $e){
+                } catch (Exception $e) {
 
                     $table->db->trans_rollback(); //Rollback Trans
                     $errors[] = $e->getMessage();
@@ -224,21 +231,21 @@ class Stock_material_controller {
             }
 
             $numErrors = count($errors);
-            if ($numErrors > 0){
-                $data['message'] = $numErrors." from ".$numItems." record(s) failed to be saved.<br/><br/><b>System Response:</b><br/>- ".implode("<br/>- ", $errors)."";
-            }else{
+            if ($numErrors > 0) {
+                $data['message'] = $numErrors . " from " . $numItems . " record(s) failed to be saved.<br/><br/><b>System Response:</b><br/>- " . implode("<br/>- ", $errors) . "";
+            } else {
                 $data['success'] = true;
                 $data['message'] = 'Data added successfully';
             }
-            $data['rows'] =$items;
-        }else {
+            $data['rows'] = $items;
+        } else {
 
-            try{
+            try {
                 $table->db->trans_begin(); //Begin Trans
 
-                    $table->setRecord($items);
-                    $table->record[$table->pkey] = $table->generate_id($table->table,$table->pkey);
-                    $table->create();
+                $table->setRecord($items);
+                $table->record[$table->pkey] = $table->generate_id($table->table, $table->pkey);
+                $table->create();
 
 
                 ##############################
@@ -251,7 +258,7 @@ class Stock_material_controller {
                 $data['success'] = true;
                 $data['message'] = 'Data added successfully';
 
-            }catch (Exception $e) {
+            } catch (Exception $e) {
                 $table->db->trans_rollback(); //Rollback Trans
 
                 $data['message'] = $e->getMessage();
@@ -263,9 +270,10 @@ class Stock_material_controller {
 
     }
 
-    function update() {
+    function update()
+    {
 
-        $ci = & get_instance();
+        $ci = &get_instance();
         $ci->load->model('agripro/stock_material');
         $table = $ci->stock_material;
 
@@ -274,27 +282,27 @@ class Stock_material_controller {
         $jsonItems = getVarClean('items', 'str', '');
         $items = jsonDecode($jsonItems);
 
-        if (!is_array($items)){
+        if (!is_array($items)) {
             $data['message'] = 'Invalid items parameter';
             return $data;
         }
 
         $table->actionType = 'UPDATE';
 
-        if (isset($items[0])){
+        if (isset($items[0])) {
             $errors = array();
             $numItems = count($items);
-            for($i=0; $i < $numItems; $i++){
-                try{
+            for ($i = 0; $i < $numItems; $i++) {
+                try {
                     $table->db->trans_begin(); //Begin Trans
 
-                        $table->setRecord($items[$i]);
-                        $table->update();
+                    $table->setRecord($items[$i]);
+                    $table->update();
 
                     $table->db->trans_commit(); //Commit Trans
 
                     $items[$i] = $table->get($items[$i][$table->pkey]);
-                }catch(Exception $e){
+                } catch (Exception $e) {
                     $table->db->trans_rollback(); //Rollback Trans
 
                     $errors[] = $e->getMessage();
@@ -302,25 +310,25 @@ class Stock_material_controller {
             }
 
             $numErrors = count($errors);
-            if ($numErrors > 0){
-                $data['message'] = $numErrors." from ".$numItems." record(s) failed to be saved.<br/><br/><b>System Response:</b><br/>- ".implode("<br/>- ", $errors)."";
-            }else{
+            if ($numErrors > 0) {
+                $data['message'] = $numErrors . " from " . $numItems . " record(s) failed to be saved.<br/><br/><b>System Response:</b><br/>- " . implode("<br/>- ", $errors) . "";
+            } else {
                 $data['success'] = true;
                 $data['message'] = 'Data update successfully';
             }
-            $data['rows'] =$items;
-        }else {
+            $data['rows'] = $items;
+        } else {
 
-            try{
+            try {
                 $table->db->trans_begin(); //Begin Trans
 
-                    $table->setRecord($items);
-                    $table->update();
+                $table->setRecord($items);
+                $table->update();
 
-                    ##############################
-                    ## Update Stock
-                    ##############################
-                    $table->updateStock($table->record);
+                ##############################
+                ## Update Stock
+                ##############################
+                $table->updateStock($table->record);
 
                 $table->db->trans_commit(); //Commit Trans
 
@@ -328,7 +336,7 @@ class Stock_material_controller {
                 $data['message'] = 'Data update successfully';
 
                 $data['rows'] = $table->get($items[$table->pkey]);
-            }catch (Exception $e) {
+            } catch (Exception $e) {
                 $table->db->trans_rollback(); //Rollback Trans
 
                 $data['message'] = $e->getMessage();
@@ -340,8 +348,9 @@ class Stock_material_controller {
 
     }
 
-    function destroy() {
-        $ci = & get_instance();
+    function destroy()
+    {
+        $ci = &get_instance();
         $ci->load->model('agripro/stock_material');
         $table = $ci->stock_material;
 
@@ -350,21 +359,21 @@ class Stock_material_controller {
         $jsonItems = getVarClean('items', 'str', '');
         $items = jsonDecode($jsonItems);
 
-        try{
+        try {
             $table->db->trans_begin(); //Begin Trans
 
             $total = 0;
-            if (is_array($items)){
-                foreach ($items as $key => $value){
+            if (is_array($items)) {
+                foreach ($items as $key => $value) {
                     if (empty($value)) throw new Exception('Empty parameter');
 
                     $table->remove($value);
                     $data['rows'][] = array($table->pkey => $value);
                     $total++;
                 }
-            }else{
-                $items = (int) $items;
-                if (empty($items)){
+            } else {
+                $items = (int)$items;
+                if (empty($items)) {
                     throw new Exception('Empty parameter');
                 };
 
@@ -379,11 +388,11 @@ class Stock_material_controller {
             }
 
             $data['success'] = true;
-            $data['message'] = $total.' Data deleted successfully';
+            $data['message'] = $total . ' Data deleted successfully';
 
             $table->db->trans_commit(); //Commit Trans
 
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             $table->db->trans_rollback(); //Rollback Trans
             $data['message'] = $e->getMessage();
             $data['rows'] = array();
@@ -393,9 +402,10 @@ class Stock_material_controller {
     }
 
 
-    function summary_stock() {
+    function summary_stock()
+    {
 
-        $ci = & get_instance();
+        $ci = &get_instance();
         $ci->load->model('agripro/stock_material');
         $table = $ci->stock_material;
 
@@ -411,14 +421,14 @@ class Stock_material_controller {
 
         $no = 1;
         $output = "";
-        foreach($items as $item) {
-            $output.= '
+        foreach ($items as $item) {
+            $output .= '
                 <tr>
-                    <td>'.$no++.'</td>
-                    <td>'.$item['product_code'].'</td>
-                    <td>'.$item['product_name'].'</td>
-                    <td>'.$item['wh_code'].'</td>
-                    <td align="right">'.$item['qty'].'</td>
+                    <td>' . $no++ . '</td>
+                    <td>' . $item['product_code'] . '</td>
+                    <td>' . $item['product_name'] . '</td>
+                    <td>' . $item['wh_code'] . '</td>
+                    <td align="right">' . $item['qty'] . '</td>
                 </tr>
             ';
         }

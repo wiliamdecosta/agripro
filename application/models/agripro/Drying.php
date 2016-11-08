@@ -13,9 +13,11 @@ class Drying extends Abstract_model
 
     public $fields = array(
         'sm_id' => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Stock Material'),
-        'fm_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Warehouse'),
+        'fm_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'FM ID'),
+        'wh_id' => array('nullable' => true, 'type' => 'int', 'unique' => false, 'display' => 'Warehouse'),
         'product_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product ID'),
         'sm_qty_kotor' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Bruto'),
+        'sm_qty_kotor_init' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'sm_qty_kotor_init'),
         'sm_qty_bersih' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Net Weight'),
 
         'sm_tgl_pengeringan' => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Drying Date'),
@@ -32,6 +34,9 @@ class Drying extends Abstract_model
                                     sm.sm_no_po,sm.sm_jml_karung,sm.product_id,pr.product_code,sm.sm_qty_kotor,sm.sm_harga_per_kg,sm.sm_harga_total,
                                     sm.sm_tgl_panen,sm.sm_harga_total,plt.plt_code,sm.plt_id,sm.sm_tgl_panen,
                                     sm.sm_tgl_pengeringan,sm.sm_qty_bersih,
+                                    sm.sm_qty_kotor_init,sm.sm_qty_bersih_init,
+                                    sm.wh_id,
+                                    pr.product_id,
                                     to_char(sm.created_date,'yyyy-mm-dd') as created_date, sm.created_by,
                                     to_char(sm.updated_date,'yyyy-mm-dd') as updated_date, sm.updated_by,
                                     fm.fm_code, fm.fm_name";
@@ -40,7 +45,7 @@ class Drying extends Abstract_model
                                 inner join product as pr on sm.product_id = pr.product_id
                                 inner join plantation as plt on sm.plt_id = plt.plt_id";
 
-    public $refs = array('stock_material_detail' => 'sm_id');
+    public $refs = array();
 
     function __construct()
     {
@@ -53,51 +58,123 @@ class Drying extends Abstract_model
         $userdata = $ci->ion_auth->user()->row();
 
         if ($this->actionType == 'CREATE') {
-            //do something
-            // example :
 
-            $this->record['sm_no_trans'] = $this->getSerialNumber();
+           /* $this->record['sm_no_trans'] = $this->getSerialNumber();
+            $this->record['sm_qty_bersih'] = $this->record['sm_qty_bersih_init'];
 
             $this->record['created_date'] = date('Y-m-d');
             $this->record['created_by'] = $userdata->username;
             $this->record['updated_date'] = date('Y-m-d');
-            $this->record['updated_by'] = $userdata->username;
+            $this->record['updated_by'] = $userdata->username;*/
 
         } else {
-            //do something
-            //example:
+
+            $this->record['sm_qty_bersih_init'] = $this->record['sm_qty_bersih'];
             $this->record['updated_date'] = date('Y-m-d');
             $this->record['updated_by'] = $userdata->username;
-            //if false please throw new Exception
         }
         return true;
     }
 
+    function InsertStock($record){
+        ######################################
+        ### 1. Insert Stok DRYING_STOCK (IN)
+        ### 2. Insert Stock RAW MATERIAL (Out)
+        ### 3. Update QTY NETTO value
+        ######################################
 
-    function getSerialNumber()
-    {
+        $ci = & get_instance();
+        $ci->load->model('agripro/stock');
+        $tStock = $ci->stock;
+        $tStock->actionType = 'CREATE';
 
-        $format_serial = 'RMP-FMCODE-DATE-XXXX';
+        $ci->load->model('agripro/stock_category');
+        $tStockCategory = $ci->stock_category;
 
-        $sql = "select max(substr(sm_no_trans, length(sm_no_trans)-4 + 1 )::integer) as total from stock_material
-                    where to_char(sm_tgl_masuk,'yyyymmdd') = '" . str_replace('-', '', $this->record['sm_tgl_masuk']) . "'";
-        $query = $this->db->query($sql);
-        $row = $query->row_array();
-        if (empty($row)) {
-            $row = array('total' => 0);
-        }
 
-        $format_serial = str_replace('XXXX', str_pad(($row['total'] + 1), 4, '0', STR_PAD_LEFT), $format_serial);
-        $format_serial = str_replace('DATE', str_replace('-', '', $this->record['sm_tgl_masuk']), $format_serial);
+        ################ Step 1 ###############
+        $record1 = array();
+        $record1['wh_id'] = $record['wh_id'];
+        $record1['product_id'] = $record['product_id'];
+        $record1['sc_id'] = $tStockCategory->getIDByCode('DRYING_STOCK');
+        $record1['stock_tgl_masuk'] = $record['sm_tgl_pengeringan'];; //base on packing_tgl
+        $record1['stock_kg'] = $record['sm_qty_bersih'];
+        $record1['stock_ref_id'] = $record['sm_id'];
+        $record1['stock_ref_code'] = 'DRYING IN';
+        $record1['stock_description'] = 'Insert Stock Drying';
+        $tStock->setRecord($record1);
 
-        $ci = &get_instance();
-        $ci->load->model('agripro/farmer');
-        $tFarmer = $ci->farmer;
+        $tStock->create();
 
-        $itemfarmer = $tFarmer->get($this->record['fm_id']);
-        $format_serial = str_replace('FMCODE', $itemfarmer['fm_code'], $format_serial);
+        ################ Step 2 ###############
+        $ci->load->model('agripro/stock');
+        $tStock = $ci->stock;
+        $tStock->actionType = 'CREATE';
 
-        return $format_serial;
+        $record2 = array();
+        $record2['wh_id'] = $record['wh_id'];
+        $record2['product_id'] = $record['product_id'];
+        $record2['sc_id'] = $tStockCategory->getIDByCode('RAW_MATERIAL_STOCK');
+        $record2['stock_tgl_keluar'] = $record['sm_tgl_pengeringan'];; //base on packing_tgl
+        $record2['stock_kg'] = $record['sm_qty_kotor_init'];
+        $record2['stock_ref_id'] = $record['sm_id'];
+        $record2['stock_ref_code'] = 'RAW MATERIAL OUT';
+        $record2['stock_description'] = 'Raw Material (OUT) for Drying';
+        $tStock->setRecord($record2);
+
+        $tStock->create();
+    }
+
+    function UpdateStock($rmp) {
+        $ci = & get_instance();
+
+        $ci->load->model('agripro/stock');
+        $tStock = $ci->stock;
+        $tStock->actionType = 'UPDATE';
+
+        $ci->load->model('agripro/stock_category');
+        $tStockCategory = $ci->stock_category;
+
+        ###################################
+        #### Update IN Stock (Drying)
+        ###################################
+        $record_stock = array();
+        $record_stock['stock_tgl_masuk'] = $rmp['sm_tgl_pengeringan'];; //base on packing_tgl
+        $record_stock['stock_kg'] = $rmp['sm_qty_bersih'];
+
+
+        $this->db->where(array(
+            'stock_ref_id' => $rmp['sm_id'],
+            'stock_ref_code' => 'DRYING IN'
+        ));
+        $this->db->update($tStock->table, $record_stock);
+
+        #####################################
+        #### Update OUT Stock (Raw Material)
+        #####################################
+        $record_stock2 = array();
+        $record_stock2['stock_tgl_keluar'] = $rmp['sm_tgl_pengeringan'];; //base on packing_tgl
+        $record_stock2['stock_kg'] = $rmp['sm_qty_kotor_init'];
+
+        $this->db->where(array(
+            'stock_ref_id' => $rmp['sm_id'],
+            'stock_ref_code' => 'RAW MATERIAL OUT'
+        ));
+        $this->db->update($tStock->table, $record_stock2);
+    }
+
+    function updateQtyRM($record){
+        $this->db->set('sm_qty_kotor',0);
+        $this->db->where('sm_id', $record['sm_id']);
+        $this->db->update('stock_material');
+    }
+
+    function checkDryingQTY($record){
+        $this->db->select('sm_qty_bersih');
+        $this->db->where('sm_id', $record['sm_id']);
+        $query = $this->db->get('stock_material');
+
+        return $query->row()->sm_qty_bersih;
     }
 
 }

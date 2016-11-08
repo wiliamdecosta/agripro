@@ -9,6 +9,7 @@
             </div>
             <input type="hidden" id="modal_lov_smd_id_val" value="" />
             <input type="hidden" id="modal_lov_smd_trx_code_val" value="" />
+            <input type="hidden" id="modal_lov_farmer_val" value="" />
             <input type="hidden" id="modal_lov_smd_qty_val" value="" />
 
             <!-- modal body -->
@@ -57,26 +58,30 @@
         });
     });
 
-    function modal_lov_stock_material_show(id, trx_code, qty,production_product_id,parent_id) {
+    function modal_lov_stock_material_show(id, trx_code, qty,production_product_id,parent_id,farmer) {
 
-        modal_lov_stock_material_set_field_value(id, trx_code,qty);
+        modal_lov_stock_material_set_field_value(id, trx_code,qty,farmer);
         $("#modal_lov_stock_material").modal({backdrop: 'static'});
         modal_lov_stock_material_prepare_table(parent_id);
        // $("#modal_lov_stock_material_detail_grid_selection").bootgrid("reload");
     }
 
 
-    function modal_lov_stock_material_set_field_value(the_id_field, the_code_field,qty) {
+    function modal_lov_stock_material_set_field_value(the_id_field, the_code_field,qty,farmer) {
          $("#modal_lov_smd_id_val").val(the_id_field);
          $("#modal_lov_smd_trx_code_val").val(the_code_field);
+         $("#modal_lov_farmer_val").val(farmer);
          $("#modal_lov_smd_qty_val").val(qty);
 
     }
 
-    function modal_lov_stock_material_set_value(the_id_val, the_code_val,the_qty) {
+    function modal_lov_stock_material_set_value(the_id_val, the_code_val,the_qty,fm_name) {
          $("#"+ $("#modal_lov_smd_id_val").val()).val(the_id_val);
          $("#"+ $("#modal_lov_smd_trx_code_val").val()).val(the_code_val);
+         $("#"+ $("#modal_lov_farmer_val").val()).val(fm_name);
          $("#"+ $("#modal_lov_smd_qty_val").val()).val(the_qty);
+         //Custom
+         $("#in_source_qty").val(the_qty);
          $("#modal_lov_stock_material").modal("toggle");
 
          $("#"+ $("#modal_lov_smd_id_val").val()).change();
@@ -88,7 +93,7 @@
         $("#modal_lov_stock_material_detail_grid_selection").bootgrid({
              formatters: {
                 "opt-edit" : function(col, row) {
-                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_stock_material_set_value(\''+ row.sm_id +'\', \''+ row.sm_no_trans +'\',\''+ row.sm_qty_bersih +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
+                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_stock_material_set_value(\''+ row.sm_id +'\', \''+ row.sm_no_trans +'\',\''+ row.sm_qty_bersih +'\',\''+ row.fm_name +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
                 }
              },
              rowCount:[5,10],

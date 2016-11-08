@@ -265,6 +265,7 @@
                 {label: 'production_id',  name: 'production_id', width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'Raw Material',  name: 'product_name', width: 150, sorttype: 'number', editable: true, hidden: false},
                 {label: 'Weight (Kgs)', name: 'production_detail_qty', width: 120, align: "left", editable: false},
+                {label: 'Transcation Code', name: 'sm_no_trans', width: 200, align: "left", editable: false},
                 {label: 'Farmer', name: 'fm_name', width: 120, align: "left", editable: false}
             ],
             height: '100%',
@@ -295,7 +296,7 @@
 
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID."agripro.packing_detail_controller/crud"; ?>',
+           // editurl: '<?php echo WS_JQGRID."agripro.packing_detail_controller/crud"; ?>',
             caption: "Packing Detail"
 
         });

@@ -263,7 +263,7 @@
                 {
                     label: 'Harvest Date', name: 'sm_tgl_panen', width: 120, editable: true,
                     edittype: "text",
-                    editrules: {required: true},
+                    editrules: {required: false},
                     editoptions: {
                         // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
                         // use it to place a third party control to customize the toolbar

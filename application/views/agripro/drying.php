@@ -17,10 +17,10 @@
 </div>
 <!-- end breadcrumb -->
 <div class="space-4"></div>
-<div class="alert alert-info">
+<!--<div class="alert alert-info">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
     <strong>Info!</strong> Proses pengeringan hanya menimbang ulang berat Raw Material!
-</div>
+</div>-->
 <div class="row">
     <div class="col-md-12">
         <table id="grid-table"></table>
@@ -95,21 +95,41 @@
                     },
                     editrules: {required: false}
                 },
+                {
+                    label: 'WH ID',
+                    name: 'wh_id',
+                    width: 150,
+                    align: "left",
+                    editable: true,
+                    hidden: true,
+                    editrules: {required: false}
+                },
+                {
+                    label: 'product_id',
+                    name: 'product_id',
+                    width: 150,
+                    align: "left",
+                    editable: true,
+                    hidden: true,
+                    editrules: {required: false}
+                },
                 {label: 'Farmer Code', name: 'fm_code', width: 150, align: "left", editable: false},
                 {label: 'Farmer Name', name: 'fm_name', width: 170, align: "left", editable: false},
                 {
                     label: 'RM Name', name: 'product_code', width: 120, align: "left", editable: false
                 },
                 {
-                    label: 'Bruto (Kgs)', name: 'sm_qty_kotor', width: 120, align: "left", editable: true,
+                    label: 'Bruto (Kgs)', name: 'sm_qty_kotor_init', width: 120, align: "left", editable: true,
+                    hidden: true,
                     editoptions: {
                         size: 10,
                         maxlength: 4
                     },
-                    editrules: {required: false}
+
+                    editrules: {required: false, edithidden: true}
                 },
                 {
-                    label: 'Netto (Kgs)', name: 'sm_qty_bersih', width: 120, align: "left", editable: true,
+                    label: 'Drying Qty (Kgs)', name: 'sm_qty_bersih', width: 120, align: "left", editable: true,
                     editoptions: {
                         size: 10,
                         maxlength: 4
@@ -202,13 +222,11 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
-                    var bruto = $("#sm_qty_kotor");
+                    var bruto = $("#sm_qty_kotor_init");
                     var netto = $("#sm_qty_bersih");
                     $("#sm_no_trans").prop("readonly", true);
                     bruto.prop("readonly", true);
                     netto.val(bruto.val());
-
-
 
                 },
 
@@ -216,15 +234,15 @@
                     form.closest('.ui-jqdialog').center();
                 },
                 beforeSubmit: function (response, postdata) {
-                    var bruto = $("#sm_qty_kotor").val();
+                    var bruto = $("#sm_qty_kotor_init").val();
                     var netto = $("#sm_qty_bersih").val();
-                    if(netto > bruto){
-                        if(confirm('Netto greater then bruto, are you sure ?')){
+                    if (netto > bruto) {
+                        if (confirm('Netto greater then bruto, are you sure ?')) {
                             return [true, "", response.responseText];
-                        }else{
+                        } else {
                             return false;
                         }
-                    }else{
+                    } else {
                         return [true, "", response.responseText];
                     }
 

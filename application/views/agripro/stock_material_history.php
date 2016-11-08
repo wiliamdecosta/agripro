@@ -202,7 +202,7 @@
                     }
                 },
                 {
-                    label: 'Total Weight (KGs)', name: 'sm_qty_kotor', width: 150, align: "left", editable: true,
+                    label: 'Total Weight (KGs)', name: 'sm_qty_kotor_init', width: 150, align: "left", editable: true,
                     editoptions: {
                         size: 10,
                         maxlength: 4
@@ -279,25 +279,6 @@
                         size: 25
                     }
                 },
-                /*{
-                    label: 'Drying Date', name: 'smd_tgl_pengeringan', width: 120, editable: true,
-                    edittype: "text",
-                    editrules: {required: false},
-                    editoptions: {
-                        // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
-                        // use it to place a third party control to customize the toolbar
-                        dataInit: function (element) {
-                            $(element).datepicker({
-                                autoclose: true,
-                                format: 'yyyy-mm-dd',
-                                orientation: 'up',
-                                todayHighlight: true
-                            });
-                        },
-                        size: 25
-                    }
-                },*/
-
                 {
                     label: 'PO Number', name: 'sm_no_po', width: 170, align: "left", editable: true,
                     editoptions: {
@@ -333,8 +314,7 @@
                     swal({title: 'Attention', text: response.message, html: true, type: "warning"});
                 }
             },
-            //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID . "agripro.stock_material_controller/crud"; ?>',
+            //editurl: '<?php //echo WS_JQGRID . "agripro.stock_material_controller/crud"; ?>//',
             caption: "Raw Material Purchesing"
 
         });
@@ -356,7 +336,7 @@
                 },
 
                 refreshicon: 'fa fa-refresh green bigger-120',
-                view: false,
+                view: true,
                 viewicon: 'fa fa-search-plus grey bigger-120'
             },
 

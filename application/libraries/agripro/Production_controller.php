@@ -481,9 +481,7 @@ class Production_controller {
          * Data master
          */
         $product_id = getVarClean('product_id','int',0);
-        $product_qty = getVarClean('qty','float',0);
         $product_date = getVarClean('tgl','str',0);
-
         $userdata = $ci->ion_auth->user()->row();
 
         /**
@@ -492,6 +490,8 @@ class Production_controller {
         $array_sm_id = (array)$ci->input->post('row_sm_id');
         $array_weight= (array)$ci->input->post('weight');
 
+        $product_qty = array_sum($array_weight);
+
 
         try{
 
@@ -499,8 +499,7 @@ class Production_controller {
             // 1. Generate Production Code
             // 2. Insert Header
             // 3. Insert Detail
-            // 4. Update SM
-            // 5. Insert Stock
+            // 4. Update SM (OUT)
 
             if(count($array_sm_id) == 0) {
                 throw new Exception('Data source material must be filled');
@@ -511,6 +510,7 @@ class Production_controller {
                 'product_id' => $product_id,
                 'warehouse_id' => $userdata->wh_id,
                 'production_qty' => $product_qty,
+                'production_qty_init' => $product_qty,
                 'production_code' => ' ',
                 'production_date' => $product_date
             );
@@ -519,10 +519,10 @@ class Production_controller {
 
             $table->record['production_date'] = $product_date;
 
-            #######################
-            ## Step 1. Generate Production Code
-            #######################
-            // . 1. Generate production code
+            ####################################
+            ### Step 1. Generate Production Code
+            ####################################
+
             $table->record['production_code'] = $table->genProductionCode();
             $table->record[$table->pkey] = $table->generate_id($table->table,$table->pkey);
 
@@ -540,13 +540,28 @@ class Production_controller {
 
             }
 
+            ####################################
+            ### Step 2. Insert Master
+            ####################################
+
             $table->create();
+
+            ####################################
+            ### Step 3. Insert Detail
+            ####################################
+
             foreach($record_detail as $item_detail) {
                 $tableDetail->setRecord($item_detail);
                 $tableDetail->create();
             }
 
-          //  $table->insertStock($table->record);
+
+
+            ####################################
+            ### Step 4. Insert Stock SM (OUT)
+            ####################################
+
+            $table->insertStock($table->record);
 
             $table->db->trans_commit(); //Commit Trans
 
