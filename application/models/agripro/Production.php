@@ -102,7 +102,7 @@ class Production extends Abstract_model {
             $record = array();
             $record['stock_tgl_keluar'] = $prod['production_date'];
             $record['stock_kg'] = $production_detail['production_detail_qty'];
-            $record['stock_ref_id'] = $production_detail['production_detail_id'];
+            $record['stock_ref_id'] = $production_detail['sm_id'];
             $record['stock_ref_code'] = 'DRYING_OUT';
             $record['sc_id'] = $tStockCategory->getIDByCode('DRYING_STOCK');
             $record['wh_id'] = $prod['warehouse_id'];
@@ -129,66 +129,63 @@ class Production extends Abstract_model {
 
     }
 
-    public function removePacking($packing_id) {
+    public function removeProduction($production_id) {
 
         $ci = & get_instance();
 
         $ci->load->model('agripro/stock');
         $tStock = $ci->stock;
 
-        $ci->load->model('agripro/packing_detail');
-        $tPackingDetail = $ci->packing_detail;
+        $ci->load->model('agripro/production_detail');
+        $tProdDetail = $ci->production_detail;
 
-        $ci->load->model('agripro/sortir');
-        $tSortir = $ci->sortir;
+        $ci->load->model('agripro/stock_material');
+        $tSM= $ci->stock_material;
 
         /**
-         * Steps to Delete Packing
+         * Steps to Delete Production
          *
          * 1. Remove all stock_detail first
-         * 2. When loop for delete stock_detail, save data sortir in array
-         * 3. Delete data packing in stock
-         * 4. Loop data sortir for delete data sortir in stock and restore qty to sortir
-         * 5. Delete data master packing
+         * 2. When loop for delete stock_detail, save data production in array
+         * 3. Delete data production in stock
+         * 4. Loop data drying for delete data drying in stock and restore qty to drying
+         * 5. Delete data master production
          */
 
-        $data_sortir = array();
-        $tPackingDetail->setCriteria('pd.packing_id = '.$packing_id);
-        $details = $tPackingDetail->getAll();
+        $data_drying = array();
+        $tProdDetail->setCriteria('pd.production_id = '.$production_id);
+        $details = $tProdDetail->getAll();
+
         $loop = 0;
-        foreach($details as $packing_detail) {
-            $data_sortir[$loop]['sortir_id'] = $packing_detail['sortir_id'];
-            $data_sortir[$loop]['restore_store_qty'] = $packing_detail['pd_kg'];
+        foreach($details as $prd_detail) {
+            $data_drying[$loop]['sm_id'] = $prd_detail['sm_id'];
+            $data_drying[$loop]['restore_store_qty'] = $prd_detail['production_detail_qty'];
             $loop++;
 
-            $tPackingDetail->remove($packing_detail['pd_id']);
+            $tProdDetail->remove($prd_detail['production_detail_id']);
         }
 
-        /**
-         * Delete data stock by packing_id
-         */
-        $tStock->deleteByReference($packing_id, 'PACKING');
 
         /**
          * loop for delete data stock by sortir_id and restore store_qty in table sortir
          */
-        foreach($data_sortir as $sortir) {
-            //delete data stock by sortir_id
-            $tStock->deleteByReference($sortir['sortir_id'], 'SORTIR');
+        foreach($data_drying as $drying) {
+            //delete data stock by sm_id
+            $tStock->deleteByReference($drying['sm_id'], 'DRYING_OUT');
 
             //restore store qty
-            $increase_kg = (float) $sortir['restore_store_qty'];
-            $sql = "UPDATE sortir SET sortir_qty = sortir_qty + ".$increase_kg."
-                        WHERE sortir_id = ".$sortir['sortir_id'];
+            $increase_kg = (float) $drying['restore_store_qty'];
+            $sql = "UPDATE stock_material SET sm_qty_bersih = sm_qty_bersih + ".$increase_kg."
+                        WHERE sm_id = ".$drying['sm_id'];
 
-            $tSortir->db->query($sql);
+            $tSM->db->query($sql);
 
         }
 
         /**
          * Delete data master packing
          */
-        $this->remove($packing_id);
+        $this->remove($production_id);
     }
 
 }

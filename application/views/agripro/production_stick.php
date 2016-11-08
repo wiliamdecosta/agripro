@@ -122,7 +122,7 @@
                 }
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID."agripro.packing_controller/crud"; ?>',
+            editurl: '<?php echo WS_JQGRID."agripro.production_controller/crud"; ?>',
             caption: "Production Item"
 
         });
@@ -214,7 +214,7 @@
                 serializeDelData: serializeJSON,
                 recreateForm: true,
                 width:400,
-                caption:'Delete data packing',
+                caption:'Delete data production',
                 msg: "Once You delete selected record, it cannot be restored.<br>Are You sure to delete selected record?",
                 beforeShowForm: function (e) {
                     var form = $(e[0]);
@@ -297,7 +297,7 @@
             },
             //memanggil controller jqgrid yang ada di controller crud
            // editurl: '<?php echo WS_JQGRID."agripro.packing_detail_controller/crud"; ?>',
-            caption: "Packing Detail"
+            caption: "Production Detail"
 
         });
 

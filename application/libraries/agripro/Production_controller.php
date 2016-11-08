@@ -189,8 +189,8 @@ class Production_controller {
     function create() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/category');
-        $table = $ci->category;
+        $ci->load->model('agripro/production');
+        $table = $ci->production;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -260,8 +260,8 @@ class Production_controller {
     function update() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/category');
-        $table = $ci->category;
+        $ci->load->model('agripro/production');
+        $table = $ci->production;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -331,8 +331,8 @@ class Production_controller {
 
     function destroy() {
         $ci = & get_instance();
-        $ci->load->model('agripro/category');
-        $table = $ci->category;
+        $ci->load->model('agripro/production');
+        $table = $ci->production;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -347,7 +347,7 @@ class Production_controller {
                 foreach ($items as $key => $value){
                     if (empty($value)) throw new Exception('Empty parameter');
 
-                    $table->remove($value);
+                   // $table->remove($value);
                     $data['rows'][] = array($table->pkey => $value);
                     $total++;
                 }
@@ -357,7 +357,8 @@ class Production_controller {
                     throw new Exception('Empty parameter');
                 };
 
-                $table->remove($items);
+               // $table->remove($items);
+                $table->removeProduction($items);
                 $data['rows'][] = array($table->pkey => $items);
                 $data['total'] = $total = 1;
             }
