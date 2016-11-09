@@ -143,6 +143,10 @@ class Sortir extends Abstract_model {
 						SELECT *
 							FROM product
 								WHERE parent_id = $product_id
+						UNION ALL 
+						SELECT *
+							FROM product
+								WHERE product_id = $product_id
 						UNION ALL
 						SELECT *
 							FROM product
