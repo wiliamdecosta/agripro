@@ -141,7 +141,7 @@ class Stock_material_controller
             $ci->load->model('agripro/stock_material');
             $table = $ci->stock_material;
 
-            $table->setCriteria(" sm_qty_bersih is not null AND sm_id not in (select distinct sm_id from sortir where sm_id is not null) ");
+            $table->setCriteria(" sm_qty_bersih > 0 AND sm_id not in (select distinct sm_id from sortir where sm_id is not null) ");
             if (!empty($searchPhrase)) {
                 $table->setCriteria(" (sm_id ilike '%" . $searchPhrase . "%' or sm_no_trans ilike '%" . $searchPhrase . "%')");
             }

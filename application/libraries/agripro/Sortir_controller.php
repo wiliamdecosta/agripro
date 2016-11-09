@@ -398,17 +398,17 @@ class Sortir_controller
         exit;
     }
 
-    function list_product()
+    function list_product ()
     {
 
         $ci = &get_instance();
         $ci->load->model('agripro/sortir');
         $table = $ci->sortir;
 
-        $sm_id = getVarClean('sm_id', 'int', 0);
+        $product_id = getVarClean('product_id', 'int', 0);
         $sortir_id = getVarClean('sortir_id', 'int', 0);
 
-        $result = $table->list_product($sm_id, $sortir_id);
+        $result = $table->list_product_prd_id($sortir_id, $product_id);
         echo "<select>";
         foreach ($result as $value) {
             echo "<option value=" . $value['product_id'] . ">" . strtoupper($value['product_code']) . "</option>";

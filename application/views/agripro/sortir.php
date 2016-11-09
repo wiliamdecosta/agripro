@@ -67,7 +67,7 @@
 </div>
 
 
-<?php $this->load->view('lov/lov_stock_material.php'); ?>
+<?php $this->load->view('lov/lov_stock_material_sortir.php'); ?>
 
 <script>
 
@@ -370,9 +370,11 @@
 				
 				var celValue = $('#grid-table').jqGrid('getCell', rowid, 'sortir_id');
 				var sm_id = $('#grid-table').jqGrid('getCell', rowid, 'sm_id');
+				var product_id = $('#grid-table').jqGrid('getCell', rowid, 'product_id');
 				var celCode = $('#grid-table').jqGrid('getCell', rowid, 'sm_no_trans');
 				var prod_date_1 = $('#grid-table').jqGrid('getCell', rowid, 'sm_tgl_produksi');
 
+				$("#temp_product_id").val(product_id);
 				$("#temp_sm_id").val(sm_id);
 				$("#temp_sortir_id").val(celValue);
 				
@@ -575,8 +577,8 @@
                     editoptions: {
                         dataUrl: '<?php echo WS_JQGRID . "agripro.sortir_controller/list_product"; ?>',
                         postData: {
-                            sm_id: function () {
-                                return $('#temp_sm_id').val()
+                            product_id: function () {
+                                return $('#temp_product_id').val()
                             }, sortir_id: function () {
                                 return $('#temp_sortir_id').val()
                             }
