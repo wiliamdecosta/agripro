@@ -23,8 +23,8 @@
     </div>
 </div>
 <div class="space-4"></div>
-<div class="m-heading-1 " id="header_sortir" style="display:none;">
-<div class="row" style="display:none;">
+<div class="m-heading-1 border-green m-bordered" id="header_sortir" ">
+<div class="row" ">
 	
 	<!-- <div class="col-md-4">
 		<div class="input-group">
