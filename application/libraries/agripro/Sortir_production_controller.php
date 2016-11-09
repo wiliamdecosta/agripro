@@ -321,7 +321,15 @@ class Sortir_production_controller
             );
 
             // Filter Table
-            $req_param['where'] = array("sr.sm_id is null and sr.production_id is not null");
+			$report = getVarClean('report', 'int', 0);
+            if ($report == 1) {
+                $req_param['where'][] = 'sr.sm_id is null and sr.production_id is not null ';
+            }else{
+                $req_param['where'] = array("sr.sm_id is null and sr.production_id is not null  and (sr.qty_detail - sr.qty_detail_init <> 0 or sr.total_detail = 0) 
+												");
+            }
+
+            
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();

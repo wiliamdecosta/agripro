@@ -10,7 +10,7 @@
             <i class="fa fa-circle"></i> 
         </li>
         <li>
-            <span>Selection</span>
+            <span>Raw Material Selection</span>
         </li>
     </ul>
 </div>
@@ -23,8 +23,8 @@
     </div>
 </div>
 <div class="space-4"></div>
-<div class="m-heading-1 border-green m-bordered" id="header_sortir">
-<div class="row">
+<div class="m-heading-1 " id="header_sortir" style="display:none;">
+<div class="row" style="display:none;">
 	
 	<!-- <div class="col-md-4">
 		<div class="input-group">
@@ -44,7 +44,7 @@
 			</div>
 			<div class="caption">
 				<i class="glyphicon glyphicon-circle-arrow-right font-blue"></i>
-				<span class="caption-subject font-blue bold uppercase" id="net_qty">Production Quantity : 0 (Kg)</span>
+				<span class="caption-subject font-blue bold uppercase" id="net_qty">Stock Material Quantity : 0 (Kg)</span>
 			</div>
 			<div class="caption">
 				<i class="glyphicon glyphicon-circle-arrow-right font-red"></i>
@@ -54,7 +54,7 @@
 	
 </div>
 </div>
-<input type="hidden" id="temp_production_id">
+<input type="hidden" id="temp_sm_id">
 <input type="hidden" id="temp_sortir_id">
 <input type="hidden" id="temp_qty_available">
 <input type="hidden" id="temp_product_id">
@@ -67,18 +67,18 @@
 </div>
 
 
-<?php $this->load->view('lov/lov_production.php'); ?>
+<?php $this->load->view('lov/lov_stock_material_sortir.php'); ?>
 
 <script>
 
 
-    function showLovproduction(id, code, id2, code2) {
-        modal_lov_production_show(id, code,id2, code2 );
+    function showLovStockMaterial(id, code, id2, code2) {
+        modal_lov_stock_material_show(id, code,id2, code2 );
     }
 
-    function clearLovproduction() {
-        $('#form_production_id').val('');
-        $('#form_production_code').val('');
+    function clearLovStockMaterial() {
+        $('#form_sm_id').val('');
+        $('#form_sm_no_trans').val('');
     }
 
 	function show_detail_grid(rowid){
@@ -87,11 +87,11 @@
 		
 		$("#temp_rowid").val(rowid);
 		
-		var celValue = $('#grid-table').jqGrid('getCell', rowid, 'production_id');
-		var celCode = $('#grid-table').jqGrid('getCell', rowid, 'production_code');
+		var celValue = $('#grid-table').jqGrid('getCell', rowid, 'sm_id');
+		var celCode = $('#grid-table').jqGrid('getCell', rowid, 'sm_no_trans');
 		var prod_date_1 = $('#grid-table').jqGrid('getCell', rowid, 'sm_tgl_produksi');
 		
-		$("#temp_production_id").val(celValue);
+		$("#temp_sm_id").val(celValue);
 		
 		if( $("#tgl_produksi").val().length > 0 ){
 				
@@ -100,11 +100,11 @@
 			var grid_detail = jQuery("#grid-table-detail");
 			if (rowid != null) {
 				grid_detail.jqGrid('setGridParam', {
-					url: '<?php echo WS_JQGRID . "agripro.sortir_production_controller/crud"; ?>',
-					postData: {production_id: celValue}
+					url: '<?php echo WS_JQGRID . "agripro.sortir_controller/crud"; ?>',
+					postData: {sm_id: celValue}
 				});
 				var strCaption = 'Detail :: ' + celCode;
-				$("#temp_production_id").val(celValue);
+				$("#temp_sm_id").val(celValue);
 				grid_detail.jqGrid('setCaption', strCaption);
 				$("#grid-table-detail").trigger("reloadGrid");
 				$("#detail_placeholder").show();
@@ -126,20 +126,20 @@
     function get_availableqty() {
 		
 			$('#temp_qty_available').val(0);
-			production_id = $('#temp_production_id').val();
+			sm_id = $('#temp_sm_id').val();
 			sortir_id = $('#temp_sortir_id').val();
 			$.ajax({
-				url: "<?php echo WS_JQGRID . 'agripro.sortir_production_controller/get_availableqty_detail_prd'; ?>",
+				url: "<?php echo WS_JQGRID . 'agripro.sortir_controller/get_availableqty_detail'; ?>",
 				type: "POST",
 				dataType: 'json',
-				data: {production_id: production_id, sortir_id:sortir_id},
+				data: {sm_id: sm_id, sortir_id:sortir_id},
 				success: function (data) {
 					
 					$('#tgl_produksi').val(data.tgl_prod);
 					$('#temp_qty_available').val(data.avaqty);
 					$('#info_avaqty').html('Available Quantity : '+data.avaqty +' (Kg)');
 					$('#info_qty').html('Sorting Quantity : ' + data.srqty +' (Kg)');
-					$('#net_qty').html('Production Quantity : ' + data.qty_bersih +' (Kg)');
+					$('#net_qty').html('Stock Material Quantity : ' + data.qty_bersih +' (Kg)');
 					
 					if(data.tgl_prod.length > 0){
 						$('#header_sortir').show();
@@ -166,8 +166,8 @@
         }
         //return [false, "Available Quantity is : "+ava_qty+" (Kg) " +value];
     }
-    function get_production_id() {
-        return $('#temp_production_id').val();
+    function get_sm_id() {
+        return $('#temp_sm_id').val();
     }
     
     function reset_detail(){
@@ -176,7 +176,7 @@
         
         }
     
-		$(document).ready(function(){
+	$(document).ready(function(){
 		
 		$('#header_sortir').hide();
 		$('#detail_placeholder').hide();
@@ -197,15 +197,16 @@
         var pager_selector = "#grid-pager";
 
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo WS_JQGRID . "agripro.sortir_production_controller/crud"; ?>',
+            url: '<?php echo WS_JQGRID . "agripro.sortir_controller/crud"; ?>',
             datatype: "json",
             mtype: "POST",
+			postData : {report: 1},
             colModel: [
                 {label: 'ID', name: 'sortir_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Production Code', name: 'production_code', width: 350, align: "left", editable: false, editoptions: { size: 25}},
+                {label: 'Transaction Code', name: 'sm_no_trans', width: 350, align: "left", editable: false, editoptions: { size: 25}},
                 {
-                    label: 'Production Code',
-                    name: 'production_id',
+                    label: 'Transaction Code',
+                    name: 'sm_id',
                     width: 150,
                     sortable: true,
                     editable: true,
@@ -218,12 +219,12 @@
 
                             // give the editor time to initialize
                             setTimeout(function () {
-                                elm.append('<input id="form_production_id" type="text"  style="display:none;">' +
-                                    '<input size="30" id="form_production_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Production Code">' +
-                                    '<button class="btn btn-success" id=lov_btn_prod"" type="button" onclick="showLovproduction(\'form_production_id\',\'form_production_code\', \'form_prod_id\', \'form_prod_name\')">' +
+                                elm.append('<input id="form_sm_id" type="text"  style="display:none;">' +
+                                    '<input size="30" id="form_sm_no_trans" disabled type="text" class="FormElement jqgrid-required" placeholder="Transaction Code">' +
+                                    '<button class="btn btn-success" type="button" onclick="showLovStockMaterial(\'form_sm_id\',\'form_sm_no_trans\', \'form_prod_id\', \'form_prod_name\')">' +
                                     '   <span class="fa fa-search icon-on-right bigger-110"></span>' +
                                     '</button>');
-                                $("#form_production_id").val(value);
+                                $("#form_sm_id").val(value);
                                 elm.parent().removeClass('jqgrid-required');
                             }, 100);
 
@@ -232,16 +233,17 @@
                         "custom_value": function (element, oper, gridval) {
 
                             if (oper === 'get') {
-                                return $("#form_production_id").val();
+                                return $("#form_sm_id").val();
                             } else if (oper === 'set') {
-                                $("#form_production_id").val(gridval);
+                                $("#form_sm_id").val(gridval);
                                 var gridId = this.id;
                                 // give the editor time to set display
                                 setTimeout(function () {
                                     var selectedRowId = $("#" + gridId).jqGrid('getGridParam', 'selrow');
                                     if (selectedRowId != null) {
-                                        var code_display = $("#" + gridId).jqGrid('getCell', selectedRowId, 'production_code');
-                                        $("#form_production_code").val(code_display);
+                                        var code_display = $("#" + gridId).jqGrid('getCell', selectedRowId, 'sm_no_trans');
+                                        //$("#form_sm_no_trans").val(code_display);
+                                        $("#form_sm_no_trans").val('');
                                     }
                                 }, 100);
                             }
@@ -285,9 +287,7 @@
                                         var code_display = $("#" + gridId).jqGrid('getCell', selectedRowId, 'product_code');
                                         //$("#form_prod_name").val(code_display);
                                         $("#form_prod_name").val('');
-                                    }else{
-										$("#form_prod_name").val('');
-									}
+                                    }
                                 }, 100);
                             }
                         }, size: 25
@@ -328,12 +328,10 @@
                                 setTimeout(function () {
                                     var selectedRowId = $("#" + gridId).jqGrid('getGridParam', 'selrow');
                                     if (selectedRowId != null) {
-                                        var code_display = $("#" + gridId).jqGrid('getCell', selectedRowId, 'production_qty');
+                                        var code_display = $("#" + gridId).jqGrid('getCell', selectedRowId, 'sortir_qty');
                                         //$("#form_qty_name").val(code_display);
                                         $("#form_qty_name").val('');
-                                    }else{
-										$("#form_qty_name").val('');
-									}
+                                    }
                                 }, 100);
                             }
                         }, size: 25
@@ -375,13 +373,13 @@
                 //show_detail_grid(rowid);
 				
 				var celValue = $('#grid-table').jqGrid('getCell', rowid, 'sortir_id');
+				var sm_id = $('#grid-table').jqGrid('getCell', rowid, 'sm_id');
 				var product_id = $('#grid-table').jqGrid('getCell', rowid, 'product_id');
-				var production_id = $('#grid-table').jqGrid('getCell', rowid, 'production_id');
-				var celCode = $('#grid-table').jqGrid('getCell', rowid, 'production_code');
+				var celCode = $('#grid-table').jqGrid('getCell', rowid, 'sm_no_trans');
 				var prod_date_1 = $('#grid-table').jqGrid('getCell', rowid, 'sm_tgl_produksi');
 
 				$("#temp_product_id").val(product_id);
-				$("#temp_production_id").val(production_id);
+				$("#temp_sm_id").val(sm_id);
 				$("#temp_sortir_id").val(celValue);
 				
 					var grid_detail = jQuery("#grid-table-detail");
@@ -419,11 +417,11 @@
 				$('#temp_qty_available').val(0);
 				$('#info_avaqty').html('Available Quantity : 0 (Kg)');
 				$('#info_qty').html('Sorting Quantity : 0 (Kg)');
-				$('#net_qty').html('Production Quantity : 0 (Kg)');
+				$('#net_qty').html('Stock Material Quantity : 0 (Kg)');
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID . "agripro.sortir_production_controller/crud"; ?>',
-            caption: "Stick Selection"
+            editurl: '<?php echo WS_JQGRID . "agripro.sortir_controller/crud"; ?>',
+            caption: "Raw Material Selection"
 
         });
 
@@ -431,9 +429,9 @@
             {   //navbar options
                 edit: false,
                 editicon: 'fa fa-pencil blue bigger-120',
-                add: true,
+                add: false,
                 addicon: 'fa fa-plus-circle purple bigger-120',
-                del: true,
+                del: false,
                 delicon: 'fa fa-trash-o red bigger-120',
                 search: true,
                 searchicon: 'fa fa-search orange bigger-120',
@@ -444,7 +442,7 @@
                 },
 
                 refreshicon: 'fa fa-refresh green bigger-120',
-                view: false,
+                view: true,
                 viewicon: 'fa fa-search-plus grey bigger-120'
             },
 
@@ -462,8 +460,8 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
-                    $("#production_code").prop("readonly", true);
-                    clearLovproduction();
+                    $("#sm_no_trans").prop("readonly", true);
+                    clearLovStockMaterial();
                 },
                 afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
@@ -492,20 +490,16 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
-					$('#form_qty_name').focus();
-					console.log('haha');
                     /*form.css({"height": 0.70 * screen.height + "px"});
                      form.css({"width": 0.60 * screen.width + "px"});*/
 
-                    $("#production_code").prop("readonly", true);
+                    $("#sm_no_trans").prop("readonly", true);
                     setTimeout(function () {
-                        clearLovproduction();
+                        clearLovStockMaterial();
                     }, 100);
                 },
                 afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
-					$('#form_qty_name').focus();
-					console.log('haha2');
                 },
                 afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
@@ -585,7 +579,7 @@
                     hidden: true,
                     editrules: {edithidden: true, required: true},
                     editoptions: {
-                        dataUrl: '<?php echo WS_JQGRID . "agripro.sortir_production_controller/list_product"; ?>',
+                        dataUrl: '<?php echo WS_JQGRID . "agripro.sortir_controller/list_product"; ?>',
                         postData: {
                             product_id: function () {
                                 return $('#temp_product_id').val()
@@ -642,7 +636,7 @@
                 $('#temp_qty_available').val(0);
 				$('#info_avaqty').html('Available Quantity : 0 (Kg)');
 				$('#info_qty').html('Sorting Quantity : 0 (Kg)');
-				$('#net_qty').html('Production Quantity : 0 (Kg)');
+				$('#net_qty').html('Stock Material Quantity : 0 (Kg)');
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID . "agripro.sortir_detail_controller/crud"; ?>',
@@ -654,9 +648,9 @@
             {   //navbar options
                 edit: false,
                 editicon: 'fa fa-pencil blue bigger-120',
-                add: true,
+                add: false,
                 addicon: 'fa fa-plus-circle purple bigger-120',
-                del: true,
+                del: false,
                 delicon: 'fa fa-trash-o red bigger-120',
                 search: true,
                 searchicon: 'fa fa-search orange bigger-120',
@@ -666,7 +660,7 @@
                 },
 
                 refreshicon: 'fa fa-refresh green bigger-120',
-                view: false,
+                view: true,
                 viewicon: 'fa fa-search-plus grey bigger-120'
             },
 
@@ -731,7 +725,7 @@
                 },
                 /* beforeSubmit: function(postdata){
                  //postdata.something = 'somevalue';
-                 if($('#temp_qty_available').val() < postdata.production_qty){
+                 if($('#temp_qty_available').val() < postdata.sortir_qty){
                  msg_txt = 'Please Insert Quantity no more than Available Quantity ('+$('#temp_qty_available').val()+' Kg)';
                  swal({title: "Warning!", text: msg_txt, html: true, type: "error"});
                  }

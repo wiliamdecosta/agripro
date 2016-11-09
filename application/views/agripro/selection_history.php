@@ -23,8 +23,8 @@
     </div>
 </div>
 <div class="space-4"></div>
-<div class="m-heading-1 border-green m-bordered" id="header_sortir">
-<div class="row">
+<div class="m-heading-1 " id="header_sortir" style="display:none;">
+<div class="row" style="display:none;">
 	
 	<!-- <div class="col-md-4">
 		<div class="input-group">
@@ -37,7 +37,7 @@
 		</span>
 	</div>
 </div> -->
-	<div class="col-md-8">
+	<div class="col-md-8" >
 			<div class="caption">
 				<i class="glyphicon glyphicon-circle-arrow-right font-green"></i>
 				<span class="caption-subject font-green bold uppercase" id="info_qty">Sorting Qty 0 (Kg)</span>
@@ -200,6 +200,7 @@
             url: '<?php echo WS_JQGRID . "agripro.sortir_production_controller/crud"; ?>',
             datatype: "json",
             mtype: "POST",
+			postData : {report: 1},
             colModel: [
                 {label: 'ID', name: 'sortir_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'Production Code', name: 'production_code', width: 350, align: "left", editable: false, editoptions: { size: 25}},
@@ -431,9 +432,9 @@
             {   //navbar options
                 edit: false,
                 editicon: 'fa fa-pencil blue bigger-120',
-                add: true,
+                add: false,
                 addicon: 'fa fa-plus-circle purple bigger-120',
-                del: true,
+                del: false,
                 delicon: 'fa fa-trash-o red bigger-120',
                 search: true,
                 searchicon: 'fa fa-search orange bigger-120',
@@ -444,7 +445,7 @@
                 },
 
                 refreshicon: 'fa fa-refresh green bigger-120',
-                view: false,
+                view: true,
                 viewicon: 'fa fa-search-plus grey bigger-120'
             },
 
@@ -654,9 +655,9 @@
             {   //navbar options
                 edit: false,
                 editicon: 'fa fa-pencil blue bigger-120',
-                add: true,
+                add: false,
                 addicon: 'fa fa-plus-circle purple bigger-120',
-                del: true,
+                del: false,
                 delicon: 'fa fa-trash-o red bigger-120',
                 search: true,
                 searchicon: 'fa fa-search orange bigger-120',
@@ -666,7 +667,7 @@
                 },
 
                 refreshicon: 'fa fa-refresh green bigger-120',
-                view: false,
+                view: true,
                 viewicon: 'fa fa-search-plus grey bigger-120'
             },
 
