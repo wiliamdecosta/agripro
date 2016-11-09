@@ -283,8 +283,11 @@
                                     var selectedRowId = $("#" + gridId).jqGrid('getGridParam', 'selrow');
                                     if (selectedRowId != null) {
                                         var code_display = $("#" + gridId).jqGrid('getCell', selectedRowId, 'product_code');
-                                        $("#form_prod_name").val(code_display);
-                                    }
+                                        //$("#form_prod_name").val(code_display);
+                                        $("#form_prod_name").val('');
+                                    }else{
+										$("#form_prod_name").val('');
+									}
                                 }, 100);
                             }
                         }, size: 25
@@ -326,8 +329,11 @@
                                     var selectedRowId = $("#" + gridId).jqGrid('getGridParam', 'selrow');
                                     if (selectedRowId != null) {
                                         var code_display = $("#" + gridId).jqGrid('getCell', selectedRowId, 'production_qty');
-                                        $("#form_qty_name").val(code_display);
-                                    }
+                                        //$("#form_qty_name").val(code_display);
+                                        $("#form_qty_name").val('');
+                                    }else{
+										$("#form_qty_name").val('');
+									}
                                 }, 100);
                             }
                         }, size: 25
@@ -417,7 +423,7 @@
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID . "agripro.sortir_production_controller/crud"; ?>',
-            caption: "Raw Material Selection"
+            caption: "Stick Selection"
 
         });
 

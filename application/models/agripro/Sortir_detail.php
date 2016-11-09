@@ -164,7 +164,7 @@ class Sortir_detail extends Abstract_model {
         $record_stock['stock_kg'] = $sortir_detail['sortir_detail_qty'];
         $record_stock['stock_ref_id'] = $sortir_detail['sortir_detail_id'];
         $record_stock['stock_ref_code'] = $stock_refcode;
-        $record_stock['sc_id'] = $tStockCategory->getIDByCode('SORTIR_STOCK');
+        $record_stock['sc_id'] = $tStockCategory->getIDByCode('DRYING_STOCK');
         $record_stock['wh_id'] = $whid;
         $record_stock['product_id'] = $sortir_detail['product_id'];
         $record_stock['stock_description'] = 'sm_qty_bersih has used by sortir_detail';
@@ -211,7 +211,7 @@ class Sortir_detail extends Abstract_model {
 		if($type == 'PRODUCTION'){
 			// ref id = production_id 
 		
-			$sql = "UPDATE production SET production_qty = production_qty - ".$sortir_detail_id."
+			$sql = "UPDATE production SET production_qty = production_qty + ".$qty_detail."
                         WHERE production_id = ".$ref_id;
 	
 			$stock_refcode = 'PRODUCTION_SORTIR';

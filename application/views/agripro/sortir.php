@@ -241,7 +241,8 @@
                                     var selectedRowId = $("#" + gridId).jqGrid('getGridParam', 'selrow');
                                     if (selectedRowId != null) {
                                         var code_display = $("#" + gridId).jqGrid('getCell', selectedRowId, 'sm_no_trans');
-                                        $("#form_sm_no_trans").val(code_display);
+                                        //$("#form_sm_no_trans").val(code_display);
+                                        $("#form_sm_no_trans").val('');
                                     }
                                 }, 100);
                             }
@@ -283,7 +284,8 @@
                                     var selectedRowId = $("#" + gridId).jqGrid('getGridParam', 'selrow');
                                     if (selectedRowId != null) {
                                         var code_display = $("#" + gridId).jqGrid('getCell', selectedRowId, 'product_code');
-                                        $("#form_prod_name").val(code_display);
+                                        //$("#form_prod_name").val(code_display);
+                                        $("#form_prod_name").val('');
                                     }
                                 }, 100);
                             }
@@ -326,7 +328,8 @@
                                     var selectedRowId = $("#" + gridId).jqGrid('getGridParam', 'selrow');
                                     if (selectedRowId != null) {
                                         var code_display = $("#" + gridId).jqGrid('getCell', selectedRowId, 'sortir_qty');
-                                        $("#form_qty_name").val(code_display);
+                                        //$("#form_qty_name").val(code_display);
+                                        $("#form_qty_name").val('');
                                     }
                                 }, 100);
                             }

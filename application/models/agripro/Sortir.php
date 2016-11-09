@@ -22,7 +22,7 @@ class Sortir extends Abstract_model {
                             );
 
     public $selectClause    = "sr.sortir_id, sr.product_id, sr.sm_id, sr.production_id, sr.sortir_tgl, sr.sortir_qty, fm.fm_code, fm.fm_name,
-								sm.sm_no_trans, sm.sm_qty_bersih, pr.product_id, pr.product_name, pr.product_code, production.production_code";
+								sm.sm_no_trans, sm.sm_qty_bersih_init sm_qty_bersih, pr.product_id, pr.product_name, pr.product_code, production.production_code";
     public $fromClause      = "sortir sr
 								left join stock_material sm on sr.sm_id = sm.sm_id
                                 left join production on sr.production_id = production.production_id
@@ -211,14 +211,15 @@ class Sortir extends Abstract_model {
     
     function is_packing($sm_id){
     
-        $sql = " SELECT COUNT(*) total 
+        /* $sql = " SELECT COUNT(*) total 
                         from packing_detail 
                             where sortir_detail_id = $sm_id";
         $query = $this->db->query($sql);
         $row = $query->row_array();
         $query->free_result();
         
-        return $row['total'];
+        return $row['total']; */
+		return 0;
     }
     
 }
