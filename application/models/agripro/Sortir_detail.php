@@ -160,7 +160,7 @@ class Sortir_detail extends Abstract_model {
 		
 		$record_stock = array();
         $stock_date = $sdate; //$datasrt['sortir_tgl'];
-        $record_stock['stock_tgl_masuk'] = $stock_date; //base on sorting_date
+        $record_stock['stock_tgl_keluar'] = $stock_date; //base on sorting_date
         $record_stock['stock_kg'] = $sortir_detail['sortir_detail_qty'];
         $record_stock['stock_ref_id'] = $sortir_detail['sortir_detail_id'];
         $record_stock['stock_ref_code'] = $stock_refcode;
