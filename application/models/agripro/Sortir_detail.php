@@ -14,10 +14,11 @@ class Sortir_detail extends Abstract_model {
                                 'sortir_detail_id'       => array('pkey' => true, 'type' => 'int', 'nullable' => false, 'unique' => true, 'display' => 'ID Sortir'),
                                 'product_id'             => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product ID'),
                                 'sortir_id'              => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Sortir ID'),
-                                'sortir_detail_qty'      => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'QTY')
+                                'sortir_detail_qty'      => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'QTY'),
+                                'sortir_detail_qty_init'      => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'QTY')
                             );
 
-    public $selectClause    = "sort_det.sortir_detail_id, sort_det.sortir_id, sort_det.product_id, sort_det.sortir_detail_qty,
+    public $selectClause    = "sort_det.sortir_detail_id, sort_det.sortir_id, sort_det.product_id, sort_det.sortir_detail_qty,sort_det.sortir_detail_qty_init,
                                 sr.sortir_tgl, fm.fm_code, fm.fm_name,
                                 pr.product_name, pr.product_code";
     public $fromClause      = " sortir_detail as sort_det
@@ -41,10 +42,13 @@ class Sortir_detail extends Abstract_model {
             //do something
             // example :
             $this->record[$this->pkey] = $this->generate_id($this->table,$this->pkey);
+            $this->record['sortir_detail_qty_init'] = $this->record['sortir_detail_qty'];
         }else {
             //do something
             //example:
             //if false please throw new Exception
+			$this->record['sortir_detail_qty_init'] = $this->record['sortir_detail_qty'];
+			
         }
         return true;
     }

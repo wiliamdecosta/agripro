@@ -56,9 +56,9 @@ class Sortir extends Abstract_model {
 
 	function get_availableqty($sm_id){
 
-		$sql = "SELECT (select sm_qty_bersih from stock_material where sm_id = $sm_id ) -
+		$sql = "SELECT (select sm_qty_bersih_init from stock_material where sm_id = $sm_id ) -
 						COALESCE (sum(sortir_qty),0) as avaqty, COALESCE (sum(sortir_qty),0) as srtqty ,
-						COALESCE((select sm_qty_bersih from stock_material where sm_id = $sm_id ),0) qty_bersih,
+						COALESCE((select sm_qty_bersih_init from stock_material where sm_id = $sm_id ),0) qty_bersih,
 						(select sm_tgl_produksi from stock_material where sm_id = $sm_id ) tgl_prod
 						from sortir where sm_id = $sm_id ";
         $query = $this->db->query($sql);
@@ -71,10 +71,10 @@ class Sortir extends Abstract_model {
     
     function get_availableqty_detail($sm_id, $sortir_id){
 
-		$sql = " SELECT (select sm_qty_bersih from stock_material where sm_id = $sm_id ) -
-						COALESCE (sum(sortir_detail_qty),0) as avaqty, 
-                        COALESCE (sum(sortir_detail_qty),0) as srtqty ,
-						COALESCE((select sm_qty_bersih from stock_material where sm_id = $sm_id ),0) qty_bersih,
+		$sql = " SELECT (select sm_qty_bersih_init from stock_material where sm_id = $sm_id ) -
+						COALESCE (sum(sortir_detail_qty_init),0) as avaqty, 
+                        COALESCE (sum(sortir_detail_qty_init),0) as srtqty ,
+						COALESCE((select sm_qty_bersih_init from stock_material where sm_id = $sm_id ),0) qty_bersih,
 						(select sm_tgl_produksi from stock_material where sm_id = $sm_id ) tgl_prod
 						from sortir_detail 
                         where sortir_id = $sortir_id ";
@@ -88,10 +88,10 @@ class Sortir extends Abstract_model {
     
     function get_availableqty_detail_prd($sm_id, $sortir_id){
 
-		$sql = " SELECT (select production_qty from production where production_id = $sm_id ) -
-						COALESCE (sum(sortir_detail_qty),0) as avaqty, 
-                        COALESCE (sum(sortir_detail_qty),0) as srtqty ,
-						COALESCE((select production_qty from production where production_id = $sm_id ),0) qty_bersih,
+		$sql = " SELECT (select production_qty_init from production where production_id = $sm_id ) -
+						COALESCE (sum(sortir_detail_qty_init),0) as avaqty, 
+                        COALESCE (sum(sortir_detail_qty_init),0) as srtqty ,
+						COALESCE((select production_qty_init from production where production_id = $sm_id ),0) qty_bersih,
 						(select production_date from production where production_id = $sm_id ) tgl_prod
 						from sortir_detail 
                         where sortir_id = $sortir_id ";
