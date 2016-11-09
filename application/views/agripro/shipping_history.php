@@ -10,18 +10,11 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Shipping</span>
+            <span>Shipping History</span>
         </li>
     </ul>
 </div>
 <!-- end breadcrumb -->
-<div class="space-4"></div>
-
-<div class="row">
-    <div class="col-md-12">
-        <button class="btn blue-madison" id="add-shipping"><i class="fa fa-truck bigger-120"></i> Add Shipping</button>
-    </div>
-</div>
 <div class="space-4"></div>
 <div class="row">
     <div class="col-md-12">
@@ -38,41 +31,13 @@
 </div>
 
 <script>
-    function editShipping(rowId) {
-        var rowData = jQuery("#grid-table").getRowData(rowId);
-        loadContentWithParams('agripro.shipping_edit_form', {
-            shipping_id : rowData.shipping_id,
-            shipping_date : rowData.shipping_date,
-            shipping_driver_name : rowData.shipping_driver_name,
-            shipping_notes : rowData.shipping_notes
-        });
-    }
-
-    function costShipping(rowId) {
-        var rowData = jQuery("#grid-table").getRowData(rowId);
-        loadContentWithParams('agripro.shipping_cost_form', {
-            shipping_id : rowData.shipping_id,
-            shipping_date : rowData.shipping_date,
-            shipping_driver_name : rowData.shipping_driver_name,
-            shipping_notes : rowData.shipping_notes
-        });
-    }
-</script>
-
-<script>
-
-    jQuery(function($) {
-        $('#add-shipping').on('click',function(e) {
-            loadContentWithParams('agripro.shipping_add_form',{});
-        });
-    });
 
     jQuery(function($) {
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
 
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo WS_JQGRID."agripro.shipping_controller/crud"; ?>',
+            url: '<?php echo WS_JQGRID."agripro.shipping_controller/readHistory"; ?>',
             datatype: "json",
             mtype: "POST",
             colModel: [
@@ -80,12 +45,6 @@
                 {label: 'Shipping Date', name: 'shipping_date', width: 120, align: "center", editable: false},
                 {label: 'Driver Name', name: 'shipping_driver_name', width: 100, align: "left", editable: false},
                 {label: 'Notes', name: 'shipping_notes', width: 100, align: "left", editable: false, hidden:true},
-                {label: 'Shipping Cost (Rp)', name: 'shipping_cost', formatter:'currency', formatoptions: {prefix:'Rp. ', thousandsSeparator : '.', decimalPlaces: 0}, align:'right', width: 150, align: "right", editable: false, hidden:true},
-                {label: 'Edit Shipping',name: '',width: 120, align: "center",editable: false,
-                    formatter:function(cellvalue, options, rowObject) {
-                        return '<a class="btn green-meadow btn-xs" href="#" onclick="editShipping('+rowObject['shipping_id']+')"><i class="fa fa-pencil"></i>Edit</a>';
-                    }
-                }
             ],
             height: '100%',
             autowidth: true,
@@ -140,7 +99,7 @@
                 editicon: 'fa fa-pencil blue bigger-120',
                 add: false,
                 addicon: 'fa fa-plus-circle purple bigger-120',
-                del: true,
+                del: false,
                 delicon: 'fa fa-trash-o red bigger-120',
                 search: true,
                 searchicon: 'fa fa-search orange bigger-120',
@@ -362,14 +321,6 @@
             },
             {
 
-                //new record form
-                editData: {
-                    pkg_id: function() {
-                        var selRowId =  $("#grid-table").jqGrid ('getGridParam', 'selrow');
-                        var pkg_id = $("#grid-table").jqGrid('getCell', selRowId, 'pkg_id');
-                        return pkg_id;
-                    }
-                },
                 closeAfterAdd: true,
                 clearAfterAdd : true,
                 closeOnEscape:true,
@@ -387,10 +338,6 @@
                     form.css({"width": 0.60*screen.width+"px"});
 
                     $("#smd_batch_number").prop("readonly", true);
-                    setTimeout(function() {
-                        clearLovstock_material_detail();
-                        clearLovPlantation();
-                    },100);
                 },
                 afterShowForm: function(form) {
                     form.closest('.ui-jqdialog').center();

@@ -1,16 +1,16 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
 * Json library
-* @class Shipping_controller
+* @class Shipping_bizhub_controller
 * @version 07/05/2015 12:18:00
 */
-class Shipping_controller {
+class Shipping_bizhub_controller {
 
     function read() {
 
         $page = getVarClean('page','int',1);
         $limit = getVarClean('rows','int',5);
-        $sidx = getVarClean('sidx','str','shipping_id');
+        $sidx = getVarClean('sidx','str','shipping_bizhub_id');
         $sord = getVarClean('sord','str','asc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
@@ -18,72 +18,8 @@ class Shipping_controller {
         try {
 
             $ci = & get_instance();
-            $ci->load->model('agripro/shipping');
-            $table = $ci->shipping;
-
-            $req_param = array(
-                "sort_by" => $sidx,
-                "sord" => $sord,
-                "limit" => null,
-                "field" => null,
-                "where" => null,
-                "where_in" => null,
-                "where_not_in" => null,
-                "search" => $_REQUEST['_search'],
-                "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
-                "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
-                "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
-            );
-
-            // Filter Table
-            $req_param['where'] = array('ship.shipping_id NOT IN (select in_shipping_id from incoming_bizhub)');
-
-            $table->setJQGridParam($req_param);
-            $count = $table->countAll();
-
-            if ($count > 0) $total_pages = ceil($count / $limit);
-            else $total_pages = 1;
-
-            if ($page > $total_pages) $page = $total_pages;
-            $start = $limit * $page - ($limit); // do not put $limit*($page - 1)
-
-            $req_param['limit'] = array(
-                'start' => $start,
-                'end' => $limit
-            );
-
-            $table->setJQGridParam($req_param);
-
-            if ($page == 0) $data['page'] = 1;
-            else $data['page'] = $page;
-
-            $data['total'] = $total_pages;
-            $data['records'] = $count;
-
-            $data['rows'] = $table->getAllItems();
-            $data['success'] = true;
-
-        }catch (Exception $e) {
-            $data['message'] = $e->getMessage();
-        }
-
-        return $data;
-    }
-
-    function readHistory() {
-
-        $page = getVarClean('page','int',1);
-        $limit = getVarClean('rows','int',5);
-        $sidx = getVarClean('sidx','str','shipping_id');
-        $sord = getVarClean('sord','str','asc');
-
-        $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
-
-        try {
-
-            $ci = & get_instance();
-            $ci->load->model('agripro/shipping');
-            $table = $ci->shipping;
+            $ci->load->model('agripro/shipping_bizhub');
+            $table = $ci->shipping_bizhub;
 
             $req_param = array(
                 "sort_by" => $sidx,
@@ -134,6 +70,7 @@ class Shipping_controller {
         return $data;
     }
 
+
     function crud() {
 
         $data = array();
@@ -167,8 +104,8 @@ class Shipping_controller {
     function create() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
+        $ci->load->model('agripro/shipping_bizhub');
+        $table = $ci->shipping_bizhub;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -238,8 +175,8 @@ class Shipping_controller {
     function update() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
+        $ci->load->model('agripro/shipping_bizhub');
+        $table = $ci->shipping_bizhub;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -309,8 +246,8 @@ class Shipping_controller {
 
     function destroy() {
         $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
+        $ci->load->model('agripro/shipping_bizhub');
+        $table = $ci->shipping_bizhub;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -358,8 +295,8 @@ class Shipping_controller {
     function createForm() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
+        $ci->load->model('agripro/shipping_bizhub');
+        $table = $ci->shipping_bizhub;
 
         $data = array('success' => false, 'message' => '');
         $table->actionType = 'CREATE';
@@ -367,24 +304,24 @@ class Shipping_controller {
         /**
          * Data master
          */
-        $shipping_date = getVarClean('shipping_date','str','');
-        $shipping_driver_name = getVarClean('shipping_driver_name','str','');
-        $shipping_notes = getVarClean('shipping_notes','str','');
+        $shipping_bizhub_date = getVarClean('shipping_bizhub_date','str','');
+        $shipping_bizhub_no = getVarClean('shipping_bizhub_no','str','');
+        $shipping_bizhub_notes = getVarClean('shipping_bizhub_notes','str','');
 
 
         /**
          * Data details
          */
-        $packing_ids = (array)$ci->input->post('packing_id');
+        $packing_bizhub_ids = (array)$ci->input->post('packing_bizhub_id');
 
         try{
 
             $table->db->trans_begin(); //Begin Trans
 
                 $items = array(
-                    'shipping_date' => $shipping_date,
-                    'shipping_driver_name' => $shipping_driver_name,
-                    'shipping_notes' => $shipping_notes
+                    'shipping_bizhub_date' => $shipping_bizhub_date,
+                    'shipping_bizhub_no' => $shipping_bizhub_no,
+                    'shipping_bizhub_notes' => $shipping_bizhub_notes
                 );
 
                 $table->setRecord($items);
@@ -392,15 +329,15 @@ class Shipping_controller {
 
 
                 $record_detail = array();
-                $ci->load->model('agripro/shipping_detail');
-                $tableDetail = $ci->shipping_detail;
+                $ci->load->model('agripro/shipping_bizhub_detail');
+                $tableDetail = $ci->shipping_bizhub_detail;
                 $tableDetail->actionType = 'CREATE';
 
 
-                for($i = 0; $i < count($packing_ids); $i++) {
+                for($i = 0; $i < count($packing_bizhub_ids); $i++) {
                     $record_detail[] = array(
-                        'shipping_id' => $table->record[$table->pkey],
-                        'packing_id' => $packing_ids[$i]
+                        'shipping_bizhub_id' => $table->record[$table->pkey],
+                        'packing_bizhub_id' => $packing_bizhub_ids[$i]
                     );
                 }
 
@@ -434,8 +371,8 @@ class Shipping_controller {
     function updateForm() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
+        $ci->load->model('agripro/shipping_bizhub');
+        $table = $ci->shipping_bizhub;
 
         $data = array('success' => false, 'message' => '');
         $table->actionType = 'UDATE';
@@ -443,42 +380,42 @@ class Shipping_controller {
         /**
          * Data master
          */
-        $shipping_id = getVarClean('shipping_id','int',0);
-        $shipping_date = getVarClean('shipping_date','str','');
-        $shipping_driver_name = getVarClean('shipping_driver_name','str','');
-        $shipping_notes = getVarClean('shipping_notes','str','');
+        $shipping_bizhub_id = getVarClean('shipping_bizhub_id','int',0);
+        $shipping_bizhub_date = getVarClean('shipping_bizhub_date','str','');
+        $shipping_bizhub_no = getVarClean('shipping_bizhub_no','str','');
+        $shipping_bizhub_notes = getVarClean('shipping_bizhub_notes','str','');
 
 
         /**
          * Data details
          */
-        $shipdet_ids = (array)$ci->input->post('shipdet_id');
-        $packing_ids = (array)$ci->input->post('packing_id');
+        $shipdet_bizhub_ids = (array)$ci->input->post('shipdet_bizhub_id');
+        $packing_bizhub_ids = (array)$ci->input->post('packing_bizhub_id');
 
         try{
 
             $table->db->trans_begin(); //Begin Trans
 
                 $items = array(
-                    'shipping_id' => $shipping_id,
-                    'shipping_date' => $shipping_date,
-                    'shipping_driver_name' => $shipping_driver_name,
-                    'shipping_notes' => $shipping_notes
+                    'shipping_bizhub_id' => $shipping_bizhub_id,
+                    'shipping_bizhub_date' => $shipping_bizhub_date,
+                    'shipping_bizhub_no' => $shipping_bizhub_no,
+                    'shipping_bizhub_notes' => $shipping_bizhub_notes
                 );
                 $table->setRecord($items);
 
 
                 $record_detail = array();
-                $ci->load->model('agripro/shipping_detail');
-                $tableDetail = $ci->shipping_detail;
+                $ci->load->model('agripro/shipping_bizhub_detail');
+                $tableDetail = $ci->shipping_bizhub_detail;
                 $tableDetail->actionType = 'CREATE';
 
 
-                for($i = 0; $i < count($packing_ids); $i++) {
-                    if($shipdet_ids[$i] == "") {
+                for($i = 0; $i < count($packing_bizhub_ids); $i++) {
+                    if($shipdet_bizhub_ids[$i] == "") {
                         $record_detail[] = array(
-                            'shipping_id' => $shipping_id,
-                            'packing_id' => $packing_ids[$i]
+                            'shipping_bizhub_id' => $shipping_bizhub_id,
+                            'packing_bizhub_id' => $packing_bizhub_ids[$i]
                         );
                     }
                 }

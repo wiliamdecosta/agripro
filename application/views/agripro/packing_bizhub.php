@@ -10,7 +10,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Shipping</span>
+            <span>Packing Bizhub</span>
         </li>
     </ul>
 </div>
@@ -19,7 +19,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <button class="btn blue-madison" id="add-shipping"><i class="fa fa-truck bigger-120"></i> Add Shipping</button>
+        <button class="btn blue-madison" id="add-packing"><i class="fa fa-dropbox bigger-120"></i> Add Packing</button>
     </div>
 </div>
 <div class="space-4"></div>
@@ -38,23 +38,17 @@
 </div>
 
 <script>
-    function editShipping(rowId) {
-        var rowData = jQuery("#grid-table").getRowData(rowId);
-        loadContentWithParams('agripro.shipping_edit_form', {
-            shipping_id : rowData.shipping_id,
-            shipping_date : rowData.shipping_date,
-            shipping_driver_name : rowData.shipping_driver_name,
-            shipping_notes : rowData.shipping_notes
-        });
-    }
+    function viewPacking(rowId) {
 
-    function costShipping(rowId) {
         var rowData = jQuery("#grid-table").getRowData(rowId);
-        loadContentWithParams('agripro.shipping_cost_form', {
-            shipping_id : rowData.shipping_id,
-            shipping_date : rowData.shipping_date,
-            shipping_driver_name : rowData.shipping_driver_name,
-            shipping_notes : rowData.shipping_notes
+        loadContentWithParams('agripro.packing_bizhub_edit_form', {
+            packing_bizhub_id : rowData.packing_bizhub_id,
+            product_id : rowData.product_id,
+            product_code : rowData.product_code,
+            packing_bizhub_batch_number : rowData.packing_bizhub_batch_number,
+            packing_bizhub_serial : rowData.packing_bizhub_serial,
+            packing_bizhub_date : rowData.packing_bizhub_date,
+            packing_bizhub_kg : rowData.packing_bizhub_kg
         });
     }
 </script>
@@ -62,8 +56,8 @@
 <script>
 
     jQuery(function($) {
-        $('#add-shipping').on('click',function(e) {
-            loadContentWithParams('agripro.shipping_add_form',{});
+        $('#add-packing').on('click',function(e) {
+            loadContentWithParams('agripro.packing_bizhub_add_form',{});
         });
     });
 
@@ -72,20 +66,32 @@
         var pager_selector = "#grid-pager";
 
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo WS_JQGRID."agripro.shipping_controller/crud"; ?>',
+            url: '<?php echo WS_JQGRID."agripro.packing_bizhub_controller/crud"; ?>',
             datatype: "json",
             mtype: "POST",
             colModel: [
-                {label: 'ID', name: 'shipping_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Shipping Date', name: 'shipping_date', width: 120, align: "center", editable: false},
-                {label: 'Driver Name', name: 'shipping_driver_name', width: 100, align: "left", editable: false},
-                {label: 'Notes', name: 'shipping_notes', width: 100, align: "left", editable: false, hidden:true},
-                {label: 'Shipping Cost (Rp)', name: 'shipping_cost', formatter:'currency', formatoptions: {prefix:'Rp. ', thousandsSeparator : '.', decimalPlaces: 0}, align:'right', width: 150, align: "right", editable: false, hidden:true},
-                {label: 'Edit Shipping',name: '',width: 120, align: "center",editable: false,
+                {label: 'ID', name: 'packing_bizhub_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'ID Product', name: 'product_id', width: 120, align: "left", editable: false, hidden:true},
+                {label: 'Product Code', name: 'product_code', width: 120, align: "left", editable: false, hidden:true},
+
+                {label: 'Product Name', name: 'product_name', width: 150, align: "left", editable: false},
+                {label: 'Serial', name: 'packing_bizhub_batch_number', width: 200, align: "left", editable: false},
+                {label: 'Batch Number', name: 'packing_bizhub_serial', width: 100, align: "left", editable: false},
+                {label: 'Weight(Kg)', name: 'packing_bizhub_kg', width: 80, align: "right", editable: false},
+                {label: 'Packing Date', name: 'packing_bizhub_date', width: 120, align: "center", editable: false},
+                {label: 'View Packing',name: '',width: 120, align: "center",editable: false,
                     formatter:function(cellvalue, options, rowObject) {
-                        return '<a class="btn green-meadow btn-xs" href="#" onclick="editShipping('+rowObject['shipping_id']+')"><i class="fa fa-pencil"></i>Edit</a>';
+                        return '<a class="btn green-meadow btn-xs" href="#" onclick="viewPacking('+rowObject['packing_bizhub_id']+')"><i class="fa fa-search-plus"></i>View</a>';
                     }
-                }
+                },
+                {label: 'Print Label',name: '',width: 120, align: "center",editable: false,
+                    formatter:function(cellvalue, options, rowObject) {
+                        var val = rowObject['packing_bizhub_id'];
+                        var url = "<?php echo base_url().'label/packing_label_bizhub?id='?>"+val;
+                        return '<a class="btn btn-danger btn-xs" href="#" onclick="PopupCenter(\''+url+'\',\'Label Packing\',500,500);"><i class="fa fa-print"></i>Label</a>';
+
+                    }
+                },
             ],
             height: '100%',
             autowidth: true,
@@ -99,14 +105,14 @@
             multiboxonly: true,
             onSelectRow: function (rowid) {
                 /*do something when selected*/
-                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'shipping_id');
-                var celCode = $('#grid-table').jqGrid('getCell', rowid, 'shipping_date');
+                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'packing_bizhub_id');
+                var celCode = $('#grid-table').jqGrid('getCell', rowid, 'packing_bizhub_batch_number');
 
                 var grid_detail = jQuery("#grid-table-detail");
                 if (rowid != null) {
                     grid_detail.jqGrid('setGridParam', {
-                        url: '<?php echo WS_JQGRID."agripro.shipping_detail_controller/crud"; ?>',
-                        postData: {shipping_id: rowid}
+                        url: '<?php echo WS_JQGRID."agripro.packing_bizhub_detail_controller/crud"; ?>',
+                        postData: {packing_bizhub_id: rowid}
                     });
                     var strCaption = 'Contains :: ' + celCode;
                     grid_detail.jqGrid('setCaption', strCaption);
@@ -129,8 +135,8 @@
                 }
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID."agripro.shipping_controller/crud"; ?>',
-            caption: "Shipping"
+            editurl: '<?php echo WS_JQGRID."agripro.packing_bizhub_controller/crud"; ?>',
+            caption: "Packing Bizhub"
 
         });
 
@@ -221,7 +227,7 @@
                 serializeDelData: serializeJSON,
                 recreateForm: true,
                 width:400,
-                caption:'Delete data shipping',
+                caption:'Delete data packing',
                 msg: "Once You delete selected record, it cannot be restored.<br>Are You sure to delete selected record?",
                 beforeShowForm: function (e) {
                     var form = $(e[0]);
@@ -268,13 +274,9 @@
             datatype: "json",
             mtype: "POST",
             colModel: [
-                {label: 'ID', key:true, name: 'shipdet_id', width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Product Code', name: 'product_code', width: 120, align: "left", editable: false},
-                {label: 'Serial', name: 'packing_batch_number', width: 200, align: "left", editable: false},
-                {label: 'Batch Number', name: 'packing_serial', width: 100, align: "left", editable: false},
-                {label: 'From Warehouse', name: 'wh_code', width: 120, align: "left", editable: false},
-                {label: 'Weight(Kg)', name: 'packing_kg', width: 120, align: "left", editable: false},
-
+                {label: 'ID', key:true, name: 'pd_bizhub_id', width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'Product', name: 'product_code', width: 120, align: "left", editable: false},
+                {label: 'Weight(Kg)', name: 'pd_bizhub_kg', width: 120, align: "right", editable: false},
             ],
             height: '100%',
             width:500,
@@ -304,8 +306,8 @@
 
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID."agripro.shipping_detail_controller/crud"; ?>',
-            caption: "Shipping Detail"
+            editurl: '<?php echo WS_JQGRID."agripro.packing_bizhub_detail_controller/crud"; ?>',
+            caption: "Packing Detail"
 
         });
 
@@ -362,14 +364,6 @@
             },
             {
 
-                //new record form
-                editData: {
-                    pkg_id: function() {
-                        var selRowId =  $("#grid-table").jqGrid ('getGridParam', 'selrow');
-                        var pkg_id = $("#grid-table").jqGrid('getCell', selRowId, 'pkg_id');
-                        return pkg_id;
-                    }
-                },
                 closeAfterAdd: true,
                 clearAfterAdd : true,
                 closeOnEscape:true,
@@ -385,12 +379,6 @@
                     style_edit_form(form);
                     form.css({"height": 0.50*screen.height+"px"});
                     form.css({"width": 0.60*screen.width+"px"});
-
-                    $("#smd_batch_number").prop("readonly", true);
-                    setTimeout(function() {
-                        clearLovstock_material_detail();
-                        clearLovPlantation();
-                    },100);
                 },
                 afterShowForm: function(form) {
                     form.closest('.ui-jqdialog').center();

@@ -1,25 +1,25 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /**
 * Json library
-* @class Shipping_controller
-* @version 07/05/2015 12:18:00
+* @class Packing_bizhub_controller
+* @version 17/06/2016 05:29:00
 */
-class Shipping_controller {
+class Packing_bizhub_controller {
 
     function read() {
 
         $page = getVarClean('page','int',1);
         $limit = getVarClean('rows','int',5);
-        $sidx = getVarClean('sidx','str','shipping_id');
-        $sord = getVarClean('sord','str','asc');
+        $sidx = getVarClean('sidx','str','packing_bizhub_id');
+        $sord = getVarClean('sord','str','desc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
         try {
 
             $ci = & get_instance();
-            $ci->load->model('agripro/shipping');
-            $table = $ci->shipping;
+            $ci->load->model('agripro/packing_bizhub');
+            $table = $ci->packing_bizhub;
 
             $req_param = array(
                 "sort_by" => $sidx,
@@ -36,7 +36,7 @@ class Shipping_controller {
             );
 
             // Filter Table
-            $req_param['where'] = array('ship.shipping_id NOT IN (select in_shipping_id from incoming_bizhub)');
+            $req_param['where'] = array('pack.packing_bizhub_id NOT IN (select packing_bizhub_id from shipping_bizhub_detail)');
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
@@ -60,7 +60,7 @@ class Shipping_controller {
             $data['total'] = $total_pages;
             $data['records'] = $count;
 
-            $data['rows'] = $table->getAllItems();
+            $data['rows'] = $table->getAll();
             $data['success'] = true;
 
         }catch (Exception $e) {
@@ -70,20 +70,21 @@ class Shipping_controller {
         return $data;
     }
 
+
     function readHistory() {
 
         $page = getVarClean('page','int',1);
         $limit = getVarClean('rows','int',5);
-        $sidx = getVarClean('sidx','str','shipping_id');
-        $sord = getVarClean('sord','str','asc');
+        $sidx = getVarClean('sidx','str','packing_bizhub_id');
+        $sord = getVarClean('sord','str','desc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
         try {
 
             $ci = & get_instance();
-            $ci->load->model('agripro/shipping');
-            $table = $ci->shipping;
+            $ci->load->model('agripro/packing_bizhub');
+            $table = $ci->packing_bizhub;
 
             $req_param = array(
                 "sort_by" => $sidx,
@@ -124,7 +125,7 @@ class Shipping_controller {
             $data['total'] = $total_pages;
             $data['records'] = $count;
 
-            $data['rows'] = $table->getAllItems();
+            $data['rows'] = $table->getAll();
             $data['success'] = true;
 
         }catch (Exception $e) {
@@ -133,6 +134,55 @@ class Shipping_controller {
 
         return $data;
     }
+
+
+    function readLov() {
+
+        permission_check('view-tracking');
+
+        $start = getVarClean('current','int',0);
+        $limit = getVarClean('rowCount','int',5);
+
+        $sort = getVarClean('sort','str','packing_bizhub_id');
+        $dir  = getVarClean('dir','str','asc');
+
+        $searchPhrase = getVarClean('searchPhrase', 'str', '');
+        $for_shipping = getVarClean('for_shipping','str','Y');
+
+        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
+
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/packing_bizhub');
+            $table = $ci->packing_bizhub;
+
+            $userdata = $ci->ion_auth->user()->row();
+            if($for_shipping == 'Y') {
+                $table->setCriteria('pack.packing_bizhub_id NOT IN (select packing_bizhub_id from shipping_detail)');
+            }
+
+            $table->setCriteria('pack.warehouse_id = 999');
+
+            if(!empty($searchPhrase)) {
+                $table->setCriteria("pack.packing_bizhub_batch_number ilike '%".$searchPhrase."%' or prod.product_code ilike '%".$searchPhrase."%'");
+            }
+
+            $start = ($start-1) * $limit;
+            $items = $table->getAll($start, $limit, $sort, $dir);
+            $totalcount = $table->countAll();
+
+            $data['rows'] = $items;
+            $data['success'] = true;
+            $data['total'] = $totalcount;
+
+        }catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+
+        return $data;
+    }
+
 
     function crud() {
 
@@ -167,8 +217,8 @@ class Shipping_controller {
     function create() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
+        $ci->load->model('agripro/packing_bizhub');
+        $table = $ci->packing_bizhub;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -238,8 +288,8 @@ class Shipping_controller {
     function update() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
+        $ci->load->model('agripro/packing_bizhub');
+        $table = $ci->packing_bizhub;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -309,8 +359,8 @@ class Shipping_controller {
 
     function destroy() {
         $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
+        $ci->load->model('agripro/packing_bizhub');
+        $table = $ci->packing_bizhub;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -325,7 +375,7 @@ class Shipping_controller {
                 foreach ($items as $key => $value){
                     if (empty($value)) throw new Exception('Empty parameter');
 
-                    $table->removeShipping($value);
+                    $table->removePacking($value);
                     $data['rows'][] = array($table->pkey => $value);
                     $total++;
                 }
@@ -335,7 +385,7 @@ class Shipping_controller {
                     throw new Exception('Empty parameter');
                 };
 
-                $table->removeShipping($items);
+                $table->removePacking($items);
                 $data['rows'][] = array($table->pkey => $items);
                 $data['total'] = $total = 1;
             }
@@ -358,8 +408,8 @@ class Shipping_controller {
     function createForm() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
+        $ci->load->model('agripro/packing_bizhub');
+        $table = $ci->packing_bizhub;
 
         $data = array('success' => false, 'message' => '');
         $table->actionType = 'CREATE';
@@ -367,51 +417,81 @@ class Shipping_controller {
         /**
          * Data master
          */
-        $shipping_date = getVarClean('shipping_date','str','');
-        $shipping_driver_name = getVarClean('shipping_driver_name','str','');
-        $shipping_notes = getVarClean('shipping_notes','str','');
-
+        $packing_bizhub_kg = getVarClean('packing_bizhub_kg','float',0);
+        $packing_bizhub_date = getVarClean('packing_bizhub_date','str','');
+        $product_id = getVarClean('product_id','int',0);
+        $userdata = $ci->ion_auth->user()->row();
 
         /**
          * Data details
          */
-        $packing_ids = (array)$ci->input->post('packing_id');
+        $sortir_bizhub_detail_ids = (array)$ci->input->post('sortir_bizhub_det_id');
+        $weights = (array)$ci->input->post('weight');
+        $product_ids = (array)$ci->input->post('product_ids');
 
         try{
+
+            if(count($sortir_bizhub_detail_ids) == 0) {
+                throw new Exception('Data source material must be filled');
+            }
 
             $table->db->trans_begin(); //Begin Trans
 
                 $items = array(
-                    'shipping_date' => $shipping_date,
-                    'shipping_driver_name' => $shipping_driver_name,
-                    'shipping_notes' => $shipping_notes
+                    'packing_bizhub_kg' => $packing_bizhub_kg,
+                    'packing_bizhub_date' => $packing_bizhub_date,
+                    'product_id' => $product_id,
+                    'warehouse_id' => 999, //get from session
+                    'packing_bizhub_batch_number' => '',
+                    'packing_bizhub_serial' => '',
                 );
 
                 $table->setRecord($items);
+
+                $batch_number = $table->getBatchNumber();
+                $table->record['packing_bizhub_batch_number'] = $batch_number['batch_number'];
+                $table->record['packing_bizhub_serial'] = $batch_number['serial_number'];
                 $table->record[$table->pkey] = $table->generate_id($table->table,$table->pkey);
 
 
                 $record_detail = array();
-                $ci->load->model('agripro/shipping_detail');
-                $tableDetail = $ci->shipping_detail;
+                $ci->load->model('agripro/packing_bizhub_detail');
+                $tableDetail = $ci->packing_bizhub_detail;
                 $tableDetail->actionType = 'CREATE';
 
+                $total_source_kg = 0;
 
-                for($i = 0; $i < count($packing_ids); $i++) {
+                for($i = 0; $i < count($sortir_bizhub_detail_ids); $i++) {
                     $record_detail[] = array(
-                        'shipping_id' => $table->record[$table->pkey],
-                        'packing_id' => $packing_ids[$i]
+                        'packing_bizhub_id' => $table->record[$table->pkey],
+                        'sortir_bizhub_det_id' => $sortir_bizhub_detail_ids[$i],
+                        'pd_bizhub_kg' => $weights[$i]
                     );
+
+                    //jika product_id master !== product_id detail maka throw exception
+                    if($product_id != $product_ids[$i]) {
+                        throw new Exception('Item of source package has different product');
+                    }
+
+                    $total_source_kg += $weights[$i];
+                    //cek data
+                    //if ok
+                    //tampung dulu ke suatu array
                 }
+
+                //cek data apakah total_source_kg == packing_kg
+                if($packing_bizhub_kg != $total_source_kg) {
+                    throw new Exception('Total weight of sources ('.$total_source_kg.' Kg) does not match with packing weight ('.$packing_bizhub_kg.' Kg)');
+                }
+
 
                 $table->create();
                 foreach($record_detail as $item_detail) {
                     $tableDetail->setRecord($item_detail);
-                    $tableDetail->record[$tableDetail->pkey] = $tableDetail->generate_id($tableDetail->table,$tableDetail->pkey);
                     $tableDetail->create();
-
-                    $tableDetail->insertStock($tableDetail->record, $table->record);
                 }
+
+                $table->insertStock($table->record);
 
             $table->db->trans_commit(); //Commit Trans
 
@@ -431,70 +511,76 @@ class Shipping_controller {
     }
 
 
-    function updateForm() {
+    /*function updateForm() {
 
         $ci = & get_instance();
-        $ci->load->model('agripro/shipping');
-        $table = $ci->shipping;
+        $ci->load->model('agripro/packing');
+        $table = $ci->packing;
 
         $data = array('success' => false, 'message' => '');
-        $table->actionType = 'UDATE';
+        $table->actionType = 'UPDATE';
 
-        /**
-         * Data master
-         */
-        $shipping_id = getVarClean('shipping_id','int',0);
-        $shipping_date = getVarClean('shipping_date','str','');
-        $shipping_driver_name = getVarClean('shipping_driver_name','str','');
-        $shipping_notes = getVarClean('shipping_notes','str','');
+        $packing_id = getVarClean('packing_id','int',0);
+        $packing_kg = getVarClean('packing_kg','float',0);
+        $packing_tgl = getVarClean('packing_tgl','str','');
+        $product_id = getVarClean('product_id','int',0);
+        $userdata = $ci->ion_auth->user()->row();
 
 
-        /**
-         * Data details
-         */
-        $shipdet_ids = (array)$ci->input->post('shipdet_id');
-        $packing_ids = (array)$ci->input->post('packing_id');
+        $pd_id = (array) $ci->input->post('pd_id');
+        $sortir_detail_ids = (array) $ci->input->post('sortir_id');
+        $weights = (array) $ci->input->post('weight');
 
         try{
+
+            if(count($sortir_ids) == 0) {
+                throw new Exception('Data source material must be filled');
+            }
 
             $table->db->trans_begin(); //Begin Trans
 
                 $items = array(
-                    'shipping_id' => $shipping_id,
-                    'shipping_date' => $shipping_date,
-                    'shipping_driver_name' => $shipping_driver_name,
-                    'shipping_notes' => $shipping_notes
+                    'packing_id' => $packing_id,
+                    'packing_kg' => $packing_kg,
+                    'packing_tgl' => $packing_tgl,
+                    'product_id' => $product_id
                 );
+
                 $table->setRecord($items);
 
-
                 $record_detail = array();
-                $ci->load->model('agripro/shipping_detail');
-                $tableDetail = $ci->shipping_detail;
-                $tableDetail->actionType = 'CREATE';
+                $ci->load->model('agripro/packing_detail');
+                $tableDetail = $ci->packing_detail;
+
+                for($i = 0; $i < count($sortir_ids); $i++) {
+
+                    $record_detail[] = array (
+                        'pd_id' => $pd_id[$i],
+                        'packing_id' => $packing_id,
+                        'sortir_id' => $sortir_ids[$i],
+                        'pd_kg' => $weights[$i]
+                    );
+
+                    //cek data
+                    //if ok
+                    //tampung dulu ke suatu array
+                }
 
 
-                for($i = 0; $i < count($packing_ids); $i++) {
-                    if($shipdet_ids[$i] == "") {
-                        $record_detail[] = array(
-                            'shipping_id' => $shipping_id,
-                            'packing_id' => $packing_ids[$i]
-                        );
+                foreach($record_detail as $item_detail) {
+
+                    if(empty($item_detail['pd_id'])) {
+                        $tableDetail->actionType = 'CREATE';
+                        unset($item_detail['pd_id']);
+                        $tableDetail->setRecord($item_detail);
+                        $tableDetail->create();
+                    }else {
+                        //do nothing
                     }
                 }
 
                 $table->update();
 
-                foreach($record_detail as $item_detail) {
-                    $tableDetail->setRecord($item_detail);
-                    $tableDetail->record[$tableDetail->pkey] = $tableDetail->generate_id($tableDetail->table,$tableDetail->pkey);
-                    $tableDetail->create();
-
-                    $tableDetail->insertStock($tableDetail->record, $table->record);
-                }
-
-                //$table->insertStock($table->record);
-
             $table->db->trans_commit(); //Commit Trans
 
             $data['success'] = true;
@@ -511,7 +597,9 @@ class Shipping_controller {
         exit;
 
     }
+*/
+
 
 }
 
-/* End of file Shipping_controller.php */
+/* End of file Warehouse_controller.php */

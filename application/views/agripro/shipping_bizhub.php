@@ -10,7 +10,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Shipping</span>
+            <span>Shipping Bizhub</span>
         </li>
     </ul>
 </div>
@@ -40,30 +40,21 @@
 <script>
     function editShipping(rowId) {
         var rowData = jQuery("#grid-table").getRowData(rowId);
-        loadContentWithParams('agripro.shipping_edit_form', {
-            shipping_id : rowData.shipping_id,
-            shipping_date : rowData.shipping_date,
-            shipping_driver_name : rowData.shipping_driver_name,
-            shipping_notes : rowData.shipping_notes
+        loadContentWithParams('agripro.shipping_bizhub_edit_form', {
+            shipping_bizhub_id : rowData.shipping_bizhub_id,
+            shipping_bizhub_date : rowData.shipping_bizhub_date,
+            shipping_bizhub_no : rowData.shipping_bizhub_no,
+            shipping_bizhub_notes : rowData.shipping_bizhub_notes
         });
     }
 
-    function costShipping(rowId) {
-        var rowData = jQuery("#grid-table").getRowData(rowId);
-        loadContentWithParams('agripro.shipping_cost_form', {
-            shipping_id : rowData.shipping_id,
-            shipping_date : rowData.shipping_date,
-            shipping_driver_name : rowData.shipping_driver_name,
-            shipping_notes : rowData.shipping_notes
-        });
-    }
 </script>
 
 <script>
 
     jQuery(function($) {
         $('#add-shipping').on('click',function(e) {
-            loadContentWithParams('agripro.shipping_add_form',{});
+            loadContentWithParams('agripro.shipping_bizhub_add_form',{});
         });
     });
 
@@ -72,18 +63,17 @@
         var pager_selector = "#grid-pager";
 
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo WS_JQGRID."agripro.shipping_controller/crud"; ?>',
+            url: '<?php echo WS_JQGRID."agripro.shipping_bizhub_controller/crud"; ?>',
             datatype: "json",
             mtype: "POST",
             colModel: [
-                {label: 'ID', name: 'shipping_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Shipping Date', name: 'shipping_date', width: 120, align: "center", editable: false},
-                {label: 'Driver Name', name: 'shipping_driver_name', width: 100, align: "left", editable: false},
-                {label: 'Notes', name: 'shipping_notes', width: 100, align: "left", editable: false, hidden:true},
-                {label: 'Shipping Cost (Rp)', name: 'shipping_cost', formatter:'currency', formatoptions: {prefix:'Rp. ', thousandsSeparator : '.', decimalPlaces: 0}, align:'right', width: 150, align: "right", editable: false, hidden:true},
+                {label: 'ID', name: 'shipping_bizhub_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'Shipping Date', name: 'shipping_bizhub_date', width: 120, align: "center", editable: false},
+                {label: 'Driver Name', name: 'shipping_bizhub_no', width: 100, align: "left", editable: false},
+                {label: 'Notes', name: 'shipping_bizhub_notes', width: 100, align: "left", editable: false, hidden:true},
                 {label: 'Edit Shipping',name: '',width: 120, align: "center",editable: false,
                     formatter:function(cellvalue, options, rowObject) {
-                        return '<a class="btn green-meadow btn-xs" href="#" onclick="editShipping('+rowObject['shipping_id']+')"><i class="fa fa-pencil"></i>Edit</a>';
+                        return '<a class="btn green-meadow btn-xs" href="#" onclick="editShipping('+rowObject['shipping_bizhub_id']+')"><i class="fa fa-pencil"></i>Edit</a>';
                     }
                 }
             ],
@@ -99,14 +89,14 @@
             multiboxonly: true,
             onSelectRow: function (rowid) {
                 /*do something when selected*/
-                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'shipping_id');
-                var celCode = $('#grid-table').jqGrid('getCell', rowid, 'shipping_date');
+                var celValue = $('#grid-table').jqGrid('getCell', rowid, 'shipping_bizhub_id');
+                var celCode = $('#grid-table').jqGrid('getCell', rowid, 'shipping_bizhub_date');
 
                 var grid_detail = jQuery("#grid-table-detail");
                 if (rowid != null) {
                     grid_detail.jqGrid('setGridParam', {
-                        url: '<?php echo WS_JQGRID."agripro.shipping_detail_controller/crud"; ?>',
-                        postData: {shipping_id: rowid}
+                        url: '<?php echo WS_JQGRID."agripro.shipping_bizhub_detail_controller/crud"; ?>',
+                        postData: {shipping_bizhub_id: rowid}
                     });
                     var strCaption = 'Contains :: ' + celCode;
                     grid_detail.jqGrid('setCaption', strCaption);
@@ -129,8 +119,8 @@
                 }
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID."agripro.shipping_controller/crud"; ?>',
-            caption: "Shipping"
+            editurl: '<?php echo WS_JQGRID."agripro.shipping_bizhub_controller/crud"; ?>',
+            caption: "Shipping Bizhub"
 
         });
 
@@ -268,12 +258,12 @@
             datatype: "json",
             mtype: "POST",
             colModel: [
-                {label: 'ID', key:true, name: 'shipdet_id', width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'ID', key:true, name: 'shipdet_bizhub_id', width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'Product Code', name: 'product_code', width: 120, align: "left", editable: false},
-                {label: 'Serial', name: 'packing_batch_number', width: 200, align: "left", editable: false},
-                {label: 'Batch Number', name: 'packing_serial', width: 100, align: "left", editable: false},
+                {label: 'Serial', name: 'packing_bizhub_batch_number', width: 200, align: "left", editable: false},
+                {label: 'Batch Number', name: 'packing_bizhub_serial', width: 100, align: "left", editable: false},
                 {label: 'From Warehouse', name: 'wh_code', width: 120, align: "left", editable: false},
-                {label: 'Weight(Kg)', name: 'packing_kg', width: 120, align: "left", editable: false},
+                {label: 'Weight(Kg)', name: 'packing_bizhub_kg', width: 120, align: "left", editable: false},
 
             ],
             height: '100%',
@@ -304,7 +294,7 @@
 
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID."agripro.shipping_detail_controller/crud"; ?>',
+            editurl: '<?php echo WS_JQGRID."agripro.shipping_bizhub_detail_controller/crud"; ?>',
             caption: "Shipping Detail"
 
         });
