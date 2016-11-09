@@ -28,7 +28,7 @@
                      <th data-column-id="product_code">Product Name</th>
                      <th data-column-id="production_qty">Weight(Kg)</th>
                      <th data-column-id="wh_name">Warehouse</th>
-                     <th data-column-id="sm_tgl_masuk">Production Date</th>
+                     <th data-column-id="production_date">Production Date</th>
                   </tr>
                 </thead>
                 </table>

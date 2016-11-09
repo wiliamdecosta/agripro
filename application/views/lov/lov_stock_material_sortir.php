@@ -26,7 +26,7 @@
                      <th data-header-align="center" data-align="center" data-formatter="opt-edit" data-sortable="false" data-width="100">Options</th>
                      <th data-column-id="sm_no_trans" data-width="300">Transaction Code</th>
                      <th data-column-id="product_code">Raw Material Name</th>
-                     <th data-column-id="sm_qty_bersih">Weight(Kg)</th>
+                     <th data-column-id="sm_qty_bersih_init">Weight(Kg)</th>
                      <th data-column-id="fm_name">Farmer Name</th>
                      <th data-column-id="sm_tgl_masuk">Transaction Date</th>
                   </tr>
@@ -101,7 +101,7 @@
         $("#modal_lov_stock_material_grid_selection").bootgrid({
              formatters: {
                 "opt-edit" : function(col, row) {
-                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_stock_material_set_value(\''+ row.sm_id +'\', \''+ row.sm_no_trans +'\', \''+ row.product_id +'\', \''+ row.product_code +'\', \''+ row.sm_qty_bersih +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
+                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_stock_material_set_value(\''+ row.sm_id +'\', \''+ row.sm_no_trans +'\', \''+ row.product_id +'\', \''+ row.product_code +'\', \''+ row.sm_qty_bersih_init +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
                 }
              },
              rowCount:[5,10],
