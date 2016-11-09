@@ -233,7 +233,11 @@ class Drying_controller
 
             try {
                 $table->db->trans_begin(); //Begin Trans
-
+                // Check QTY used by production
+                $is_null = $table->checkQtyUsedProd($items);
+                if($is_null > 0){
+                    throw new Exception('Can not edit . This record has been used for Production Proccess');
+                }
 
                 ######################################
                 ### 1. Insert Stok DRYING_STOCK (IN)

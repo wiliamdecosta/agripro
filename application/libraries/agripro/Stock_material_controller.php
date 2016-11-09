@@ -322,6 +322,7 @@ class Stock_material_controller
             try {
                 $table->db->trans_begin(); //Begin Trans
 
+
                 $table->setRecord($items);
                 $table->update();
 

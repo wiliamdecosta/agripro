@@ -177,6 +177,15 @@ class Drying extends Abstract_model
         return $query->row()->sm_qty_bersih;
     }
 
+    function checkQtyUsedProd($record){
+        $this->db->where('sm_id', $record['sm_id']);
+        $query = $this->db->get('production_detail');
+
+        return $query->num_rows();
+    }
+
+
+
 }
 
 /* End of file Groups.php */

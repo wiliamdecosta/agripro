@@ -2,7 +2,7 @@
 <div class="page-bar">
     <ul class="page-breadcrumb">
         <li>
-            <a href="<?php base_url();?>">Home</a>
+            <a href="<?php base_url(); ?>">Home</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -10,7 +10,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Stick Production</span>
+            <span>Asalan Production</span>
         </li>
     </ul>
 </div>
@@ -37,54 +37,47 @@
     </div>
 </div>
 
-<script>
-    function viewPacking(rowId) {
-
-        var rowData = jQuery("#grid-table").getRowData(rowId);
-        loadContentWithParams('agripro.packing_edit_form', {
-            packing_id : rowData.packing_id,
-            product_id : rowData.product_id,
-            product_code : rowData.product_code,
-            packing_batch_number : rowData.packing_batch_number,
-            packing_serial : rowData.packing_serial,
-            packing_tgl : rowData.packing_tgl,
-            packing_kg : rowData.packing_kg
-        });
-    }
-</script>
 
 <script>
 
-    jQuery(function($) {
-        $('#add-production').on('click',function(e) {
-            loadContentWithParams('agripro.production_stick_add_form',{});
+    jQuery(function ($) {
+        $('#add-production').on('click', function (e) {
+            loadContentWithParams('agripro.production_asalan_add_form', {});
         });
     });
 
-    jQuery(function($) {
+    jQuery(function ($) {
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
 
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo WS_JQGRID."agripro.production_controller/crud"; ?>',
+            url: '<?php echo WS_JQGRID . "agripro.production_controller/crud"; ?>',
             datatype: "json",
             mtype: "POST",
-            postData : {p_cat: 'stick'},
+            postData: {p_cat: 'asalan'},
             colModel: [
-                {label: 'ID', name: 'production_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'ID Product', name: 'product_id', width: 120, align: "left", editable: false, hidden:true},
-                {label: 'Product Code', name: 'product_code', width: 120, align: "left", editable: false, hidden:true},
+                {
+                    label: 'ID',
+                    name: 'production_id',
+                    key: true,
+                    width: 5,
+                    sorttype: 'number',
+                    editable: true,
+                    hidden: true
+                },
+                {label: 'ID Product', name: 'product_id', width: 120, align: "left", editable: false, hidden: true},
+                {label: 'Product Code', name: 'product_code', width: 120, align: "left", editable: false, hidden: true},
 
                 {label: 'Product Name', name: 'product_name', width: 150, align: "left", editable: false},
                 {label: 'Production Code', name: 'production_code', width: 200, align: "left", editable: false},
                 {label: 'Production Date', name: 'production_date', width: 120, align: "left", editable: false},
-                {label: 'Weight(Kg)', name: 'production_qty', width: 80, align: "left", editable: false}
+                {label: 'Total (Kg)', name: 'production_qty', width: 80, align: "left", editable: false}
             ],
             height: '100%',
             autowidth: true,
             viewrecords: true,
             rowNum: 10,
-            rowList: [10,20,50],
+            rowList: [10, 20, 50],
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
             altRows: true,
@@ -98,7 +91,7 @@
                 var grid_detail = jQuery("#grid-table-detail");
                 if (rowid != null) {
                     grid_detail.jqGrid('setGridParam', {
-                        url: '<?php echo WS_JQGRID."agripro.production_detail_controller/crud"; ?>',
+                        url: '<?php echo WS_JQGRID . "agripro.production_detail_controller/crud"; ?>',
                         postData: {production_id: rowid}
                     });
                     var strCaption = 'Raw Material :: ' + celCode;
@@ -109,7 +102,7 @@
                     responsive_jqgrid('#grid-table-detail', '#grid-pager-detail');
                 }
             },
-            sortorder:'',
+            sortorder: '',
             pager: '#grid-pager',
             jsonReader: {
                 root: 'rows',
@@ -117,12 +110,12 @@
                 repeatitems: false
             },
             loadComplete: function (response) {
-                if(response.success == false) {
+                if (response.success == false) {
                     swal({title: 'Attention', text: response.message, html: true, type: "warning"});
                 }
             },
             //memanggil controller jqgrid yang ada di controller crud
-            editurl: '<?php echo WS_JQGRID."agripro.production_controller/crud"; ?>',
+            editurl: '<?php echo WS_JQGRID . "agripro.production_controller/crud"; ?>',
             caption: "Production Item"
 
         });
@@ -151,7 +144,7 @@
             {
                 // options for the Edit Dialog
                 closeAfterEdit: true,
-                closeOnEscape:true,
+                closeOnEscape: true,
                 recreateForm: true,
                 viewPagerButtons: false,
                 serializeEditData: serializeJSON,
@@ -164,22 +157,22 @@
                     style_edit_form(form);
                     $("#pkg_serial_number").prop("readonly", true);
                 },
-                afterShowForm: function(form) {
+                afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
                 },
-                afterSubmit:function(response,postdata) {
+                afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
-                    if(response.success == false) {
-                        return [false,response.message,response.responseText];
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
                     }
-                    return [true,"",response.responseText];
+                    return [true, "", response.responseText];
                 }
             },
             {
                 //new record form
                 closeAfterAdd: false,
-                clearAfterAdd : true,
-                closeOnEscape:true,
+                clearAfterAdd: true,
+                closeOnEscape: true,
                 recreateForm: true,
                 width: 'auto',
                 errorTextFormat: function (data) {
@@ -192,13 +185,13 @@
                     style_edit_form(form);
 
                 },
-                afterShowForm: function(form) {
+                afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
                 },
-                afterSubmit:function(response,postdata) {
+                afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
-                    if(response.success == false) {
-                        return [false,response.message,response.responseText];
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
                     }
 
                     $(".tinfo").html('<div class="ui-state-success">' + response.message + '</div>');
@@ -206,32 +199,32 @@
                     tinfoel.delay(3000).fadeOut();
 
 
-                    return [true,"",response.responseText];
+                    return [true, "", response.responseText];
                 }
             },
             {
                 //delete record form
                 serializeDelData: serializeJSON,
                 recreateForm: true,
-                width:400,
-                caption:'Delete data production',
+                width: 400,
+                caption: 'Delete data production',
                 msg: "Once You delete selected record, it cannot be restored.<br>Are You sure to delete selected record?",
                 beforeShowForm: function (e) {
                     var form = $(e[0]);
                     style_delete_form(form);
                 },
-                afterShowForm: function(form) {
+                afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
                 },
                 onClick: function (e) {
                     //alert(1);
                 },
-                afterSubmit:function(response,postdata) {
+                afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
-                    if(response.success == false) {
-                        return [false,response.message,response.responseText];
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
                     }
-                    return [true,"",response.responseText];
+                    return [true, "", response.responseText];
                 }
             },
             {
@@ -261,20 +254,48 @@
             datatype: "json",
             mtype: "POST",
             colModel: [
-                {label: 'ID', key:true, name: 'production_detail_id', width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'production_id',  name: 'production_id', width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Raw Material',  name: 'product_name', width: 150, sorttype: 'number', editable: true, hidden: false},
+                {
+                    label: 'ID',
+                    key: true,
+                    name: 'production_detail_id',
+                    width: 5,
+                    sorttype: 'number',
+                    editable: true,
+                    hidden: true
+                },
+                {
+                    label: 'production_id',
+                    name: 'production_id',
+                    width: 5,
+                    sorttype: 'number',
+                    editable: true,
+                    hidden: true
+                },
+                {
+                    label: 'Raw Material',
+                    name: 'product_name',
+                    width: 150,
+                    sorttype: 'number',
+                    editable: true,
+                    hidden: false
+                },
 
                 {label: 'Transcation Code', name: 'sm_no_trans', width: 200, align: "left", editable: false},
                 {label: 'Farmer', name: 'fm_name', width: 120, align: "left", editable: false},
-                {label: 'Weight (Kgs)', name: 'production_detail_qty', width: 120, align: "left", editable: false},
+                {
+                    label: 'Weight (Kgs)',
+                    name: 'production_detail_qty',
+                    width: 120,
+                    align: "left",
+                    editable: false
+                }
             ],
             height: '100%',
-            width:500,
+            width: 500,
             autowidth: true,
             viewrecords: true,
             rowNum: 10,
-            rowList: [10,20,50],
+            rowList: [10, 20, 50],
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
             altRows: true,
@@ -283,7 +304,7 @@
             onSelectRow: function (permission_name) {
                 /*do something when selected*/
             },
-            sortorder:'',
+            sortorder: '',
             pager: '#grid-pager-detail',
             jsonReader: {
                 root: 'rows',
@@ -291,13 +312,13 @@
                 repeatitems: false
             },
             loadComplete: function (response) {
-                if(response.success == false) {
+                if (response.success == false) {
                     swal({title: 'Attention', text: response.message, html: true, type: "warning"});
                 }
 
             },
             //memanggil controller jqgrid yang ada di controller crud
-           // editurl: '<?php echo WS_JQGRID."agripro.packing_detail_controller/crud"; ?>',
+            // editurl: '<?php echo WS_JQGRID . "agripro.packing_detail_controller/crud"; ?>',
             caption: "Production Detail"
 
         });
@@ -324,7 +345,7 @@
 
             {
                 closeAfterEdit: true,
-                closeOnEscape:true,
+                closeOnEscape: true,
                 recreateForm: true,
                 viewPagerButtons: false,
                 serializeEditData: serializeJSON,
@@ -336,20 +357,20 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
-                    form.css({"height": 0.50*screen.height+"px"});
-                    form.css({"width": 0.60*screen.width+"px"});
+                    form.css({"height": 0.50 * screen.height + "px"});
+                    form.css({"width": 0.60 * screen.width + "px"});
 
                     $("#smd_batch_number").prop("readonly", true);
                 },
-                afterShowForm: function(form) {
+                afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
                 },
-                afterSubmit:function(response,postdata) {
+                afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
-                    if(response.success == false) {
-                        return [false,response.message,response.responseText];
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
                     }
-                    return [true,"",response.responseText];
+                    return [true, "", response.responseText];
                 }
 
             },
@@ -357,15 +378,15 @@
 
                 //new record form
                 editData: {
-                    pkg_id: function() {
-                        var selRowId =  $("#grid-table").jqGrid ('getGridParam', 'selrow');
+                    pkg_id: function () {
+                        var selRowId = $("#grid-table").jqGrid('getGridParam', 'selrow');
                         var pkg_id = $("#grid-table").jqGrid('getCell', selRowId, 'pkg_id');
                         return pkg_id;
                     }
                 },
                 closeAfterAdd: true,
-                clearAfterAdd : true,
-                closeOnEscape:true,
+                clearAfterAdd: true,
+                closeOnEscape: true,
                 recreateForm: true,
                 width: 'auto',
                 errorTextFormat: function (data) {
@@ -376,29 +397,29 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
-                    form.css({"height": 0.50*screen.height+"px"});
-                    form.css({"width": 0.60*screen.width+"px"});
+                    form.css({"height": 0.50 * screen.height + "px"});
+                    form.css({"width": 0.60 * screen.width + "px"});
 
                     $("#smd_batch_number").prop("readonly", true);
-                    setTimeout(function() {
+                    setTimeout(function () {
                         clearLovstock_material_detail();
                         clearLovPlantation();
-                    },100);
+                    }, 100);
                 },
-                afterShowForm: function(form) {
+                afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
                 },
-                afterSubmit:function(response,postdata) {
+                afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
-                    if(response.success == false) {
-                        return [false,response.message,response.responseText];
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
                     }
 
                     $(".tinfo").html('<div class="ui-state-success">' + response.message + '</div>');
                     var tinfoel = $(".tinfo").show();
                     tinfoel.delay(3000).fadeOut();
 
-                    return [true,"",response.responseText];
+                    return [true, "", response.responseText];
                 }
             },
             {
@@ -409,18 +430,18 @@
                     var form = $(e[0]);
                     style_delete_form(form);
                 },
-                afterShowForm: function(form) {
+                afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
                 },
                 onClick: function (e) {
                     //alert(1);
                 },
-                afterSubmit:function(response,postdata) {
+                afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
-                    if(response.success == false) {
-                        return [false,response.message,response.responseText];
+                    if (response.success == false) {
+                        return [false, response.message, response.responseText];
                     }
-                    return [true,"",response.responseText];
+                    return [true, "", response.responseText];
                 }
             },
             {
@@ -449,8 +470,8 @@
 
     function responsive_jqgrid(grid_selector, pager_selector) {
         var parent_column = $(grid_selector).closest('[class*="col-"]');
-        $(grid_selector).jqGrid( 'setGridWidth', $(".page-content").width() );
-        $(pager_selector).jqGrid( 'setGridWidth', parent_column.width() );
+        $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+        $(pager_selector).jqGrid('setGridWidth', parent_column.width());
     }
 
 </script>

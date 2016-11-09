@@ -199,6 +199,8 @@ class Stock_material extends Abstract_model
         return $query->num_rows();
     }
 
+
+
 }
 
 /* End of file Groups.php */

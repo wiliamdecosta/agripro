@@ -357,7 +357,10 @@ class Production_controller {
                     throw new Exception('Empty parameter');
                 };
 
-               // $table->remove($items);
+                $is_null = $table->checkQtyUsedBySortir($items);
+                if($is_null > 0){
+                    throw new Exception('Can not delete this record (has been used for selection process) ! ');
+                }
                 $table->removeProduction($items);
                 $data['rows'][] = array($table->pkey => $items);
                 $data['total'] = $total = 1;
@@ -399,9 +402,9 @@ class Production_controller {
             // Filter Table
             $p_cat = getVarClean('p_cat','str','');
 
-            if($p_cat === 'stick'){
+            if(strtoupper($p_cat) === 'STICK'){
                 $table->setCriteria("prod.parent_id = 1 and prod.product_category_id = 2 ");
-            }elseif ($p_cat === 'asalan'){
+            }elseif (strtoupper($p_cat) === 'ASALAN'){
                 $table->setCriteria("prod.parent_id = 2 and prod.product_category_id = 3 ");
             }
 

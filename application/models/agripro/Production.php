@@ -29,7 +29,7 @@ class Production extends Abstract_model {
 
 
     public $selectClause    = "a.production_id, a.production_code,to_char(a.production_date,'yyyy-mm-dd') as production_date,a.production_qty,
-                               b.product_id, b.product_name,b.product_code,b.product_category_id, a.production_qty
+                               b.product_id, b.product_name,b.product_code,b.product_category_id, a.production_qty, a.warehouse_id
                                 ";
     public $fromClause      = "production a
                                 left join product b
@@ -186,6 +186,13 @@ class Production extends Abstract_model {
          * Delete data master packing
          */
         $this->remove($production_id);
+    }
+
+    public function checkQtyUsedBySortir($item){
+        $this->db->where('production_id', $item);
+        $query = $this->db->get('sortir');
+
+        return $query->num_rows();
     }
 
 }
