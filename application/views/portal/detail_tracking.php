@@ -1,39 +1,15 @@
-<h4>Packaging</h4>
 <div class="row">
     <div class="col-md-12">
         <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>
-                    Product Name
-                </th>
-                <th>
-                    Weight
-                </th>
-                <th>
-                    Packing Date
-                </th>
-                <th>
-                    Warehouse
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>
-                    <?php echo $packaging->product_name;?>
-                </td>
-                <td>
-                    <?php echo $packaging->packing_kg;?> Kgs
-                </td>
-                <td>
-                    <?php echo $packaging->packing_tgl;?>
-                </td>
-                <td>
-                    <?php echo $packaging->wh_name;?> - <?php echo $packaging->wh_location;?>
-                </td>
-            </tr>
-            </tbody>
+
+            <span class="col-xs-2" style="color: green"> SERIAL NUMBER  </span> : <?php echo $packing_inf->packing_batch_number;?> <br>
+            <span class="col-xs-2" style="color: green"> PRODUCT NAME  </span> : <?php echo $packing_inf->product_code;?> <br>
+            <span class="col-xs-2" style="color: green"> WEIGHT : </span>  : <?php echo $packing_inf->packing_kg;?> Kg<br>
+            <span class="col-xs-2" style="color: green"> BATCH NUMBER  </span> : <?php echo $packing_inf->packing_serial;?> <br>
+            <span class="col-xs-2" style="color: green"> PACKING DATE </span> : <?php echo $packing_inf->packing_tgl;?> <br>
+            <span class="col-xs-2" style="color: green"> WAREHOUSE   </span> : <?php echo $packing_inf->wh_name;?> ( <?php echo $packing_inf->wh_location;?> )
+            <br>
+
         </table>
     </div>
 </div>
@@ -45,19 +21,19 @@
             <thead>
             <tr>
                 <th>
+                    Farmer
+                </th>
+                <th>
+                    Lahan
+                </th>
+                <th>
+                    Trx Number
+                </th>
+                <th>
                     Raw Material
                 </th>
                 <th>
-                    Weight
-                </th>
-                <th>
-                    Farmer Name
-                </th>
-                <th>
-                    Farmer Code
-                </th>
-                <th>
-                    Gender
+                   Transaction Date
                 </th>
                 <th>
                     Farmer Address
@@ -65,22 +41,23 @@
             </tr>
             </thead>
             <tbody>
-            <?php foreach($detail_packing as $detail){;?>
+            <?php foreach($details as $detail){;?>
             <tr>
                 <td>
-                    <?php echo $detail->rm_name;?>
+                    <?php echo $detail->fm_name;?> ( <?php echo $detail->fm_code;?>  )
+                </td>
+
+                <td>
+                    <?php echo $detail->plt_alamat;?>
                 </td>
                 <td>
-                    <?php echo $detail->pd_kg;?> Kgs
+                    <?php echo $detail->sm_no_trans;?>
                 </td>
                 <td>
-                    <?php echo $detail->fm_name;?>
+                    <?php echo $detail->product_code;?>
                 </td>
                 <td>
-                    <?php echo $detail->fm_code;?>
-                </td>
-                <td>
-                    <?php if($detail->fm_jk == 'L'){ echo "Male";} else echo "Female";?>
+                    <?php echo $detail->sm_tgl_masuk;?>
                 </td>
                 <td>
                     <?php echo $detail->fm_address;?>

@@ -4,48 +4,52 @@
  * Raw Material Model
  *
  */
-class Production extends Abstract_model {
+class Production extends Abstract_model
+{
 
-    public $table           = "production";
-    public $pkey            = "production_id";
-    public $alias           = "a";
+    public $table = "production";
+    public $pkey = "production_id";
+    public $alias = "a";
 
-    public $fields          = array(
-                                'production_id'         => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Packaging'),
-                                'product_id'            => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product ID'),
-                                'warehouse_id'           => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'WH ID'),
-                               // 'product_category_id'   => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product Category ID'),
-                                'production_code'       => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Production Code'),
-                                'production_date'       => array('nullable' => false, 'type' => 'date', 'unique' => false, 'display' => 'Production Date'),
-                                'production_qty'        => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Production Quantity'),
-                                'production_qty_init'        => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Production Quantity'),
+    public $fields = array(
+        'production_id' => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Packaging'),
+        'product_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product ID'),
+        'warehouse_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'WH ID'),
+        // 'product_category_id'   => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product Category ID'),
+        'production_code' => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Production Code'),
+        'production_date' => array('nullable' => false, 'type' => 'date', 'unique' => false, 'display' => 'Production Date'),
+        'production_qty' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Production Quantity'),
+        'production_qty_init' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Production Quantity'),
 
-                               /* 'created_date'          => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Created Date'),
-                                'created_by'            => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Created By'),
-                                'updated_date'          => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Updated Date'),
-                                'updated_by'            => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Updated By'),*/
+        /* 'created_date'          => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Created Date'),
+         'created_by'            => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Created By'),
+         'updated_date'          => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Updated Date'),
+         'updated_by'            => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Updated By'),*/
 
-                            );
+    );
 
 
-    public $selectClause    = "a.production_id, a.production_code,to_char(a.production_date,'yyyy-mm-dd') as production_date,a.production_qty,
-                               b.product_id, b.product_name,b.product_code,b.product_category_id, a.production_qty, a.warehouse_id
+    public $selectClause = "a.production_id, a.production_code,to_char(a.production_date,'yyyy-mm-dd') as production_date,a.production_qty,
+                               b.product_id, b.product_name,b.product_code,b.product_category_id, a.production_qty, a.warehouse_id,
+                               a.production_qty_init
                                 ";
-    public $fromClause      = "production a
+    public $fromClause = "production a
                                 left join product b
                                 on a.product_id = b.product_id";
 
-    public $refs            = array();
+    public $refs = array();
 
-    function __construct() {
+    function __construct()
+    {
         parent::__construct();
     }
 
-    function validate() {
+    function validate()
+    {
         $ci =& get_instance();
         $userdata = $ci->ion_auth->user()->row();
 
-        if($this->actionType == 'CREATE') {
+        if ($this->actionType == 'CREATE') {
 
             /*$this->record['created_date'] = date('Y-m-d');
             $this->record['created_by'] = $userdata->username;
@@ -54,7 +58,7 @@ class Production extends Abstract_model {
 
             //$this->record['pkg_serial_number'] = $this->getSerialNumber();
             //$this->record['pkg_batch_number'] = $this->getBatchNumber($this->record['pkg_serial_number'] );
-        }else {
+        } else {
             //do something
             //example:
             /*$this->record['updated_date'] = date('Y-m-d');
@@ -68,7 +72,7 @@ class Production extends Abstract_model {
     {
 
         $sql = "select max(substring(production_code, 5 )) as total from production
-                    where to_char(production_date,'yyyymm') = '" . substr(str_replace('-', '', $this->record['production_date']),0,6) . "'";
+                    where to_char(production_date,'yyyymm') = '" . substr(str_replace('-', '', $this->record['production_date']), 0, 6) . "'";
 
         $query = $this->db->query($sql);
 
@@ -77,12 +81,13 @@ class Production extends Abstract_model {
             $row = array('total' => 0);
         }
 
-        $production_code =   substr(str_replace('-', '', $this->record['production_date']),2,4) ."".str_pad(($row['total'] + 1), 4, '0', STR_PAD_LEFT);
+        $production_code = substr(str_replace('-', '', $this->record['production_date']), 2, 4) . "" . str_pad(($row['total'] + 1), 4, '0', STR_PAD_LEFT);
         return $production_code;
     }
 
-    function insertStock($prod) {
-        $ci = & get_instance();
+    function insertStock($prod)
+    {
+        $ci = &get_instance();
 
         $ci->load->model('agripro/stock');
         $tStock = $ci->stock;
@@ -94,11 +99,11 @@ class Production extends Abstract_model {
         $ci->load->model('agripro/stock_category');
         $tStockCategory = $ci->stock_category;
 
-        $prod_det->setCriteria('pd.production_id = '.$prod['production_id']);
+        $prod_det->setCriteria('pd.production_id = ' . $prod['production_id']);
         $details = $prod_det->getAll();
 
 
-        foreach($details as $production_detail) {
+        foreach ($details as $production_detail) {
             $record = array();
             $record['stock_tgl_keluar'] = $prod['production_date'];
             $record['stock_kg'] = $production_detail['production_detail_qty'];
@@ -113,25 +118,25 @@ class Production extends Abstract_model {
         }
 
 
-
         ######################################
         ### Update Raw Material Qty (Decrease)
         ######################################
 
-        foreach($details as $pd_det) {
+        foreach ($details as $pd_det) {
 
-            $decrease_kg = (float) $pd_det['production_detail_qty'];
+            $decrease_kg = (float)$pd_det['production_detail_qty'];
             $sql = "UPDATE stock_material SET 
-                      sm_qty_bersih = sm_qty_bersih - ".$decrease_kg."
-                        WHERE sm_id = ".$pd_det['sm_id'];
+                      sm_qty_bersih = sm_qty_bersih - " . $decrease_kg . "
+                        WHERE sm_id = " . $pd_det['sm_id'];
             $prod_det->db->query($sql);
         }
 
     }
 
-    public function removeProduction($production_id) {
+    public function removeProduction($production_id)
+    {
 
-        $ci = & get_instance();
+        $ci = &get_instance();
 
         $ci->load->model('agripro/stock');
         $tStock = $ci->stock;
@@ -140,7 +145,7 @@ class Production extends Abstract_model {
         $tProdDetail = $ci->production_detail;
 
         $ci->load->model('agripro/stock_material');
-        $tSM= $ci->stock_material;
+        $tSM = $ci->stock_material;
 
         /**
          * Steps to Delete Production
@@ -153,11 +158,11 @@ class Production extends Abstract_model {
          */
 
         $data_drying = array();
-        $tProdDetail->setCriteria('pd.production_id = '.$production_id);
+        $tProdDetail->setCriteria('pd.production_id = ' . $production_id);
         $details = $tProdDetail->getAll();
 
         $loop = 0;
-        foreach($details as $prd_detail) {
+        foreach ($details as $prd_detail) {
             $data_drying[$loop]['sm_id'] = $prd_detail['sm_id'];
             $data_drying[$loop]['restore_store_qty'] = $prd_detail['production_detail_qty'];
             $loop++;
@@ -169,14 +174,14 @@ class Production extends Abstract_model {
         /**
          * loop for delete data stock by sortir_id and restore store_qty in table sortir
          */
-        foreach($data_drying as $drying) {
+        foreach ($data_drying as $drying) {
             //delete data stock by sm_id
             $tStock->deleteByReference($drying['sm_id'], 'DRYING_OUT');
 
             //restore store qty
-            $increase_kg = (float) $drying['restore_store_qty'];
-            $sql = "UPDATE stock_material SET sm_qty_bersih = sm_qty_bersih + ".$increase_kg."
-                        WHERE sm_id = ".$drying['sm_id'];
+            $increase_kg = (float)$drying['restore_store_qty'];
+            $sql = "UPDATE stock_material SET sm_qty_bersih = sm_qty_bersih + " . $increase_kg . "
+                        WHERE sm_id = " . $drying['sm_id'];
 
             $tSM->db->query($sql);
 
@@ -188,7 +193,8 @@ class Production extends Abstract_model {
         $this->remove($production_id);
     }
 
-    public function checkQtyUsedBySortir($item){
+    public function checkQtyUsedBySortir($item)
+    {
         $this->db->where('production_id', $item);
         $query = $this->db->get('sortir');
 

@@ -39,9 +39,9 @@ class Production_controller {
             $p_cat = getVarClean('p_cat','str','');
 
             if($p_cat === 'stick'){
-                $req_param['where'] = array("b.parent_id = 1 and b.product_category_id = 2 ");
+                $req_param['where'] = array("b.parent_id = 1 and b.product_category_id = 2 and a.production_qty > 0");
             }elseif ($p_cat === 'asalan'){
-                $req_param['where'] = array("b.parent_id = 2 and b.product_category_id = 3 ");
+                $req_param['where'] = array("b.parent_id = 2 and b.product_category_id = 3 and a.production_qty > 0");
             }
 
 
