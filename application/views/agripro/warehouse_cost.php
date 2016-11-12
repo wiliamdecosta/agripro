@@ -72,6 +72,7 @@
                 {label: 'Warehouse', name: 'wh_name', width: 120, align: "left", editable: false},
                 {label: 'Start Date', name: 'whcost_start_date', width: 100, align: "center", editable: false},
                 {label: 'End Date', name: 'whcost_end_date', width: 100, align: "center", editable: false},
+                {label: 'Total Cost (Rp)', name: 'total_cost', width: 120, formatter:'currency', formatoptions: {thousandsSeparator : '.', decimalPlaces: 0}, align:'right', editable: false},
                 {label: 'Description', name: 'whcost_description', width: 100, hidden:true, align: "left", editable: false},
                 {label: 'Edit Cost',name: '',width: 120, align: "center",editable: false,
                     formatter:function(cellvalue, options, rowObject) {

@@ -79,6 +79,24 @@ class Warehouse_cost extends Abstract_model {
 
         return $item['total'];
     }
+
+    function getAllItems($start, $limit, $sidx, $sord) {
+        $items = $this->getAll($start, $limit, $sidx, $sord);
+        for($rec = 0; $rec < count($items); $rec++) {
+            $items[$rec]['total_cost'] = $this->getTotalCost($items[$rec][$this->pkey]);
+        }
+        return $items;
+    }
+
+    function getTotalCost($whcost_id) {
+        $sql = "select sum(whcost_det_value) as total_cost from warehouse_cost_detail
+                    where whcost_id = ?";
+
+        $query = $this->db->query($sql, array($whcost_id));
+        $item = $query->row_array();
+
+        return $item['total_cost'];
+    }
 }
 
 /* End of file Groups.php */

@@ -60,7 +60,7 @@ class Warehouse_cost_controller {
             $data['total'] = $total_pages;
             $data['records'] = $count;
 
-            $data['rows'] = $table->getAll($start, $limit, $sidx, $sord);
+            $data['rows'] = $table->getAllItems($start, $limit, $sidx, $sord);
             $data['success'] = true;
 
         }catch (Exception $e) {
