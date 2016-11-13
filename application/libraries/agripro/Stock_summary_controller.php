@@ -9,14 +9,16 @@ class Stock_summary_controller {
     function getSummary() {
 
         $sc_code = getVarClean('sc_code','str','');
-
+        $sc_code = explode(",", $sc_code);
         try {
 
             $ci = & get_instance();
             $ci->load->model('agripro/stock_summary');
-            $table = $ci->stock_summary;
+            $tStockSummary = $ci->stock_summary;
 
-            $items = $table->getSummary($sc_code);
+            $sql = "select * from product";
+            $query = $tStockSummary->db->query($sql);
+            $items = $query->result_array();
 
             $output = '';
             $no = 1;
@@ -25,7 +27,7 @@ class Stock_summary_controller {
                     <tr>
                         <td>'.$no++.'</td>
                         <td>'.$item['product_code'].'</td>
-                        <td align="right">'.$item['total_stock'].'</td>
+                        <td align="right">'.($tStockSummary->getSummaryPerProduct($sc_code, $item['product_id'])).'</td>
                     </tr>
                 ';
             }

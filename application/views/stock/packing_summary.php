@@ -42,7 +42,7 @@
         $.ajax({
             url: '<?php echo WS_JQGRID."agripro.stock_summary_controller/getSummary"; ?>',
             type: "POST",
-            data: {sc_code : 'PACKING_STOCK'},
+            data: {sc_code : "'PACKING_STOCK'"},
             success: function (response) {
                 $( "#tbody-summary" ).html( response );
             },

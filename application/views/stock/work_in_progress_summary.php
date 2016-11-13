@@ -10,13 +10,13 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Raw Material Stock Summary</span>
+            <span>Work In Progress Stock Summary</span>
         </li>
     </ul>
 </div>
 
 <div class="space-4"></div>
-<h3>Raw Material Stock Summary</h3>
+<h3>Work In Progress Stock Summary</h3>
 
 <div class="row">
     <div class="col-md-12">
@@ -42,7 +42,7 @@
         $.ajax({
             url: '<?php echo WS_JQGRID."agripro.stock_summary_controller/getSummary"; ?>',
             type: "POST",
-            data: {sc_code : "'RAW_MATERIAL_STOCK'"},
+            data: {sc_code : "'DRYING_STOCK','SORTIR_STOCK'"},
             success: function (response) {
                 $( "#tbody-summary" ).html( response );
             },
