@@ -204,7 +204,7 @@
             colModel: [
                 {label: 'ID', name: 'sortir_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'Transaction Code', name: 'sm_no_trans', width: 350, align: "left", editable: false, editoptions: { size: 25}},
-                {
+                /* {
                     label: 'Transaction Code',
                     name: 'sm_id',
                     width: 150,
@@ -249,8 +249,8 @@
                             }
                         }, size: 25
                     }
-                },
-                {
+                }, */
+               /*  {
                     label: 'Product Name',
                     name: 'product_id',
                     width: 150,
@@ -292,9 +292,9 @@
                             }
                         }, size: 25
                     }
-                },
+                }, */
                 {label: 'Product Name', name: 'product_code', width: 170, align: "left", editable: false},
-                 {
+                /*  {
                     label: 'Quantity (Kg)',
                     name: 'sortir_qty',
                     width: 150,
@@ -336,7 +336,7 @@
                             }
                         }, size: 25
                     }
-                },
+                }, */
                 {label: 'Quantity (Kg)', name: 'sortir_qty', width: 170, align: "left", editable: false},
                 {
                     label: 'Selection Date', name: 'sortir_tgl', width: 120, editable: true,
@@ -569,7 +569,7 @@
                 {label: 'ID', key: true, name: 'sortir_detail_id', width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'ID', key: false, name: 'sortir_id', width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'Product Code', name: 'product_code', width: 150, align: "left", editable: false},
-                {
+                /* {
                     label: 'Product Code',
                     name: 'product_id',
                     width: 150,
@@ -591,11 +591,11 @@
                             $(elem).width(240);  // set the width which you need
                         }
                     }
-                },
+                }, */
                 {
                     label: 'Quantity(Kg)',
                     name: 'sortir_detail_qty',
-                    index: 'sortir_detail_qty',
+                    index: 'sortir_detail_qty_init',
                     width: 120,
                     align: "right",
                     editable: true,

@@ -399,7 +399,7 @@ class Sortir_controller
         $sm_id = getVarClean('sm_id', 'int', 0);
         $sortir_id = getVarClean('sortir_id', 'int', 0);
 
-        $qty = explode('|',$table->get_availableqty_detail_prd($sm_id, $sortir_id));
+        $qty = explode('|',$table->get_availableqty_detail($sm_id, $sortir_id));
 
         $out['avaqty'] = $qty[0];
         $out['srqty'] = $qty[1];

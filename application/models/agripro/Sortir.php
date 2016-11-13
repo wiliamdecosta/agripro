@@ -144,10 +144,13 @@ class Sortir extends Abstract_model {
 						SELECT *
 							FROM product
 								WHERE parent_id = $product_id
+								AND upper(product_code) NOT LIKE '%REJECT%'
 						UNION ALL 
 						SELECT *
 							FROM product
 								WHERE product_id = $product_id
+								AND upper(product_code) NOT LIKE '%REJECT%'
+								AND product_category_id = 2
 						UNION ALL 
 						SELECT *
 							FROM product
