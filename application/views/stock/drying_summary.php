@@ -19,8 +19,8 @@
 <h3>Drying Stock Summary</h3>
 
 <div class="row">
-    <div class="col-md-12">
-        <table class="table table-bordered table-hover">
+    <div class="col-md-10">
+        <table class="table table-bordered table-hover table-striped">
             <thead>
                 <tr>
                     <th>#</th>
