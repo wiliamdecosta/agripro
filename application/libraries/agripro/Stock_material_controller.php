@@ -49,6 +49,17 @@ class Stock_material_controller
                 $req_param['where'] = array("sm.sm_qty_bersih *1 > 0 ");
             }
 
+            $start = getVarClean('inStart','date','');
+            $end = getVarClean('inEnd','date','');
+
+            if($start && !$end){
+                $req_param['where'] = array("sm.sm_tgl_masuk = '".$start."'::date");
+            }
+            if($start && $end){
+                $req_param['where'] = array("sm.sm_tgl_masuk >= '".$start."'::date and sm.sm_tgl_masuk <= '".$end."'::date");
+            }
+
+
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
 

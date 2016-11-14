@@ -7,7 +7,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="#">Tracking</a>
+            <a href="#">Drying</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>

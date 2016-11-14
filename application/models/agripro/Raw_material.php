@@ -49,7 +49,7 @@ class Raw_material extends Abstract_model {
     }
 
     public function getListRawMaterial(){
-        $sql = "SELECT * FROM product WHERE product_code in ('STICK','KA','KB','KC','KF','KM','KS','KTP')";
+        $sql = "SELECT * FROM product WHERE product_code in ('STICK','KA','KB','KC','KF','KM','KS','KTP') order by product_code asc";
         $q = $this->db->query($sql);
         return $q->result_array();
     }

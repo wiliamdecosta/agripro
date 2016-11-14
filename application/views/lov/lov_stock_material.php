@@ -62,8 +62,7 @@
 
         modal_lov_stock_material_set_field_value(id, trx_code,qty,farmer);
         $("#modal_lov_stock_material").modal({backdrop: 'static'});
-        modal_lov_stock_material_prepare_table(parent_id);
-       // $("#modal_lov_stock_material_detail_grid_selection").bootgrid("reload");
+        modal_lov_stock_material_prepare_table(parent_id,production_product_id);
     }
 
 
@@ -88,7 +87,7 @@
          $("#"+ $("#modal_lov_smd_trx_code_val").val()).change();
     }
 
-    function modal_lov_stock_material_prepare_table(parent_id) {
+    function modal_lov_stock_material_prepare_table(parent_id,product_id) {
         $("#modal_lov_stock_material_detail_grid_selection").bootgrid("destroy");
         $("#modal_lov_stock_material_detail_grid_selection").bootgrid({
              formatters: {
@@ -115,7 +114,8 @@
                 return response;
              },
             post: {
-                parent_id: parent_id
+                parent_id: parent_id,
+                product_id : product_id
             },
              url: '<?php echo WS_BOOTGRID."agripro.production_controller/readLovSM"; ?>',
              selection: true,

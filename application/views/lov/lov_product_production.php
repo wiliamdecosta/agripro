@@ -4,7 +4,7 @@
             <!-- modal title -->
             <div class="modal-header no-padding">
                 <div class="table-header">
-                    <span class="form-add-edit-title"> Data Produk</span>
+                    <span class="form-add-edit-title">Product List</span>
                 </div>
             </div>
             <input type="hidden" id="modal_lov_product_id_val" value=""/>

@@ -6,11 +6,11 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="#">Tracking</a>
+            <a href="#">Raw Material Purchasing</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Raw Material</span>
+            <span>Raw Material Purchasing</span>
         </li>
     </ul>
 </div>
@@ -334,7 +334,7 @@
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID . "agripro.stock_material_controller/crud"; ?>',
-            caption: "Raw Material Purchesing"
+            caption: "Raw Material Purchasing"
 
         });
 

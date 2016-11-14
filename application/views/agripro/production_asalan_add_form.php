@@ -250,7 +250,7 @@
         modal_lov_product_show(id, code, parent_id,p_cat);
     }
 
-    function showLovRM(id, code, qty_field,farmer) {
+    function showLovRM(id, code, qty_field,farmer,product_id) {
         var parent_id = $('#parent_id').val();
         var production_product_id = $('#production_product_id').val();
         if ( production_product_id == "") {

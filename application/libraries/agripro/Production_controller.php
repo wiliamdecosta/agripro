@@ -39,9 +39,9 @@ class Production_controller {
             $p_cat = getVarClean('p_cat','str','');
 
             if($p_cat === 'stick'){
-                $req_param['where'] = array("b.parent_id = 1 and b.product_category_id = 2 and a.production_qty > 0");
+                $req_param['where'] = array("b.product_category_id = 1 and a.production_qty > 0");
             }elseif ($p_cat === 'asalan'){
-                $req_param['where'] = array("b.parent_id = 2 and b.product_category_id = 3 and a.production_qty > 0");
+                $req_param['where'] = array("b.product_category_id = 2 and a.production_qty > 0");
             }
 
 
@@ -403,9 +403,9 @@ class Production_controller {
             $p_cat = getVarClean('p_cat','str','');
 
             if(strtoupper($p_cat) === 'STICK'){
-                $table->setCriteria("prod.parent_id = 1 and prod.product_category_id = 2 ");
+                $table->setCriteria("prod.parent_id = 1 and upper(prod.product_code) NOT LIKE 'REJECT%' ");
             }elseif (strtoupper($p_cat) === 'ASALAN'){
-                $table->setCriteria("prod.parent_id = 2 and prod.product_category_id = 3 ");
+                $table->setCriteria("prod.product_code in ('KABC','KBBC') ");
             }
 
             if(!empty($searchPhrase)) {
@@ -446,11 +446,12 @@ class Production_controller {
             $table = $ci->stock_material;
 
             $parent_id = getVarClean('parent_id','int',0);
+            $product_id = getVarClean('product_id','int',0);
             /*if parent_id = 1 => Set product code = STICK*/
             if($parent_id == 1){
                 $table->setCriteria("pr.product_code = 'STICK' "); // Kusus Stick
             }else{
-                $table->setCriteria("pr.parent_id = 4 "); // Asalan Raw Mat
+                $table->setCriteria("pr.parent_id = $product_id "); // Asalan Raw Mat
             }
             $table->setCriteria("sm_qty_bersih != 0 "); // Quantity yg bukan 0
 

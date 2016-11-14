@@ -6,16 +6,29 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="#">Purchasing</a>
+            <a href="#">Raw Material Purchasing</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>History Purchasing</span>
+            <span>Purchasing History</span>
         </li>
     </ul>
 </div>
 <!-- end breadcrumb -->
 <div class="space-4"></div>
+<div class="form-inline">
+    <div class="input-group">
+        <input type="text" class="form-control form-control-inline date-picker" id="inStart" placeholder="Start Date">
+    </div>
+
+    <div class="input-group">
+        <input type="text" class="form-control form-control-inline date-picker" id="inEnd" placeholder="End Date">
+    </div>
+
+    <button type="button" class="btn btn-success" id="search">Search</button>
+<!--    <button type="button" class="btn btn-success" id="search" style="float: right">Download</button>-->
+</div>
+&nbsp;
 <div class="row">
     <div class="col-md-12">
         <table id="grid-table"></table>
@@ -34,7 +47,23 @@
 <?php $this->load->view('lov/lov_raw_material.php'); ?>
 <?php $this->load->view('lov/lov_plantation.php'); ?>
 <script>
+    $("#search").click(function () {
+        var grid_pot = jQuery("#grid-table");
+        var inStart = $("#inStart").val();
+        var inEnd = $("#inEnd").val();
 
+        var postdata = grid_pot.jqGrid('getGridParam', 'postData');
+        $.extend(postdata, {inStart: inStart, inEnd: inEnd});
+        grid_pot.trigger("reloadGrid", [{page: 1}]);
+    });
+</script>
+<script>
+    $('.date-picker').datepicker({
+        autoclose: true,
+        format: 'yyyy-mm-dd',
+        orientation: 'bottom',
+        todayHighlight: true
+    });
     function showLovFarmer(id, code) {
         modal_lov_farmer_show(id, code);
     }
@@ -78,7 +107,7 @@
             url: '<?php echo WS_JQGRID . "agripro.stock_material_controller/crud"; ?>',
             datatype: "json",
             mtype: "POST",
-            postData: {purchasing:0},
+            postData: {purchasing: 0},
             colModel: [
                 {label: 'ID', name: 'sm_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
                 {
@@ -195,7 +224,8 @@
                     edittype: 'select',
                     hidden: true,
                     editrules: {edithidden: true, required: true},
-                    editoptions: {dataUrl: '<?php echo site_url('raw_material_controller/listRawMaterial');?>',
+                    editoptions: {
+                        dataUrl: '<?php echo site_url('raw_material_controller/listRawMaterial');?>',
                         dataInit: function (elem) {
                             $(elem).width(240);  // set the width which you need
                         }
@@ -319,6 +349,7 @@
 
         });
 
+
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
             {   //navbar options
                 edit: false,
@@ -337,7 +368,8 @@
 
                 refreshicon: 'fa fa-refresh green bigger-120',
                 view: true,
-                viewicon: 'fa fa-search-plus grey bigger-120'
+                viewicon: 'fa fa-search-plus grey bigger-120',
+                excel:true
             },
 
             {
@@ -385,7 +417,7 @@
                     var form = $(e[0]);
                     style_edit_form(form);
                     /*form.css({"height": 0.70 * screen.height + "px"});
-                    form.css({"width": 0.60 * screen.width + "px"});*/
+                     form.css({"width": 0.60 * screen.width + "px"});*/
 
                     $("#sm_no_trans").prop("readonly", true);
                     setTimeout(function () {
@@ -456,6 +488,12 @@
         );
 
 
+    });
+    jQuery("#grid-table").jqGrid('navButtonAdd','#grid-pager',{
+        caption:"",
+        onClickButton : function () {
+            jQuery("#grid-table").excelExport();
+        }
     });
 
     function responsive_jqgrid(grid_selector, pager_selector) {

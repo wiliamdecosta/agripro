@@ -106,7 +106,7 @@
                                 setTimeout(function(){
                                     var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
                                     if(selectedRowId != null) {
-                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'product_name');
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'parent_name');
                                         $("#form_pr_code").val( code_display );
                                     }
                                 },100);
