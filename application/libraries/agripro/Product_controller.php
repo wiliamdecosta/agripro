@@ -168,7 +168,7 @@ class Product_controller {
             $ci->load->model('agripro/product');
             $table = $ci->product;
 
-            $table->setCriteria("prod.parent_id is not null");
+            //$table->setCriteria("prod.parent_id is not null");
             $table->setCriteria("(prod.product_code NOT IN('LOST'))");
 
             if(!empty($searchPhrase)) {

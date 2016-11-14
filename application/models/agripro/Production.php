@@ -149,13 +149,15 @@ class Production extends Abstract_model
 
         /**
          * Steps to Delete Production
-         *
+         * 0 . Remove Stock Production
          * 1. Remove all stock_detail first
          * 2. When loop for delete stock_detail, save data production in array
          * 3. Delete data production in stock
          * 4. Loop data drying for delete data drying in stock and restore qty to drying
          * 5. Delete data master production
          */
+         $tStock->deleteByReference($production_id, 'PRODUCTION_IN');
+
 
         $data_drying = array();
         $tProdDetail->setCriteria('pd.production_id = ' . $production_id);
@@ -199,6 +201,30 @@ class Production extends Abstract_model
         $query = $this->db->get('sortir');
 
         return $query->num_rows();
+    }
+
+    public function InsertStockMaster($row){
+
+       // print_r($record['production_date']);
+        //exit;
+       $ci = &get_instance();
+
+        $ci->load->model('agripro/stock');
+        $tStock = $ci->stock;
+        $ci->load->model('agripro/stock_category');
+        $tStockCategory = $ci->stock_category;
+
+        $record = array();
+        $record['stock_tgl_masuk'] = $row['production_date'];
+        $record['stock_kg'] = $row['production_qty'];
+        $record['stock_ref_id'] = $row['production_id'];
+        $record['stock_ref_code'] = 'PRODUCTION_IN';
+        $record['sc_id'] = $tStockCategory->getIDByCode('PRODUCTION_STOCK');
+        $record['wh_id'] = $row['warehouse_id'];
+        $record['product_id'] = $row['product_id'];
+        $record['stock_description'] = 'Insert Stock Production . Ref Production ID : '.$row["production_id"];
+        $tStock->setRecord($record);
+        $tStock->create();
     }
 
 }

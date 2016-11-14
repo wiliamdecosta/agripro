@@ -550,6 +550,7 @@ class Production_controller {
             ####################################
 
             $table->create();
+            $table->InsertStockMaster($table->record);
 
             ####################################
             ### Step 3. Insert Detail
