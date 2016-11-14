@@ -71,7 +71,17 @@
 
 <script>
 
-
+	function init() {                
+        // set focus on your element here <br>    }
+    }
+		var previousOnload = window.onload;        
+		window.onload = function() { 
+			if (previousOnload) { 
+				previousOnload();
+			}
+		
+			init();
+    }
     function showLovStockMaterial(id, code, id2, code2) {
         modal_lov_stock_material_show(id, code,id2, code2 );
     }

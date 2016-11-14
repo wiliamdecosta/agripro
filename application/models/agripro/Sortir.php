@@ -137,8 +137,32 @@ class Sortir extends Abstract_model {
     }
 	
 	function list_product_prd_id($sm_id,$product_id){
-
-        $sql = "
+		$type = $this->get_type_prod($sm_id);
+		if($type == '0') {
+			$sql = "
+				SELECT *
+				FROM (
+						SELECT *
+							FROM product
+								WHERE product_id = $product_id
+								AND upper(product_code) NOT LIKE '%REJECT%'
+								AND product_category_id = 2
+						UNION ALL 
+						SELECT *
+							FROM product
+								WHERE (parent_id = $product_id  ) 
+								AND upper(product_code) LIKE '%REJECT%'
+						UNION ALL
+						SELECT *
+							FROM product
+								WHERE product_code IN ('LOST')
+						) as a
+					WHERE a.product_id not in (select distinct product_id
+														from sortir_detail
+															where sortir_id = $sm_id )
+				";
+		}else{
+			$sql = "
 				SELECT *
 				FROM (
 						SELECT *
@@ -166,6 +190,8 @@ class Sortir extends Abstract_model {
 														from sortir_detail
 															where sortir_id = $sm_id )
 				";
+		}
+        
         $q = $this->db->query($sql);
         return $q->result_array();
 
@@ -214,6 +240,20 @@ class Sortir extends Abstract_model {
 
     }
     
+	function get_type_prod($sm_id){
+		
+		$sql = " SELECT case when b.product_category_id = 1 then 1 else 0 end total 
+                        from sortir a, product b
+                            where a.sortir_id = $sm_id
+                            and a.product_id = b.product_id limit 1  ";
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        $query->free_result();
+        
+        return $row['total']; 
+		
+	}
+	
     function is_packing($sm_id){
     
         /* $sql = " SELECT COUNT(*) total 
