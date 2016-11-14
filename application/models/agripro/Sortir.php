@@ -154,7 +154,8 @@ class Sortir extends Abstract_model {
 						UNION ALL 
 						SELECT *
 							FROM product
-								WHERE parent_id = $product_id
+								WHERE (parent_id = $product_id or parent_id  = (select case when sm_id is null then 1 else 0 end 
+																					from sortir where sortir_id = $sm_id limit 1) ) 
 								AND upper(product_code) LIKE '%REJECT%'
 						UNION ALL
 						SELECT *

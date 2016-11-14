@@ -124,6 +124,7 @@ class Sortir_detail extends Abstract_model {
 			$dataprd = $tProduction->getAll();
 			foreach($dataprd as $dataprds) {
 				$whid = $dataprds['warehouse_id'];
+				$prd_id = $dataprds['product_id'];
             }
 			
 			
@@ -137,6 +138,7 @@ class Sortir_detail extends Abstract_model {
 			$datatsm = $tsm->getAll();
 			foreach($datatsm as $datatsms) {
 				$whid = $datatsms['wh_id'];
+				$prd_id = $datatsms['product_id'];
 				}
 			// ref id =  sm_id 
 			$sql = "UPDATE stock_material SET sm_qty_bersih = sm_qty_bersih - ".$sortir_detail['sortir_detail_qty']."
@@ -166,7 +168,7 @@ class Sortir_detail extends Abstract_model {
         $record_stock['stock_ref_code'] = $stock_refcode;
         $record_stock['sc_id'] = $tStockCategory->getIDByCode('DRYING_STOCK');
         $record_stock['wh_id'] = $whid;
-        $record_stock['product_id'] = $sortir_detail['product_id'];
+        $record_stock['product_id'] = $prd_id;
         $record_stock['stock_description'] = 'sm_qty_bersih has used by sortir_detail';
         $tStock->setRecord($record_stock);
         $tStock->create();
