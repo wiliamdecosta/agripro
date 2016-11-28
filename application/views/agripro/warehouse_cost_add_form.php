@@ -26,7 +26,7 @@
 
             <div class="portlet-body form">
                 <!-- BEGIN FORM-->
-                <form method="post" action="" class="form-horizontal" id="form-warehoust-cost">
+                <form method="post" action="" class="form-horizontal" id="form-warehoust-cost" enctype="multipart/form-data">
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <div class="form-body">
 
@@ -53,7 +53,7 @@
 
                         <hr>
                         <div class="row">
-                            <div class="col-md-offset-1 col-md-10">
+                            <div class="col-md-12">
                                 <h3>Cost Details</h3>
 
                                 <div class="form-group">
@@ -61,7 +61,7 @@
                                     <div class="col-md-4">
                                         <div class="input-group">
                                             <input type="hidden" name="parameter_cost_id" id="parameter_cost_id" class="form-control">
-                                            <input type="text" name="parameter_cost_code" id="parameter_cost_code" readonly="" class="form-control" placeholder="Choose Parameter" onchange="enablingCostValue(this.value);">
+                                            <input type="text" name="parameter_cost_code" id="parameter_cost_code" readonly="" class="form-control" placeholder="Parameter Cost" onchange="enablingCostValue(this.value);">
                                             <span class="input-group-btn">
                                                 <button class="btn btn-success" type="button" onclick="showLovCostParameter('parameter_cost_id','parameter_cost_code')">
                                                     <span class="fa fa-search icon-on-right bigger-110"></span>
@@ -73,7 +73,7 @@
                                         <input type="text" class="form-control" id="whcost_det_value" placeholder="Fill Cost Value (Rp)">
                                     </div>
                                     <div class="col-md-1">
-                                        <button class="btn btn-primary" type="button" id="btn-add-parameter"> <i class="fa fa-plus"></i>Add Parameter</button>
+                                        <button class="btn btn-primary btn-sm" type="button" id="btn-add-parameter"> <i class="fa fa-plus"></i>Add Parameter</button>
                                     </div>
                                 </div>
 
@@ -83,6 +83,7 @@
                                             <th>#</th>
                                             <th>Cost Parameter</th>
                                             <th>Cost Value (Rp)</th>
+                                            <th>File Evidence</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -137,15 +138,18 @@
         var parameter_cost_code = $('#parameter_cost_code').val();
         var whcost_det_value = $('#whcost_det_value').val();
 
+
         var tr = document.getElementById('tbl-parameter').insertRow(jumlah_baris);
         var tdNo = tr.insertCell(0);
         var tdCostCode = tr.insertCell(1);
         var tdCostValue = tr.insertCell(2);
-        var tdAction = tr.insertCell(3);
+        var tdEvidence = tr.insertCell(3);
+        var tdAction = tr.insertCell(4);
 
         tdNo.innerHTML = jumlah_baris;
         tdCostCode.innerHTML = '<input type="hidden" name="parameter_cost_id[]" value="'+ parameter_cost_id +'"> <input type="hidden" name="parameter_cost_code[]" value="'+ parameter_cost_code +'">'+ parameter_cost_code;
         tdCostValue.innerHTML = '<input type="hidden" name="whcost_det_values[]" value="'+ whcost_det_value +'">'+ $.number(whcost_det_value, 2, '.', ',');
+        tdEvidence.innerHTML = '<input type="file" name="whcost_det_evidences[]">';
         tdAction.innerHTML = '<button type="button" onclick="deleteDataRow(this);"><i class="fa fa-trash"></i> Delete </button>';
 
         $('#parameter_cost_id').val("");
@@ -202,13 +206,19 @@
         $("#form-warehoust-cost").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
 
+            var formData = new FormData($(this)[0]);
+
             if($("#form-warehoust-cost").valid() == true){
                 var url = '<?php echo WS_JQGRID."agripro.warehouse_cost_controller/createForm"; ?>';
                 $.ajax({
                     type: "POST",
                     url: url,
                     dataType : 'json',
-                    data: $("#form-warehoust-cost").serialize(),
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
                     success: function(response) {
 
                         if(response.success != true){

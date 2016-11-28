@@ -26,7 +26,7 @@
 
             <div class="portlet-body form">
                 <!-- BEGIN FORM-->
-                <form method="post" action="" class="form-horizontal" id="form-warehoust-cost">
+                <form method="post" action="" class="form-horizontal" id="form-warehoust-cost" enctype="multipart/form-data">
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <input type="hidden" name="whcost_id" value="<?php echo $this->input->post('whcost_id'); ?>">
                     <div class="form-body">
@@ -84,6 +84,7 @@
                                             <th>#</th>
                                             <th>Cost Parameter</th>
                                             <th>Cost Value (Rp)</th>
+                                            <th>File Evidence</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -142,11 +143,13 @@
         var tdNo = tr.insertCell(0);
         var tdCostCode = tr.insertCell(1);
         var tdCostValue = tr.insertCell(2);
-        var tdAction = tr.insertCell(3);
+        var tdEvidence = tr.insertCell(3);
+        var tdAction = tr.insertCell(4);
 
         tdNo.innerHTML = jumlah_baris;
         tdCostCode.innerHTML = '<input type="hidden" name="whcost_det_id[]"><input type="hidden" name="parameter_cost_id[]" value="'+ parameter_cost_id +'"> <input type="hidden" name="parameter_cost_code[]" value="'+ parameter_cost_code +'">'+ parameter_cost_code;
         tdCostValue.innerHTML = '<input type="hidden" name="whcost_det_values[]" value="'+ whcost_det_value +'">'+ $.number(whcost_det_value, 2, '.', ',');
+        tdEvidence.innerHTML = '<input type="hidden" name="exist_evidences[]" value="-999"><input type="file" name="whcost_det_evidences[]">';
         tdAction.innerHTML = '<button type="button" onclick="deleteDataRow(this, null);"><i class="fa fa-trash"></i> Delete </button>';
 
         $('#parameter_cost_id').val("");
@@ -233,13 +236,19 @@
         $("#form-warehoust-cost").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
 
+            var formData = new FormData($(this)[0]);
+
             if($("#form-warehoust-cost").valid() == true){
                 var url = '<?php echo WS_JQGRID."agripro.warehouse_cost_controller/updateForm"; ?>';
                 $.ajax({
                     type: "POST",
                     url: url,
                     dataType : 'json',
-                    data: $("#form-warehoust-cost").serialize(),
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
                     success: function(response) {
 
                         if(response.success != true){

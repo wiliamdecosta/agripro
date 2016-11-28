@@ -10,7 +10,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Shipping</span>
+            <span>Trucking</span>
         </li>
     </ul>
 </div>
@@ -19,7 +19,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <button class="btn blue-madison" id="add-shipping"><i class="fa fa-truck bigger-120"></i> Add Shipping</button>
+        <button class="btn blue-madison" id="add-shipping"><i class="fa fa-truck bigger-120"></i> Add Trucking</button>
     </div>
 </div>
 <div class="space-4"></div>
@@ -77,11 +77,11 @@
             mtype: "POST",
             colModel: [
                 {label: 'ID', name: 'shipping_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Shipping Date', name: 'shipping_date', width: 120, align: "center", editable: false},
+                {label: 'Trucking Date', name: 'shipping_date', width: 120, align: "center", editable: false},
                 {label: 'Driver Name', name: 'shipping_driver_name', width: 100, align: "left", editable: false},
                 {label: 'Notes', name: 'shipping_notes', width: 100, align: "left", editable: false, hidden:true},
-                {label: 'Shipping Cost (Rp)', name: 'shipping_cost', formatter:'currency', formatoptions: {prefix:'Rp. ', thousandsSeparator : '.', decimalPlaces: 0}, align:'right', width: 150, align: "right", editable: false, hidden:true},
-                {label: 'Edit Shipping',name: '',width: 120, align: "center",editable: false,
+                {label: 'Trucking Cost (Rp)', name: 'shipping_cost', formatter:'currency', formatoptions: {prefix:'Rp. ', thousandsSeparator : '.', decimalPlaces: 0}, align:'right', width: 150, align: "right", editable: false, hidden:true},
+                {label: 'Edit Trucking',name: '',width: 120, align: "center",editable: false,
                     formatter:function(cellvalue, options, rowObject) {
                         return '<a class="btn green-meadow btn-xs" href="#" onclick="editShipping('+rowObject['shipping_id']+')"><i class="fa fa-pencil"></i>Edit</a>';
                     }
@@ -130,7 +130,7 @@
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID."agripro.shipping_controller/crud"; ?>',
-            caption: "Shipping"
+            caption: "Trucking"
 
         });
 
@@ -305,7 +305,7 @@
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID."agripro.shipping_detail_controller/crud"; ?>',
-            caption: "Shipping Detail"
+            caption: "Trucking Detail"
 
         });
 

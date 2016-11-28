@@ -264,7 +264,15 @@
             colModel: [
                 {label: 'ID', key:true, name: 'whcost_det_id', width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'Parameter Cost', name: 'parameter_cost_code', width: 200, align: "left", editable: false},
-                {label: 'Cost Value (Rp)', name: 'whcost_det_value', width: 120, formatter:'currency', formatoptions: {thousandsSeparator : '.', decimalPlaces: 0}, align:'right', editable: false}
+                {label: 'Cost Value (Rp)', name: 'whcost_det_value', width: 120, formatter:'currency', formatoptions: {thousandsSeparator : '.', decimalPlaces: 0}, align:'right', editable: false},
+                {label: 'Evidence',name: 'whcost_det_evidence',width: 120, align: "left",editable: false,
+                    formatter:function(cellvalue, options, rowObject) {
+                        if(cellvalue != '' && cellvalue != null) {
+                            return '<a href="<?php echo base_url('file_evidence');?>/'+cellvalue+'">'+ cellvalue +'</a>';
+                        }
+                        return 'no file';
+                    }
+                },
             ],
             height: '100%',
             width:500,

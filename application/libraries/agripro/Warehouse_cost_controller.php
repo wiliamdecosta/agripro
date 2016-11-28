@@ -303,13 +303,16 @@ class Warehouse_cost_controller {
         $data = array('success' => false, 'message' => '');
         $table->actionType = 'CREATE';
 
+        $ci->load->model('agripro/warehouse_cost_detail');
+        $tableDetail = $ci->warehouse_cost_detail;
+        $tableDetail->actionType = 'CREATE';
+
         /**
          * Data master
          */
         $whcost_start_date = getVarClean('whcost_start_date','str','');
         $whcost_end_date = getVarClean('whcost_end_date','str','');
         $whcost_description = getVarClean('whcost_description','str','');
-
 
         /**
          * Data details
@@ -326,6 +329,45 @@ class Warehouse_cost_controller {
                     throw new Exception("Start Date must be lesser that End Date");
                 }
 
+                /**
+                 * Upload file evidence first
+                 */
+                $config = array();
+                $config['upload_path'] = 'file_evidence/';
+                $config['allowed_types'] = 'gif|jpg|jpeg|png|xls|xlsx|doc';
+                $config['overwrite'] = 1;
+                $ci->load->library('upload', $config);
+
+                $files = $_FILES['whcost_det_evidences'];
+
+                $items_evidence = array();
+
+                foreach ($files['name'] as $key => $evidence) {
+
+                    $fileName = date('Ymd').'_'.$evidence;
+                    $items_evidence[] = array(
+                        $tableDetail->pkey => null,
+                        'whcost_det_evidence' => $evidence == '' ? '' : $fileName
+                    );
+
+                    if(empty($evidence)) continue;
+
+                    $_FILES['fevidence']['name']= $files['name'][$key];
+                    $_FILES['fevidence']['type']= $files['type'][$key];
+                    $_FILES['fevidence']['tmp_name']= $files['tmp_name'][$key];
+                    $_FILES['fevidence']['error']= $files['error'][$key];
+                    $_FILES['fevidence']['size']= $files['size'][$key];
+
+                    $config['file_name'] = $fileName;
+
+                    $ci->upload->initialize($config);
+
+                    if (!$ci->upload->do_upload('fevidence')) {
+                        $errors = $ci->upload->display_errors();
+                        throw new Exception($errors);
+                    }
+                }
+
                 $items = array(
                     'whcost_start_date' => $whcost_start_date,
                     'whcost_end_date' => $whcost_end_date,
@@ -336,12 +378,7 @@ class Warehouse_cost_controller {
                 $table->setRecord($items);
                 $table->record[$table->pkey] = $table->generate_id($table->table,$table->pkey);
 
-
                 $record_detail = array();
-                $ci->load->model('agripro/warehouse_cost_detail');
-                $tableDetail = $ci->warehouse_cost_detail;
-                $tableDetail->actionType = 'CREATE';
-
 
                 for($i = 0; $i < count($parameter_cost_ids); $i++) {
                     if($parameter_cost_codes[$i] != 'STOCK MATERIAL') {
@@ -360,10 +397,23 @@ class Warehouse_cost_controller {
                 }
 
                 $table->create();
+
+                $rec = 0;
                 foreach($record_detail as $item_detail) {
                     $tableDetail->setRecord($item_detail);
                     $tableDetail->record[$tableDetail->pkey] = $tableDetail->generate_id($tableDetail->table,$tableDetail->pkey);
+
+                    //set id for update file evidence
+                    $items_evidence[$rec++][$tableDetail->pkey] = $tableDetail->record[$tableDetail->pkey];
+
                     $tableDetail->create();
+                }
+
+                //update evidence for detail
+                $tableDetail->actionType = 'UPDATE';
+                foreach($items_evidence as $evidence) {
+                    $tableDetail->setRecord($evidence);
+                    $tableDetail->update();
                 }
 
             $table->db->trans_commit(); //Commit Trans
@@ -383,6 +433,7 @@ class Warehouse_cost_controller {
 
     }
 
+
     function updateForm() {
 
         $ci = & get_instance();
@@ -392,6 +443,9 @@ class Warehouse_cost_controller {
         $data = array('success' => false, 'message' => '');
         $table->actionType = 'UDATE';
 
+        $ci->load->model('agripro/warehouse_cost_detail');
+        $tableDetail = $ci->warehouse_cost_detail;
+        $tableDetail->actionType = 'UDATE';
         /**
          * Data master
          */
@@ -400,7 +454,6 @@ class Warehouse_cost_controller {
         $whcost_end_date = getVarClean('whcost_end_date','str','');
         $whcost_description = getVarClean('whcost_description','str','');
 
-
         /**
          * Data details
          */
@@ -408,6 +461,67 @@ class Warehouse_cost_controller {
         $parameter_cost_ids = (array)$ci->input->post('parameter_cost_id');
         $whcost_det_values = (array)$ci->input->post('whcost_det_values');
         $parameter_cost_codes = (array)$ci->input->post('parameter_cost_code');
+
+        $exist_evidences = (array)$ci->input->post('exist_evidences');
+
+        /**
+         * Upload file evidence first
+         */
+        $config = array();
+        $config['upload_path'] = 'file_evidence/';
+        $config['allowed_types'] = 'gif|jpg|jpeg|png|xls|xlsx|doc';
+        $config['overwrite'] = 1;
+        $ci->load->library('upload', $config);
+
+        $files = $_FILES['whcost_det_evidences'];
+
+        $items_evidence = array();
+        $loop = 0;
+
+        foreach ($files['name'] as $key => $evidence) {
+
+            $fileName = date('Ymd').'_'.$evidence;
+            if($exist_evidences[$loop] == -999) { //new item for upload
+                $items_evidence[] = array(
+                    $tableDetail->pkey => null,
+                    'whcost_det_evidence' => $evidence == '' ? '' : $fileName
+                );
+            }
+
+            if(empty($evidence)) {
+                $loop++;
+                continue;
+            }
+
+            $_FILES['fevidence']['name']= $files['name'][$key];
+            $_FILES['fevidence']['type']= $files['type'][$key];
+            $_FILES['fevidence']['tmp_name']= $files['tmp_name'][$key];
+            $_FILES['fevidence']['error']= $files['error'][$key];
+            $_FILES['fevidence']['size']= $files['size'][$key];
+
+            $config['file_name'] = $fileName;
+
+            $ci->upload->initialize($config);
+
+            if (!$ci->upload->do_upload('fevidence')) {
+                $errors = $ci->upload->display_errors();
+                throw new Exception($errors);
+            }
+
+            if($exist_evidences[$loop] != -999) {
+                $tableDetail->setRecord(
+                    array(
+                        $tableDetail->pkey => $exist_evidences[$loop],
+                        'whcost_det_evidence' => $fileName
+                    )
+                );
+                $tableDetail->update();
+            }
+
+            $loop++;
+
+        }
+
 
         try{
 
@@ -426,8 +540,6 @@ class Warehouse_cost_controller {
                 $table->setRecord($items);
 
                 $record_detail = array();
-                $ci->load->model('agripro/warehouse_cost_detail');
-                $tableDetail = $ci->warehouse_cost_detail;
                 $tableDetail->actionType = 'CREATE';
 
                 $stockMaterialFoundCreate = false;
@@ -461,9 +573,13 @@ class Warehouse_cost_controller {
 
                 $table->update();
 
+                $rec = 0;
                 foreach($record_detail as $item_detail) {
                     $tableDetail->setRecord($item_detail);
                     $tableDetail->record[$tableDetail->pkey] = $tableDetail->generate_id($tableDetail->table,$tableDetail->pkey);
+                    //set id for update file evidence
+                    $items_evidence[$rec++][$tableDetail->pkey] = $tableDetail->record[$tableDetail->pkey];
+
                     $tableDetail->create();
                 }
 
@@ -473,6 +589,13 @@ class Warehouse_cost_controller {
                     $tableDetail->update();
                 }
                 //$table->insertStock($table->record);
+
+                //update evidence for detail
+                $tableDetail->actionType = 'UPDATE';
+                foreach($items_evidence as $evidence) {
+                    $tableDetail->setRecord($evidence);
+                    $tableDetail->update();
+                }
 
             $table->db->trans_commit(); //Commit Trans
 

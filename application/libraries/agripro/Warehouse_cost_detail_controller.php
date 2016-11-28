@@ -88,14 +88,29 @@ class Warehouse_cost_detail_controller {
             $output = '';
             $no = 1;
             foreach($items as $item) {
-                $output .= '
-                    <tr>
-                        <td>'.$no++.'</td>
-                        <td><input type="hidden" name="whcost_det_id[]" value="'.$item['whcost_det_id'].'"> <input type="hidden" name="parameter_cost_id[]" value="'.$item['parameter_cost_id'].'"><input type="hidden" name="parameter_cost_code[]" value="'.$item['parameter_cost_code'].'">'.$item['parameter_cost_code'].'</td>
-                        <td align="right"><input type="hidden" name="whcost_det_values[]" value="'.$item['whcost_det_value'].'">'.numberFormat($item['whcost_det_value'],2).'</td>
-                        <td><button type="button" onclick="deleteDataRow(this,'.$item['whcost_det_id'].');"><i class="fa fa-trash"></i> Delete </button></td>
-                    </tr>
-                ';
+
+                if(!empty($item['whcost_det_evidence'])) {
+                    $output .= '
+                        <tr>
+                            <td>'.$no++.'</td>
+                            <td><input type="hidden" name="whcost_det_id[]" value="'.$item['whcost_det_id'].'"> <input type="hidden" name="parameter_cost_id[]" value="'.$item['parameter_cost_id'].'"><input type="hidden" name="parameter_cost_code[]" value="'.$item['parameter_cost_code'].'">'.$item['parameter_cost_code'].'</td>
+                            <td align="right"><input type="hidden" name="whcost_det_values[]" value="'.$item['whcost_det_value'].'">'.numberFormat($item['whcost_det_value'],2).'</td>
+                            <td><a href="'.base_url("file_evidence/".$item['whcost_det_evidence']).'">'.$item['whcost_det_evidence'].'</a></td>
+                            <td><button type="button" onclick="deleteDataRow(this,'.$item['whcost_det_id'].');"><i class="fa fa-trash"></i> Delete </button></td>
+                        </tr>
+                        ';
+                }else {
+                    $output .= '
+                        <tr>
+                            <td>'.$no++.'</td>
+                            <td><input type="hidden" name="whcost_det_id[]" value="'.$item['whcost_det_id'].'"> <input type="hidden" name="parameter_cost_id[]" value="'.$item['parameter_cost_id'].'"><input type="hidden" name="parameter_cost_code[]" value="'.$item['parameter_cost_code'].'">'.$item['parameter_cost_code'].'</td>
+                            <td align="right"><input type="hidden" name="whcost_det_values[]" value="'.$item['whcost_det_value'].'">'.numberFormat($item['whcost_det_value'],2).'</td>
+                            <td><input type="hidden" name="exist_evidences[]" value="'.$item['whcost_det_id'].'"><input type="file" name="whcost_det_evidences[]"></td>
+                            <td><button type="button" onclick="deleteDataRow(this,'.$item['whcost_det_id'].');"><i class="fa fa-trash"></i> Delete </button></td>
+                        </tr>
+                        ';
+                }
+
             }
 
         }catch (Exception $e) {

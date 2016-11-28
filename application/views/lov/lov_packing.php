@@ -10,6 +10,7 @@
             <input type="hidden" id="modal_lov_packing_id_val" value="" />
             <input type="hidden" id="modal_lov_packing_code_val" value="" />
             <input type="hidden" id="modal_lov_product_code_val" value="" />
+            <input type="hidden" id="modal_lov_packing_kg_val" value="" />
 
             <!-- modal body -->
             <div class="modal-body">
@@ -53,27 +54,30 @@
             $("#"+ $("#modal_lov_packing_id_val").val()).val("");
             $("#"+ $("#modal_lov_packing_code_val").val()).val("");
             $("#"+ $("#modal_lov_product_code_val").val()).val("");
+            $("#"+ $("#modal_lov_packing_kg_val").val()).val("");
             $("#modal_lov_packing").modal("toggle");
         });
     });
 
-    function modal_lov_packing_show(the_id_field, the_code_field, product_code) {
-        modal_lov_packing_set_field_value(the_id_field, the_code_field, product_code);
+    function modal_lov_packing_show(the_id_field, the_code_field, product_code, packing_kg) {
+        modal_lov_packing_set_field_value(the_id_field, the_code_field, product_code, packing_kg);
         $("#modal_lov_packing").modal({backdrop: 'static'});
         modal_lov_packing_prepare_table();
     }
 
 
-    function modal_lov_packing_set_field_value(the_id_field, the_code_field, product_code) {
+    function modal_lov_packing_set_field_value(the_id_field, the_code_field, product_code, packing_kg) {
          $("#modal_lov_packing_id_val").val(the_id_field);
          $("#modal_lov_packing_code_val").val(the_code_field);
          $("#modal_lov_product_code_val").val(product_code);
+         $("#modal_lov_packing_kg_val").val(packing_kg);
     }
 
-    function modal_lov_packing_set_value(the_id_val, the_code_val, product_code) {
+    function modal_lov_packing_set_value(the_id_val, the_code_val, product_code, packing_kg) {
          $("#"+ $("#modal_lov_packing_id_val").val()).val(the_id_val);
          $("#"+ $("#modal_lov_packing_code_val").val()).val(the_code_val);
          $("#"+ $("#modal_lov_product_code_val").val()).val(product_code);
+         $("#"+ $("#modal_lov_packing_kg_val").val()).val(packing_kg);
          $("#modal_lov_packing").modal("toggle");
 
          $("#"+ $("#modal_lov_packing_id_val").val()).change();
@@ -84,7 +88,7 @@
         $("#modal_lov_packing_grid_selection").bootgrid({
              formatters: {
                 "opt-edit" : function(col, row) {
-                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_packing_set_value(\''+ row.packing_id +'\', \''+ row.packing_batch_number +'\', \''+ row.product_code +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
+                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_packing_set_value(\''+ row.packing_id +'\', \''+ row.packing_batch_number +'\', \''+ row.product_code +'\', \''+ row.packing_kg +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
                 }
              },
              rowCount:[5,10],

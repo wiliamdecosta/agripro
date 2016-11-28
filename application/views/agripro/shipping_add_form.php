@@ -10,7 +10,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Add Shipping Form</span>
+            <span>Add Trucking Form</span>
         </li>
     </ul>
 </div>
@@ -20,7 +20,7 @@
     <div class="col-md-12">
         <div class="portlet box green">
             <div class="portlet-title">
-                <div class="caption">Add Shipping Form</div>
+                <div class="caption">Add Trucking Form</div>
             </div>
 
             <div class="portlet-body form">
@@ -53,16 +53,17 @@
                         <hr>
                         <div class="row">
                             <div class="col-md-offset-1 col-md-10">
-                                <h3>Shipping Details</h3>
+                                <h3>Trucking Details</h3>
 
                                 <div class="form-group">
                                     <label class="col-md-3 control-label">Packing Box</label>
                                     <div class="col-md-4">
                                         <div class="input-group">
                                             <input type="hidden" name="box_packing_id" id="box_packing_id" class="form-control">
+                                            <input type="hidden" name="box_packing_kg" id="box_packing_kg" class="form-control">
                                             <input type="text" name="box_packing_batch_number" id="box_packing_batch_number" readonly="" class="form-control" placeholder="Choose Packing Box">
                                             <span class="input-group-btn">
-                                                <button class="btn btn-success" type="button" onclick="showLovPacking('box_packing_id','box_packing_batch_number','box_product_code')">
+                                                <button class="btn btn-success" type="button" onclick="showLovPacking('box_packing_id','box_packing_batch_number','box_product_code','box_packing_kg')">
                                                     <span class="fa fa-search icon-on-right bigger-110"></span>
                                                 </button>
                                             </span>
@@ -82,6 +83,7 @@
                                             <th>#</th>
                                             <th>Serial Number</th>
                                             <th>Product Code</th>
+                                            <th>Weight (Kg)</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -111,8 +113,8 @@
 <?php $this->load->view('lov/lov_packing.php'); ?>
 
 <script>
-    function showLovPacking(id, code, product_code) {
-        modal_lov_packing_show(id, code, product_code);
+    function showLovPacking(id, code, product_code, packing_kg) {
+        modal_lov_packing_show(id, code, product_code, packing_kg);
     }
 </script>
 
@@ -125,21 +127,25 @@
         var packing_id = document.getElementById('box_packing_id').value;
         var packing_batch_number = document.getElementById('box_packing_batch_number').value;
         var product_code = document.getElementById('box_product_code').value;
+        var packing_kg = document.getElementById('box_packing_kg').value;
 
         var tr = document.getElementById('tbl-packing-box').insertRow(jumlah_baris);
         var tdNo = tr.insertCell(0);
         var tdSerialNumber = tr.insertCell(1);
         var tdProduct = tr.insertCell(2);
-        var tdAction = tr.insertCell(3);
+        var tdWeight = tr.insertCell(3);
+        var tdAction = tr.insertCell(4);
 
         tdNo.innerHTML = jumlah_baris;
         tdSerialNumber.innerHTML = '<input type="hidden" name="packing_id[]" value="'+ packing_id +'">'+ packing_batch_number;
         tdProduct.innerHTML = product_code;
+        tdWeight.innerHTML = packing_kg;
         tdAction.innerHTML = '<button type="button" onclick="deleteDataRow(this);"><i class="fa fa-trash"></i> Delete </button>';
 
         document.getElementById('box_packing_id').value = "";
         document.getElementById('box_packing_batch_number').value = "";
         document.getElementById('box_product_code').value = "";
+        document.getElementById('box_packing_kg').value = "";
     }
 
     function deleteDataRow(sender) {

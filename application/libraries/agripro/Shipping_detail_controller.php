@@ -93,6 +93,7 @@ class Shipping_detail_controller {
                         <td>'.$no++.'</td>
                         <td><input type="hidden" name="shipdet_id[]" value="'.$item['shipdet_id'].'"> <input type="hidden" name="packing_id[]" value="'.$item['packing_id'].'">'.$item['packing_batch_number'].'</td>
                         <td>'.$item['product_code'].'</td>
+                        <td>'.$item['packing_kg'].'</td>
                         <td><button type="button" onclick="deleteDataRow(this,'.$item['shipdet_id'].');"><i class="fa fa-trash"></i> Delete </button></td>
                     </tr>
                 ';
