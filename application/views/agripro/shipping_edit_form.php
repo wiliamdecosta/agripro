@@ -25,7 +25,7 @@
 
             <div class="portlet-body form">
                 <!-- BEGIN FORM-->
-                <form method="post" action="" class="form-horizontal" id="form-shipping">
+                <form method="post" action="" class="form-horizontal" id="form-shipping" enctype="multipart/form-data">
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <input type="hidden" name="shipping_id" value="<?php echo $this->input->post('shipping_id'); ?>">
 
@@ -42,6 +42,21 @@
                             <label class="col-md-3 control-label" for="shipping_driver_name">Driver Name:</label>
                             <div class="col-md-3">
                                 <input type="text" name="shipping_driver_name" id="shipping_driver_name" class="form-control required" value="<?php echo $this->input->post('shipping_driver_name'); ?>">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="shipping_police_no">Police No:</label>
+                            <div class="col-md-3">
+                                <input type="text" name="shipping_police_no" id="shipping_police_no" class="form-control required" value="<?php echo $this->input->post('shipping_police_no'); ?>">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="shipping_license">File License:</label>
+                            <div class="col-md-3">
+                                <input type="file" name="shipping_license" id="shipping_license">
+                                <a target="_blank" href="<?php echo base_url('trucking_license').'/'.$this->input->post('shipping_license'); ?>"><?php echo $this->input->post('shipping_license'); ?></a>
                             </div>
                         </div>
 
@@ -229,13 +244,19 @@
         $("#form-shipping").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
 
+            var formData = new FormData($(this)[0]);
+
             if($("#form-shipping").valid() == true){
                 var url = '<?php echo WS_JQGRID."agripro.shipping_controller/updateForm"; ?>';
                 $.ajax({
                     type: "POST",
                     url: url,
                     dataType : 'json',
-                    data: $("#form-shipping").serialize(),
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
                     success: function(response) {
 
                         if(response.success != true){

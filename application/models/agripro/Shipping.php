@@ -15,6 +15,8 @@ class Shipping extends Abstract_model {
                                 'shipping_date'         => array('nullable' => false, 'type' => 'date', 'unique' => false, 'display' => 'Shipping Date'),
                                 'shipping_driver_name'  => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'Driver Name'),
                                 'shipping_notes'        => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Notes'),
+                                'shipping_police_no'    => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'No Police'),
+                                'shipping_license'      => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'License File'),
 
                                 'created_date'          => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Created Date'),
                                 'created_by'            => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Created By'),
@@ -24,7 +26,9 @@ class Shipping extends Abstract_model {
                             );
 
 
-    public $selectClause    = "ship.shipping_id, to_char(ship.shipping_date,'yyyy-mm-dd') as shipping_date, ship.shipping_driver_name, ship.shipping_notes";
+    public $selectClause    = "ship.shipping_id, to_char(ship.shipping_date,'yyyy-mm-dd') as shipping_date,
+                                ship.shipping_driver_name, ship.shipping_notes,
+                                ship.shipping_police_no, ship.shipping_license, ship.shipping_license as shipping_license_view";
     public $fromClause      = "shipping as ship";
 
     public $refs            = array();

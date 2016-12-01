@@ -370,6 +370,8 @@ class Shipping_controller {
         $shipping_date = getVarClean('shipping_date','str','');
         $shipping_driver_name = getVarClean('shipping_driver_name','str','');
         $shipping_notes = getVarClean('shipping_notes','str','');
+        $shipping_police_no = getVarClean('shipping_police_no','str','');
+
 
 
         /**
@@ -381,10 +383,30 @@ class Shipping_controller {
 
             $table->db->trans_begin(); //Begin Trans
 
+                /**
+                 * Upload file license first
+                 */
+                $config = array();
+                $config['upload_path'] = 'trucking_license/';
+                $config['allowed_types'] = 'gif|jpg|jpeg|png|xls|xlsx|doc';
+                $config['overwrite'] = 1;
+                $ci->load->library('upload', $config);
+                $fileName = date('Ymd').'_'.$_FILES['shipping_license']['name'];
+                $config['file_name'] = $fileName;
+
+                $ci->upload->initialize($config);
+
+                if (!$ci->upload->do_upload('shipping_license')) {
+                    $errors = $ci->upload->display_errors();
+                    throw new Exception($errors);
+                }
+
                 $items = array(
                     'shipping_date' => $shipping_date,
                     'shipping_driver_name' => $shipping_driver_name,
-                    'shipping_notes' => $shipping_notes
+                    'shipping_notes' => $shipping_notes,
+                    'shipping_police_no' => $shipping_police_no,
+                    'shipping_license' => $fileName
                 );
 
                 $table->setRecord($items);
@@ -447,7 +469,7 @@ class Shipping_controller {
         $shipping_date = getVarClean('shipping_date','str','');
         $shipping_driver_name = getVarClean('shipping_driver_name','str','');
         $shipping_notes = getVarClean('shipping_notes','str','');
-
+        $shipping_police_no = getVarClean('shipping_police_no','str','');
 
         /**
          * Data details
@@ -459,20 +481,42 @@ class Shipping_controller {
 
             $table->db->trans_begin(); //Begin Trans
 
+                /**
+                 * Upload file license first
+                 */
+                if(!empty($_FILES['shipping_license']['name'])) {
+                    $config = array();
+                    $config['upload_path'] = 'trucking_license/';
+                    $config['allowed_types'] = 'gif|jpg|jpeg|png|xls|xlsx|doc';
+                    $config['overwrite'] = 1;
+                    $ci->load->library('upload', $config);
+                    $fileName = date('Ymd').'_'.$_FILES['shipping_license']['name'];
+                    $config['file_name'] = $fileName;
+
+                    $ci->upload->initialize($config);
+
+                    if (!$ci->upload->do_upload('shipping_license')) {
+                        $errors = $ci->upload->display_errors();
+                        throw new Exception($errors);
+                    }
+                }
+
                 $items = array(
                     'shipping_id' => $shipping_id,
                     'shipping_date' => $shipping_date,
                     'shipping_driver_name' => $shipping_driver_name,
-                    'shipping_notes' => $shipping_notes
+                    'shipping_notes' => $shipping_notes,
+                    'shipping_police_no' => $shipping_police_no
                 );
+                if(!empty($_FILES['shipping_license']['name'])) {
+                    $items['shipping_license'] = $fileName;
+                }
                 $table->setRecord($items);
-
 
                 $record_detail = array();
                 $ci->load->model('agripro/shipping_detail');
                 $tableDetail = $ci->shipping_detail;
                 $tableDetail->actionType = 'CREATE';
-
 
                 for($i = 0; $i < count($packing_ids); $i++) {
                     if($shipdet_ids[$i] == "") {

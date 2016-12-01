@@ -44,7 +44,9 @@
             shipping_id : rowData.shipping_id,
             shipping_date : rowData.shipping_date,
             shipping_driver_name : rowData.shipping_driver_name,
-            shipping_notes : rowData.shipping_notes
+            shipping_notes : rowData.shipping_notes,
+            shipping_police_no : rowData.shipping_police_no,
+            shipping_license : rowData.shipping_license
         });
     }
 
@@ -80,10 +82,25 @@
                 {label: 'Trucking Date', name: 'shipping_date', width: 120, align: "center", editable: false},
                 {label: 'Driver Name', name: 'shipping_driver_name', width: 100, align: "left", editable: false},
                 {label: 'Notes', name: 'shipping_notes', width: 100, align: "left", editable: false, hidden:true},
+                {label: 'Police No', name: 'shipping_police_no', width: 100, align: "left", editable: false, hidden:false},
+                {label: 'License File', name: 'shipping_license', width: 100, align: "left", editable: false, hidden:true},
+                {label: 'License File',name: 'shipping_license_view',width: 120, align: "center",editable: false,
+                    formatter:function(cellvalue, options, rowObject) {
+                        return '<a href="trucking_license/'+cellvalue+'" target="_blank">'+cellvalue+'</a>';
+                    }
+                },
                 {label: 'Trucking Cost (Rp)', name: 'shipping_cost', formatter:'currency', formatoptions: {prefix:'Rp. ', thousandsSeparator : '.', decimalPlaces: 0}, align:'right', width: 150, align: "right", editable: false, hidden:true},
                 {label: 'Edit Trucking',name: '',width: 120, align: "center",editable: false,
                     formatter:function(cellvalue, options, rowObject) {
                         return '<a class="btn green-meadow btn-xs" href="#" onclick="editShipping('+rowObject['shipping_id']+')"><i class="fa fa-pencil"></i>Edit</a>';
+                    }
+                },
+                {label: 'Print List',name: '',width: 120, align: "center",editable: false,
+                    formatter:function(cellvalue, options, rowObject) {
+                        var val = rowObject['shipping_id'];
+                        var url = "<?php echo base_url().'trucking_list/pdf?id='?>"+val;
+                        return '<a class="btn btn-danger btn-xs" href="#" onclick="PopupCenter(\''+url+'\',\'Packing List\',500,500);"><i class="fa fa-print"></i>Packing List</a>';
+
                     }
                 }
             ],
@@ -238,6 +255,7 @@
                     if(response.success == false) {
                         return [false,response.message,response.responseText];
                     }
+                    jQuery("#detail_placeholder").hide();
                     return [true,"",response.responseText];
                 }
             },
