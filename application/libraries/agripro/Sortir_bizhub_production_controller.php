@@ -5,7 +5,7 @@
  * @class sortir_controller
  * @version 07/05/2015 12:18:00
  */
-class Sortir_bizhub_controller
+class Sortir_bizhub_production_controller
 {
 
     function readLov()
@@ -33,51 +33,9 @@ class Sortir_bizhub_controller
                 $table->setCriteria("sr.product_id = ".$product_id);
 
             if (!empty($searchPhrase)) {
-                $table->setCriteria("(sr.sortir_bizhub_id ilike '%" . $searchPhrase . "%' or pr.product_code ilike '%" . $searchPhrase . "%')");
+                $table->setCriteria("(sr.sortir_id ilike '%" . $searchPhrase . "%' or pr.product_code ilike '%" . $searchPhrase . "%')");
             }
 
-            $start = ($start - 1) * $limit;
-            $items = $table->getAll($start, $limit, $sort, $dir);
-            $totalcount = $table->countAll();
-
-            $data['rows'] = $items;
-            $data['success'] = true;
-            $data['total'] = $totalcount;
-
-        } catch (Exception $e) {
-            $data['message'] = $e->getMessage();
-        }
-
-        return $data;
-    }
-
-     function readLovIncoming()
-    {
-        permission_check('view-tracking');
-
-        $start = getVarClean('current', 'int', 0);
-        $limit = getVarClean('rowCount', 'int', 5);
-
-        $sort = getVarClean('sort', 'str', 'packing_batch_number');
-        $dir = getVarClean('dir', 'str', 'asc');
-
-        $searchPhrase = getVarClean('searchPhrase', 'str', '');
-        $product_id = getVarClean('product_id', 'int', 0);
-
-        $data = array('rows' => array(), 'success' => false, 'message' => '', 'current' => $start, 'rowCount' => $limit, 'total' => 0);
-
-        try {
-
-            $ci = &get_instance();
-            $ci->load->model('agripro/incoming_goods_detail');
-            $table = $ci->incoming_goods_detail;
-            
-            $table->setCriteria(" qty_netto > 0 AND in_biz_det_id not in (select distinct in_biz_det_id from sortir_bizhub where in_biz_det_id is not null) ");
-            
-            if (!empty($searchPhrase)) {
-                $table->setCriteria(" (packing_batch_number ilike '%" . $searchPhrase . "%' or packing_batch_number ilike '%" . $searchPhrase . "%')");
-            }
-            
             $start = ($start - 1) * $limit;
             $items = $table->getAll($start, $limit, $sort, $dir);
             $totalcount = $table->countAll();
@@ -179,7 +137,6 @@ class Sortir_bizhub_controller
                 $table->create();
 
                 $table->db->trans_commit(); //Commit Trans
-                //$table->insert_stock($type='sm_id', $sortir_det_id=);
 
                 $data['success'] = true;
                 $data['message'] = 'Data added successfully';
@@ -200,8 +157,8 @@ class Sortir_bizhub_controller
     {
 
         $ci = &get_instance();
-        $ci->load->model('agripro/sortir_bizhub');
-        $table = $ci->sortir_bizhub;
+        $ci->load->model('agripro/sortir');
+        $table = $ci->sortir;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -246,14 +203,14 @@ class Sortir_bizhub_controller
         } else {
 
             try {
-
-                //  check if sortir id already packed
+               
+                //  check if sortir id already packed 
                 $check = $table->is_packing($items[$table->pkey]);
-
+                
                 if($check > 0){
                     throw new Exception('Update Failed, This items already packed !');
                 };
-
+                
                 $table->db->trans_begin(); //Begin Trans
 
                 $table->setRecord($items);
@@ -265,7 +222,7 @@ class Sortir_bizhub_controller
                 $data['message'] = 'Data update successfully';
 
                 $data['rows'] = $table->get($items[$table->pkey]);
-
+                        
             } catch (Exception $e) {
                 $table->db->trans_rollback(); //Rollback Trans
 
@@ -281,8 +238,8 @@ class Sortir_bizhub_controller
     function destroy()
     {
         $ci = &get_instance();
-        $ci->load->model('agripro/sortir_bizhub');
-        $table = $ci->sortir_bizhub;
+        $ci->load->model('agripro/sortir');
+        $table = $ci->sortir;
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
@@ -290,7 +247,7 @@ class Sortir_bizhub_controller
         $items = jsonDecode($jsonItems);
 
         try {
-
+            
             $table->db->trans_begin(); //Begin Trans
 
             $total = 0;
@@ -307,8 +264,8 @@ class Sortir_bizhub_controller
                 if (empty($items)) {
                     throw new Exception('Empty parameter');
                 };
-
-                //  check if sortir id already packed
+                
+                //  check if sortir id already packed 
                 if($table->is_packing($items) > 0){
                     throw new Exception('Delete Failed, Item Already Packed !');
                 };
@@ -321,7 +278,7 @@ class Sortir_bizhub_controller
             $data['message'] = $total . ' Data deleted successfully';
 
             $table->db->trans_commit(); //Commit Trans
-
+                    
         } catch (Exception $e) {
             $table->db->trans_rollback(); //Rollback Trans
             $data['message'] = $e->getMessage();
@@ -342,7 +299,6 @@ class Sortir_bizhub_controller
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
-        $in_biz_det_id = getVarClean('in_biz_det_id', 'int', 0);
 
         try {
 
@@ -365,7 +321,16 @@ class Sortir_bizhub_controller
             );
 
             // Filter Table
-            $req_param['where'] = array("sr.in_biz_det_id is not null and sr.production_bizhub_id is null");
+			$report = getVarClean('report', 'int', 0);
+            if ($report == 1) {
+                $req_param['where'][] = 'sr.in_biz_det_id is null and sr.production_bizhub_id is not null ';
+            }else{
+               /* $req_param['where'] = array("sr.in_biz_det_id is null and sr.production_bizhub_id is not null  and (sr.sortir_bizhub_qty - sr.qty_detail_init <> 0 or sr.total_detail = 0) 
+												");*/
+                   $req_param['where'][] = 'sr.in_biz_det_id is null and sr.production_bizhub_id is not null ';
+            }
+
+            
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
@@ -399,17 +364,16 @@ class Sortir_bizhub_controller
         return $data;
     }
 
-    function get_availableqty_detail()
+    function get_availableqty()
     {
 
         $ci = &get_instance();
-        $ci->load->model('agripro/sortir_bizhub');
-        $table = $ci->sortir_bizhub;
+        $ci->load->model('agripro/sortir');
+        $table = $ci->sortir;
 
-        $in_biz_det_id = getVarClean('in_biz_det_id', 'int', 0);
-        $sortir_id = getVarClean('sortir_bizhub_id', 'int', 0);
+        $sm_id = getVarClean('sm_id', 'int', 0);
 
-        $qty = explode('|',$table->get_availableqty_detail($in_biz_det_id, $sortir_id));
+        $qty = explode('|',$table->get_availableqty($sm_id));
 
         $out['avaqty'] = $qty[0];
         $out['srqty'] = $qty[1];
@@ -420,17 +384,39 @@ class Sortir_bizhub_controller
         exit;
     }
 
-    function list_product ()
+    function get_availableqty_detail_prd()
     {
 
         $ci = &get_instance();
         $ci->load->model('agripro/sortir_bizhub');
         $table = $ci->sortir_bizhub;
 
-        $product_id = getVarClean('product_id', 'int', 0);
-        $sortir_id = getVarClean('sortir_id', 'int', 0);
+        $sm_id = getVarClean('production_bizhub_id', 'int', 0);
+        $sortir_id = getVarClean('sortir_bizhub_id', 'int', 0);
 
-        $result = $table->list_product_prd_id($sortir_id, $product_id);
+        $qty = explode('|',$table->get_availableqty_detail_prd($sm_id, $sortir_id));
+
+        $out['avaqty'] = $qty[0];
+        $out['srqty'] = $qty[1];
+        $out['qty_bersih'] = $qty[2];
+        $out['tgl_prod'] = $qty[3];
+
+        echo json_encode($out);
+        exit;
+    }
+
+    function list_product()
+    {
+
+        $ci = &get_instance();
+        $ci->load->model('agripro/sortir');
+        $table = $ci->sortir;
+		
+		$sm_id = getVarClean('sortir_id', 'int', 0);
+        $product_id = getVarClean('product_id', 'int', 0);
+        //$sortir_id = getVarClean('sortir_id', 'int', 0);
+
+        $result = $table->list_product_prd_id($sm_id, $product_id);
         echo "<select>";
         foreach ($result as $value) {
             echo "<option value=" . $value['product_id'] . ">" . strtoupper($value['product_code']) . "</option>";
@@ -439,30 +425,29 @@ class Sortir_bizhub_controller
         exit;
     }
 
-    function upd_tgl_prod(){
-        
+	function upd_tgl_prod(){
+		
         $ci = & get_instance();
-        $ci->load->model('agripro/sortir_bizhub');
-        $table = $ci->sortir_bizhub;
-        
+        $ci->load->model('agripro/sortir');
+        $table = $ci->sortir;
+		
         $sm_id = getVarClean('sm_id','str','');
         $tgl_prod = getVarClean('tgl_prod','str','');
-        
+		
         try{
             $table->upd_tgl_prod($sm_id, $tgl_prod);
             $data['success'] = true;
             $data['message'] = 'Succesfully ';
-            }catch (Exception $e) {
+			}catch (Exception $e) {
             $data['message'] = $e->getMessage();
         }
-        
+		
         echo json_encode($data);
         exit;
-        
-        
+		
+		
     }
-    
-
+	
 }
 
 /* End of file Warehouse_controller.php */

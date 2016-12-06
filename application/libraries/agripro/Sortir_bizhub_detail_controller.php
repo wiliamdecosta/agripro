@@ -348,6 +348,90 @@ class Sortir_bizhub_detail_controller
         return $data;
     }
 
+    function get_availableqty()
+    {
+
+        $ci = &get_instance();
+        $ci->load->model('agripro/sortir');
+        $table = $ci->sortir;
+
+        $sm_id = getVarClean('sm_id', 'int', 0);
+
+        $qty = explode('|',$table->get_availableqty($sm_id));
+
+        $out['avaqty'] = $qty[0];
+        $out['srqty'] = $qty[1];
+        $out['qty_bersih'] = $qty[2];
+        $out['tgl_prod'] = $qty[3];
+
+        echo json_encode($out);
+        exit;
+    }
+
+    function get_availableqty_detail_prd()
+    {
+
+        $ci = &get_instance();
+        $ci->load->model('agripro/sortir');
+        $table = $ci->sortir;
+
+        $sm_id = getVarClean('production_id', 'int', 0);
+        $sortir_id = getVarClean('sortir_id', 'int', 0);
+
+        $qty = explode('|',$table->get_availableqty_detail_prd($sm_id, $sortir_id));
+
+        $out['avaqty'] = $qty[0];
+        $out['srqty'] = $qty[1];
+        $out['qty_bersih'] = $qty[2];
+        $out['tgl_prod'] = $qty[3];
+
+        echo json_encode($out);
+        exit;
+    }
+
+    function list_product()
+    {
+
+        $ci = &get_instance();
+        $ci->load->model('agripro/sortir');
+        $table = $ci->sortir;
+        
+        $sm_id = getVarClean('sortir_id', 'int', 0);
+        $product_id = getVarClean('product_id', 'int', 0);
+        //$sortir_id = getVarClean('sortir_id', 'int', 0);
+
+        $result = $table->list_product_prd_id($sm_id, $product_id);
+        echo "<select>";
+        foreach ($result as $value) {
+            echo "<option value=" . $value['product_id'] . ">" . strtoupper($value['product_code']) . "</option>";
+        }
+        echo "</select>";
+        exit;
+    }
+
+    function upd_tgl_prod(){
+        
+        $ci = & get_instance();
+        $ci->load->model('agripro/sortir');
+        $table = $ci->sortir;
+        
+        $sm_id = getVarClean('sm_id','str','');
+        $tgl_prod = getVarClean('tgl_prod','str','');
+        
+        try{
+            $table->upd_tgl_prod($sm_id, $tgl_prod);
+            $data['success'] = true;
+            $data['message'] = 'Succesfully ';
+            }catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+        
+        echo json_encode($data);
+        exit;
+        
+        
+    }
+
 
 }
 

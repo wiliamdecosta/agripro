@@ -64,6 +64,115 @@ class Sortir_bizhub extends Abstract_model {
         return $row['total'];
     }
 
+    function get_availableqty_detail($in_biz_det_id, $sortir_bizhub_id){
+
+        $sql = " SELECT (select qty_netto_init from incoming_bizhub_detail where in_biz_det_id = $in_biz_det_id ) -
+                  COALESCE (sum(sortir_bizhub_det_qty_init),0) as avaqty, 
+                  COALESCE (sum(sortir_bizhub_det_qty_init),0) as srtqty,
+                  COALESCE((select qty_netto_init from incoming_bizhub_detail where in_biz_det_id = $in_biz_det_id ),0) qty_bersih,
+                  (select in_biz_drying_date from incoming_bizhub_detail where in_biz_det_id = $in_biz_det_id ) tgl_prod
+                  from sortir_bizhub_detail 
+                  where sortir_bizhub_id = $sortir_bizhub_id  ";
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        $query->free_result();
+
+        return floatval($row['avaqty']) .'|'. floatval($row['srtqty']).'|'. floatval($row['qty_bersih']).'|'. $row['tgl_prod'];
+
+    }
+    
+    function get_availableqty_detail_prd($sm_id, $sortir_bizhub_id){
+
+        $sql = " SELECT (select production_bizhub_qty_init from production_bizhub where production_bizhub_id = $sm_id ) -
+                        COALESCE (sum(sortir_bizhub_det_qty_init),0) as avaqty, 
+                        COALESCE (sum(sortir_bizhub_det_qty_init),0) as srtqty ,
+                        COALESCE((select production_bizhub_qty_init from production_bizhub where production_bizhub_id = $sm_id ),0) qty_bersih,
+                        (select production_bizhub_date from production_bizhub where production_bizhub_id = $sm_id ) tgl_prod
+                        from sortir_bizhub_detail 
+                        where sortir_bizhub_id = $sortir_bizhub_id ";
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        $query->free_result();
+
+        return floatval($row['avaqty']) .'|'. floatval($row['srtqty']).'|'. floatval($row['qty_bersih']).'|'. $row['tgl_prod'];
+
+    }
+
+    function list_product_prd_id($sm_id,$product_id){
+        $type = $this->get_type_prod($sm_id);
+        if($type == '0') {
+            $sql = "
+                SELECT *
+                FROM (
+                        SELECT *
+                            FROM product
+                                WHERE product_id = $product_id
+                                AND upper(product_code) NOT LIKE '%REJECT%'
+                                AND product_category_id = 2
+                        UNION ALL 
+                        SELECT *
+                            FROM product
+                                WHERE (parent_id = $product_id  ) 
+                                AND upper(product_code) LIKE '%REJECT%'
+                        UNION ALL
+                        SELECT *
+                            FROM product
+                                WHERE product_code IN ('LOST')
+                        ) as a
+                    WHERE a.product_id not in (select distinct product_id
+                                                        from sortir_bizhub_detail
+                                                            where sortir_bizhub_id = $sm_id )
+                ";
+        }else{
+            $sql = "
+                SELECT *
+                FROM (
+                        SELECT *
+                            FROM product
+                                WHERE parent_id = $product_id
+                                AND upper(product_code) NOT LIKE '%REJECT%'
+                        UNION ALL 
+                        SELECT *
+                            FROM product
+                                WHERE product_id = $product_id
+                                AND upper(product_code) NOT LIKE '%REJECT%'
+                                AND product_category_id = 2
+                        UNION ALL 
+                        SELECT *
+                            FROM product
+                                WHERE (parent_id = $product_id or parent_id  = (select case when sm_id is null then 1 else 0 end 
+                                                                                    from sortir where sortir_bizhub_id = $sm_id limit 1) ) 
+                                AND upper(product_code) LIKE '%REJECT%'
+                        UNION ALL
+                        SELECT *
+                            FROM product
+                                WHERE product_code IN ('LOST')
+                        ) as a
+                    WHERE a.product_id not in (select distinct product_id
+                                                        from sortir_bizhub_detail
+                                                            where sortir_bizhub_id = $sm_id )
+                ";
+        }
+        
+        $q = $this->db->query($sql);
+        return $q->result_array();
+
+    }
+
+    function get_type_prod($sm_id){
+        
+        $sql = " SELECT case when b.product_category_id = 1 then 1 else 0 end total 
+                        from sortir_bizhub a, product b
+                            where a.sortir_bizhub_id = $sm_id
+                            and a.product_id = b.product_id limit 1  ";
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        $query->free_result();
+        
+        return $row['total']; 
+        
+    }
+
 }
 
 /* End of file Groups.php */
