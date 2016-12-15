@@ -28,7 +28,13 @@ class Shipping extends Abstract_model {
 
     public $selectClause    = "ship.shipping_id, to_char(ship.shipping_date,'yyyy-mm-dd') as shipping_date,
                                 ship.shipping_driver_name, ship.shipping_notes,
-                                ship.shipping_police_no, ship.shipping_license, ship.shipping_license as shipping_license_view";
+                                ship.shipping_police_no, ship.shipping_license, ship.shipping_license as shipping_license_view,
+                                (select wh_name from warehouse 
+                                    where wh_id = (select distinct warehouse_id from packing
+                                                        where packing_id in (select packing_id 
+                                                                                from shipping_detail 
+                                                                                    where shipping_id = ship.shipping_id) 
+                                )) wh_name ";
     public $fromClause      = "shipping as ship";
 
     public $refs            = array();

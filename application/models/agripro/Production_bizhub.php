@@ -116,7 +116,7 @@ class Production_bizhub extends Abstract_model
             $record['stock_kg'] = $production_detail['production_bizhub_det_qty'];
             $record['stock_ref_id'] = $production_detail['in_biz_det_id'];
             $record['stock_ref_code'] = 'DRYING_OUT';
-            $record['sc_id'] = $tStockCategory->getIDByCode('DRYING_STOCK');
+            $record['sc_id'] = $tStockCategory->getIDByCode('DRYING_STOCK_BIZHUB');
             $record['wh_id'] = $prod['warehouse_id'];
             $record['product_id'] = $production_detail['product_id'];
             $record['stock_description'] = 'Drying Stock has used for Production Detail';
@@ -163,7 +163,7 @@ class Production_bizhub extends Abstract_model
          * 4. Loop data drying for delete data drying in stock and restore qty to drying
          * 5. Delete data master production
          */
-         $tStock->deleteByReference($production_id, 'PRODUCTION_IN');
+         $tStock->deleteByReference($production_id, 'PRODUCTION_IN_BIZHUB');
 
 
         $data_drying = array();
@@ -185,7 +185,7 @@ class Production_bizhub extends Abstract_model
          */
         foreach ($data_drying as $drying) {
             //delete data stock by in_biz_det_id
-            $tStock->deleteByReference($drying['in_biz_det_id'], 'DRYING_OUT');
+            $tStock->deleteByReference($drying['in_biz_det_id'], 'DRYING_OUT_BIZHUB');
 
             //restore store qty
             $increase_kg = (float)$drying['qty_netto'];
@@ -225,8 +225,8 @@ class Production_bizhub extends Abstract_model
         $record['stock_tgl_masuk'] = $row['production_bizhub_date'];
         $record['stock_kg'] = $row['production_bizhub_qty'];
         $record['stock_ref_id'] = $row['production_bizhub_id'];
-        $record['stock_ref_code'] = 'PRODUCTION_IN';
-        $record['sc_id'] = $tStockCategory->getIDByCode('PRODUCTION_STOCK');
+        $record['stock_ref_code'] = 'PRODUCTION_IN_BIZHUB';
+        $record['sc_id'] = $tStockCategory->getIDByCode('PRODUCTION_STOCK_BIZHUB');
         $record['wh_id'] = $row['warehouse_id'];
         $record['product_id'] = $row['product_id'];
         $record['stock_description'] = 'Insert Stock Production . Ref Production ID : '.$row["production_bizhub_id"];

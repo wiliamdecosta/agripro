@@ -28,6 +28,7 @@
                      <th data-column-id="shipping_driver_name">Driver Name</th>
                      <!-- <th data-column-id="product_code">Weight (Kg)</th> -->
                      <th data-column-id="shipping_notes">Notes</th>
+                     <th data-column-id="wh_name">Warehouse </th>
                   </tr>
                 </thead>
                 </table>
@@ -78,27 +79,24 @@
          //$("#form_qty_id").val(qty);
     }
 
-    function modal_lov_shipping_set_value(the_id_val, the_code_val, the_id_val2, the_code_val2) {
+    function modal_lov_shipping_set_value(the_id_val, the_code_val, the_id_val2, the_code_val2,wh_name ) {
         
          $("#"+ $("#modal_lov_shipping_id_val").val()).val(the_id_val);
          $("#"+ $("#modal_lov_shipping_date_val").val()).val(the_id_val2);
          $("#"+ $("#modal_lov_shipping_driver_name_val").val()).val(the_code_val);
          $("#"+ $("#modal_lov_shipping_notes_val").val()).val(the_code_val2);
+         $("#wh_name").val(wh_name);
          //$("#form_qty_name").val(qty);
          //$("#form_qty_id").val(qty);
          $("#modal_lov_shipping").modal("toggle");
-        // $("#"+ $("#modal_lov_shipping_id_val").val()).change();
-        //$("#"+ $("#modal_lov_shipping_date_val").val()).change();
-
-        // console.log($('#form_sm_no_trans').val()+' hahahahah'+the_id_val+' - '+the_code_val+' - '+$("#modal_lov_shipping_code_val").val());
-        
+       
     }
 
     function modal_lov_shipping_prepare_table() {
         $("#modal_lov_shipping_grid_selection").bootgrid({
              formatters: {
                 "opt-edit" : function(col, row) {
-                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_shipping_set_value(\''+ row.shipping_id +'\', \''+ row.shipping_date +'\', \''+ row.shipping_driver_name +'\', \''+ row.shipping_notes +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
+                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_shipping_set_value(\''+ row.shipping_id +'\', \''+ row.shipping_date +'\', \''+ row.shipping_driver_name +'\', \''+ row.shipping_notes +'\', \''+ row.wh_name +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
                 }
              },
              rowCount:[5,10],

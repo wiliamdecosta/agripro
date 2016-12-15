@@ -134,11 +134,11 @@ class Drying_bizhub extends Abstract_model {
         $record1 = array();
         $record1['wh_id'] = $record['wh_id'];
         $record1['product_id'] = $record['product_id'];
-        $record1['sc_id'] = $tStockCategory->getIDByCode('DRYING_STOCK');
+        $record1['sc_id'] = $tStockCategory->getIDByCode('DRYING_STOCK_BIZHUB');
         $record1['stock_tgl_masuk'] = $record['in_biz_drying_date'];
         $record1['stock_kg'] = $record['qty_rescale'];
         $record1['stock_ref_id'] = $record['in_biz_det_id'];
-        $record1['stock_ref_code'] = 'DRYING IN';
+        $record1['stock_ref_code'] = 'DRYING_IN_BIZHUB';
         $record1['stock_description'] = 'Insert Stock Drying';
         $tStock->setRecord($record1);
 
@@ -152,11 +152,11 @@ class Drying_bizhub extends Abstract_model {
         $record2 = array();
         $record2['wh_id'] = $record['wh_id'];
         $record2['product_id'] = $record['product_id'];
-        $record2['sc_id'] = $tStockCategory->getIDByCode('RAW_MATERIAL_STOCK');
+        $record2['sc_id'] = $tStockCategory->getIDByCode('RAW_MATERIAL_STOCK_BIZHUB');
         $record2['stock_tgl_keluar'] = $record['in_biz_drying_date'];
         $record2['stock_kg'] = $record['qty_rescale'];
         $record2['stock_ref_id'] = $record['in_biz_det_id'];
-        $record2['stock_ref_code'] = 'RAW MATERIAL OUT';
+        $record2['stock_ref_code'] = 'RAW_MATERIAL_OUT_BIZHUB';
         $record2['stock_description'] = 'Raw Material (OUT) for Drying';
         $tStock->setRecord($record2);
 
@@ -183,7 +183,7 @@ class Drying_bizhub extends Abstract_model {
 
         $this->db->where(array(
             'stock_ref_id' => $rmp['in_biz_det_id'],
-            'stock_ref_code' => 'DRYING IN'
+            'stock_ref_code' => 'DRYING_IN_BIZHUB'
         ));
         $this->db->update($tStock->table, $record_stock);
 
@@ -196,7 +196,7 @@ class Drying_bizhub extends Abstract_model {
 
         $this->db->where(array(
             'stock_ref_id' => $rmp['in_biz_det_id'],
-            'stock_ref_code' => 'RAW MATERIAL OUT'
+            'stock_ref_code' => 'RAW_MATERIAL_OUT_BIZHUB'
         ));
         $this->db->update($tStock->table, $record_stock2);
     }
@@ -260,19 +260,19 @@ class Drying_bizhub extends Abstract_model {
 			$sql = "UPDATE production SET production_qty = production_qty + ".$qty_detail."
                         WHERE production_id = ".$ref_id;
 	
-			$stock_refcode = 'PRODUCTION_SORTIR';
+			$stock_refcode = 'PRODUCTION_SORTIR_BIZHUB';
 			
 		}else{
 			// ref id =  sm_id 
 			$sql = "UPDATE stock_material SET sm_qty_bersih = sm_qty_bersih + ".$qty_detail."
                         WHERE sm_id = ".$ref_id;
 			
-			$stock_refcode = 'DRYING_SORTIR';
+			$stock_refcode = 'DRYING_SORTIR_BIZHUB';
 			
 		}
 		
 		
-		$tStock->deleteByReference($sortir_detail_id, 'SORTIR_STOCK');
+		$tStock->deleteByReference($sortir_detail_id, 'SORTIR_STOCK_BIZHUB');
 		$tStock->deleteByReference($sortir_detail_id, $stock_refcode);
 		
         $tStock->db->query($sql);

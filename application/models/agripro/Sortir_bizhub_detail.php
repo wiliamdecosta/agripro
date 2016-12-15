@@ -116,7 +116,7 @@ class Sortir_bizhub_detail extends Abstract_model {
                     SET production_bizhub_qty = production_bizhub_qty - ".$sortir_detail['sortir_bizhub_det_qty']."
                         WHERE production_bizhub_id = ".$ref_id;
 
-            $stock_refcode = 'PRODUCTION_SORTIR';
+            $stock_refcode = 'PRODUCTION_SORTIR_BIZHUB';
             
         }else{
             $tsm->setCriteria(' in_biz_det_id = '.$ref_id);
@@ -130,7 +130,7 @@ class Sortir_bizhub_detail extends Abstract_model {
                     SET qty_netto = qty_netto - ".$sortir_detail['sortir_bizhub_det_qty']."
                         WHERE in_biz_det_id = ".$ref_id;
 
-            $stock_refcode = 'DRYING_SORTIR';
+            $stock_refcode = 'DRYING_SORTIR_BIZHUB';
             
         }
         
@@ -139,8 +139,8 @@ class Sortir_bizhub_detail extends Abstract_model {
         $record_stock['stock_tgl_masuk'] = $stock_date; //base on sorting_date
         $record_stock['stock_kg'] = $sortir_detail['sortir_bizhub_det_qty'];
         $record_stock['stock_ref_id'] = $sortir_detail['sortir_bizhub_det_id'];
-        $record_stock['stock_ref_code'] = 'SORTIR_STOCK';
-        $record_stock['sc_id'] = $tStockCategory->getIDByCode('SORTIR_STOCK');
+        $record_stock['stock_ref_code'] = 'SORTIR_STOCK_BIZHUB';
+        $record_stock['sc_id'] = $tStockCategory->getIDByCode('SORTIR_STOCK_BIZHUB');
         $record_stock['wh_id'] = $whid;
         $record_stock['product_id'] = $sortir_detail['product_id'];
         $tStock->setRecord($record_stock);
@@ -152,7 +152,7 @@ class Sortir_bizhub_detail extends Abstract_model {
         $record_stock['stock_kg'] = $sortir_detail['sortir_bizhub_det_qty'];
         $record_stock['stock_ref_id'] = $sortir_detail['sortir_bizhub_det_id'];
         $record_stock['stock_ref_code'] = $stock_refcode;
-        $record_stock['sc_id'] = $tStockCategory->getIDByCode('DRYING_STOCK');
+        $record_stock['sc_id'] = $tStockCategory->getIDByCode('DRYING_STOCK_BIZHUB');
         $record_stock['wh_id'] = $whid;
         $record_stock['product_id'] = $prd_id;
         $record_stock['stock_description'] = 'sm_qty_bersih has used by sortir_detail';
@@ -203,7 +203,7 @@ class Sortir_bizhub_detail extends Abstract_model {
                     SET production_bizhub_qty = production_bizhub_qty + ".$qty_detail."
                         WHERE production_bizhub_id = ".$ref_id;
     
-            $stock_refcode = 'PRODUCTION_SORTIR';
+            $stock_refcode = 'PRODUCTION_SORTIR_BIZHUB';
             
         }else{
             // ref id =  sm_id 
@@ -211,12 +211,12 @@ class Sortir_bizhub_detail extends Abstract_model {
                     SET qty_netto = qty_netto + ".$qty_detail."
                         WHERE sm_id = ".$ref_id;
             
-            $stock_refcode = 'DRYING_SORTIR';
+            $stock_refcode = 'DRYING_SORTIR_BIZHUB';
             
         }
         
         
-        $tStock->deleteByReference($sortir_detail_id, 'SORTIR_STOCK');
+        $tStock->deleteByReference($sortir_detail_id, 'SORTIR_STOCK_BIZHUB');
         $tStock->deleteByReference($sortir_detail_id, $stock_refcode);
         
         $tStock->db->query($sql);

@@ -137,7 +137,7 @@ class Incoming_goods_detail extends Abstract_model {
 			
 		if($val == 'L'){
 			$sql = "DELETE FROM stock 
-				WHERE stock_ref_code = 'RAW_MATERIAL_STOCK' 
+				WHERE stock_ref_code = 'RAW_MATERIAL_STOCK_BIZHUB' 
 				AND stock_ref_id = ?
 				AND wh_id = ? 
 				";
@@ -146,7 +146,7 @@ class Incoming_goods_detail extends Abstract_model {
 			
 			
 			$sql = "DELETE FROM stock 
-				WHERE stock_ref_code = 'RAW_MATERIAL_STOCK' 
+				WHERE stock_ref_code = 'RAW_MATERIAL_STOCK_BIZHUB' 
 				AND stock_ref_id = ?
 				AND wh_id = ? 
 				";
@@ -157,8 +157,8 @@ class Incoming_goods_detail extends Abstract_model {
 			$record_stock['stock_tgl_masuk'] = $stock_date; //base on sorting_date
 			$record_stock['stock_kg'] = $qtyRescale;
 			$record_stock['stock_ref_id'] = $packing_id;
-			$record_stock['stock_ref_code'] = 'RAW_MATERIAL_STOCK';
-			$record_stock['sc_id'] = $tStockCategory->getIDByCode('RAW_MATERIAL_STOCK');
+			$record_stock['stock_ref_code'] = 'RAW_MATERIAL_STOCK_BIZHUB';
+			$record_stock['sc_id'] = $tStockCategory->getIDByCode('RAW_MATERIAL_STOCK_BIZHUB');
 			$record_stock['wh_id'] = $this->session->userdata('wh_id');
 			$record_stock['product_id'] = $product_id;
 			$tStock->setRecord($record_stock);
@@ -191,7 +191,7 @@ class Incoming_goods_detail extends Abstract_model {
 		$this->db->query($sql, array($in_biz_id));
 		
 		$sql = "DELETE FROM stock 
-				WHERE stock_ref_code = 'RAW_MATERIAL_STOCK' 
+				WHERE stock_ref_code = 'RAW_MATERIAL_STOCK_BIZHUB' 
 				AND stock_ref_id in (SELECT distinct in_biz_det_id 
 										FROM incoming_bizhub_detail 
 											WHERE in_biz_id = ? )
@@ -240,14 +240,14 @@ class Incoming_goods_detail extends Abstract_model {
 			$sql = "UPDATE production SET production_qty = production_qty + ".$qty_detail."
                         WHERE production_id = ".$ref_id;
 	
-			$stock_refcode = 'PRODUCTION_SORTIR';
+			$stock_refcode = 'PRODUCTION_SORTIR_BIZHUB';
 			
 		}else{
 			// ref id =  sm_id 
 			$sql = "UPDATE stock_material SET sm_qty_bersih = sm_qty_bersih + ".$qty_detail."
                         WHERE sm_id = ".$ref_id;
 			
-			$stock_refcode = 'DRYING_SORTIR';
+			$stock_refcode = 'DRYING_SORTIR_BIZHUB';
 			
 		}
 		
