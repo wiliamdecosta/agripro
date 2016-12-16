@@ -148,11 +148,11 @@ class Production_bizhub extends Abstract_model
         $ci->load->model('agripro/stock');
         $tStock = $ci->stock;
 
-        $ci->load->model('agripro/production_detail');
-        $tProdDetail = $ci->production_detail;
+        $ci->load->model('agripro/production_detail_bizhub');
+        $tProdDetail = $ci->production_detail_bizhub;
 
-        $ci->load->model('agripro/incoming_bizhub_detail');
-        $tSM = $ci->incoming_bizhub_detail;
+        $ci->load->model('agripro/incoming_goods_detail');
+        $tSM = $ci->incoming_goods_detail;
 
         /**
          * Steps to Delete Production
