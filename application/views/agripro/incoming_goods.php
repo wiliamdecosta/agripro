@@ -47,7 +47,8 @@
             shipping_id : rowData.in_shipping_id,
             shipping_date : rowData.shipping_date,
             shipping_driver_name : rowData.shipping_driver_name,
-            shipping_notes : rowData.shipping_notes
+            shipping_notes : rowData.shipping_notes,
+            wh_shipping_name : rowData.wh_shipping_name
         });
 		
     }
@@ -90,7 +91,8 @@
                 {label: 'Shipping id', name: 'in_shipping_id', width: 120, align: "center", editable: false, hidden: true},
                 {label: 'Shipping Date', name: 'shipping_date', width: 75, align: "left", editable: false},
                 {label: 'Driver Name', name: 'shipping_driver_name', width: 100, align: "left", editable: false},
-                {label: 'Shipping Notes', name: 'shipping_notes', width: 100, align: "left", editable: false, hidden:false}
+                {label: 'Shipping Notes', name: 'shipping_notes', width: 100, align: "left", editable: false, hidden:false},
+                {label: 'From', name: 'wh_shipping_name', width: 100, align: "left", editable: false, hidden:false}
                
             ],
             height: '100%',

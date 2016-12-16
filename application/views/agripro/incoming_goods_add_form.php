@@ -78,7 +78,7 @@
                             <label class="col-md-3 control-label" for="shipping_driver_name">Warehouse </label>
                             <div class="col-md-3">
                                 <input type="hidden" name="wh" id="wh" class="form-control" readonly value="<?php echo $this->session->userdata('wh_id'); ?>">
-                                <input type="text" name="wh_name" id="wh_name" class="form-control" readonly >
+                                <input type="text" name="wh_name" id="wh_name" class="form-control" readonly value="<?php echo $this->input->post('wh_shipping_name'); ?>">
                             </div>
                         </div>
 						

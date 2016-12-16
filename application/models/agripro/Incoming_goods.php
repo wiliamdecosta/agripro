@@ -24,7 +24,16 @@ class Incoming_goods extends Abstract_model {
                             );
 
 
-    public $selectClause    = "inc.*, wh.wh_name, sh.shipping_date, sh.shipping_driver_name, sh.shipping_notes";
+    public $selectClause    = "inc.*, wh.wh_name, sh.shipping_date, sh.shipping_driver_name, sh.shipping_notes,
+                                         (select wh_name 
+                                        from warehouse 
+                                            where wh_id = (select distinct wh_id 
+                                                                from packing 
+                                                                    where packing_id in (select packing_id 
+                                                                            from shipping_detail 
+                                                                            where shipping_id = inc.in_shipping_id))
+                                                                            limit 1)wh_shipping_name
+                                ";
     public $fromClause      = "incoming_bizhub inc
 								join warehouse wh on wh.wh_id = inc.warehouse_id
 								join shipping sh on inc.in_shipping_id = sh.shipping_id 
