@@ -67,6 +67,7 @@ class Incoming_goods_detail extends Abstract_model {
             //example:
             $this->record['updated_date'] = date('Y-m-d');
             $this->record['updated_by'] = $userdata->username;
+			$this->record['qty_netto_init'] = $this->record['qty_netto'];
             //if false please throw new Exception
         }
         return true;

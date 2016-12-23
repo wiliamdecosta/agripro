@@ -355,13 +355,14 @@
                         // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
                         // use it to place a third party control to customize the toolbar
                         dataInit: function (element) {
+							setTimeout(function(){
                             $(element).datepicker({
                                 autoclose: true,
                                 format: 'yyyy-mm-dd',
                                 orientation: 'up',
                                 todayHighlight: true
                             });
-                        },
+                        },10)},
                         size: 30
                     }
                 }
@@ -509,6 +510,7 @@
                 },
                 afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
+					$("#sortir_bizhub_tgl", form).prop("readonly", true); 
                 },
                 afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);

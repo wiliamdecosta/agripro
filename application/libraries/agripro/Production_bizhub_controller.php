@@ -566,7 +566,7 @@ class Production_bizhub_controller {
             ### Step 4. Insert Stock SM (OUT)
             ####################################
 
-            //$table->insertStock($table->record);
+            $table->insertStock($table->record);
 
             $table->db->trans_commit(); //Commit Trans
 

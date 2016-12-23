@@ -111,7 +111,7 @@
                     label: 'RM Name', name: 'product_code', width: 120, align: "left", editable: false
                 },
 				{
-                    label: 'Bruto Qty (Kgs)', name: 'qty_bruto', width: 120, align: "left", editable: true,
+                    label: 'Bruto Qty (Kgs)', name: 'qty_bruto', width: 120, align: "left", editable: true,hidden:true,
                     editoptions: {
                         size: 10,
 						readonly:"readonly"
@@ -119,7 +119,7 @@
                     editrules: {required: false}
                 },
 				{
-                    label: 'Bruto Qty (Kgs)', name: 'qty_rescale', width: 120, align: "left", editable: true,hidden:true,
+                    label: 'Bruto Qty (Kgs)', name: 'qty_rescale', width: 120, align: "left", editable: true,hidden:false,
                     editoptions: {
                         size: 10,
 						readonly:"readonly"

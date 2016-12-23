@@ -30,12 +30,14 @@ class Production extends Abstract_model
 
 
     public $selectClause = "a.production_id, a.production_code,to_char(a.production_date,'yyyy-mm-dd') as production_date,a.production_qty,
-                               b.product_id, b.product_name,b.product_code,b.product_category_id, a.production_qty, a.warehouse_id,
+                               b.product_id, b.product_name,b.product_code,b.product_category_id, a.production_qty, a.warehouse_id, wh.wh_name,
                                a.production_qty_init
                                 ";
     public $fromClause = "production a
                                 left join product b
-                                on a.product_id = b.product_id";
+                                on a.product_id = b.product_id
+								left join warehouse wh 
+								on a.warehouse_id = wh.wh_id";
 
     public $refs = array();
 

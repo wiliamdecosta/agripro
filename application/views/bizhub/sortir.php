@@ -308,7 +308,7 @@
                             // give the editor time to initialize
                             setTimeout(function () {
                                 elm.append('<input id="form_qty_id" type="text"  style="display:none;">' +
-                                    '<input size="30" id="form_qty_name" readonly type="text" class="FormElement jqgrid-required" placeholder="Quantity">');
+                                    '<input size="30" id="form_qty_name"  type="text" class="FormElement jqgrid-required" placeholder="Quantity">');
                                 $("#form_qty_id").val(value);
                                 elm.parent().removeClass('jqgrid-required');
                             }, 100);
@@ -340,17 +340,18 @@
                     label: 'Selection Date', name: 'sortir_bizhub_tgl', width: 120, editable: true,
                     edittype: "text",
                     editrules: {required: true},
-                    editoptions: {
+					 editoptions: {
                         // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
                         // use it to place a third party control to customize the toolbar
                         dataInit: function (element) {
+							setTimeout(function(){
                             $(element).datepicker({
                                 autoclose: true,
                                 format: 'yyyy-mm-dd',
                                 orientation: 'up',
                                 todayHighlight: true
                             });
-                        },
+                        },10)},
                         size: 30
                     }
                 }
@@ -495,9 +496,19 @@
                     setTimeout(function () {
                         clearLovStockMaterial();
                     }, 100);
+					
+					$('#form_qty_name').focus();
                 },
                 afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
+					/* $('#form_qty_name', form).click(); */
+					$("#sortir_bizhub_tgl", form).prop("readonly", true); 
+					/* $('#sortir_bizhub_tgl',form).datepicker({
+                                autoclose: true,
+                                format: 'yyyy-mm-dd',
+                                orientation: 'up',
+                                todayHighlight: true
+                            }); */
                 },
                 afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
@@ -565,7 +576,7 @@
             mtype: "POST",
             colModel: [
                 {label: 'ID', key: true, name: 'sortir_bizhub_det_id', width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'ID', key: true, name: 'sortir_bizhub_id', width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'ID', key: false, name: 'sortir_bizhub_id', width: 5, sorttype: 'number', editable: true, hidden: true},
                 {label: 'Product Code', name: 'product_code', width: 150, align: "left", editable: false},
                 {
                     label: 'Product Code',

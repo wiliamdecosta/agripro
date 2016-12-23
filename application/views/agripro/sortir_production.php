@@ -347,14 +347,15 @@
                     editoptions: {
                         // dataInit is the client-side event that fires upon initializing the toolbar search field for a column
                         // use it to place a third party control to customize the toolbar
-                        dataInit: function (element) {
+                       dataInit: function (element) {
+							setTimeout(function(){
                             $(element).datepicker({
                                 autoclose: true,
                                 format: 'yyyy-mm-dd',
                                 orientation: 'up',
                                 todayHighlight: true
                             });
-                        },
+                        },10)},
                         size: 30
                     }
                 }

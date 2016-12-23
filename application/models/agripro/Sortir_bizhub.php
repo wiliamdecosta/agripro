@@ -140,8 +140,8 @@ class Sortir_bizhub extends Abstract_model {
                         UNION ALL 
                         SELECT *
                             FROM product
-                                WHERE (parent_id = $product_id or parent_id  = (select case when sm_id is null then 1 else 0 end 
-                                                                                    from sortir where sortir_bizhub_id = $sm_id limit 1) ) 
+                                WHERE (parent_id = $product_id or parent_id  = (select case when in_biz_det_id is null then 1 else 0 end 
+                                                                                    from sortir_bizhub where sortir_bizhub_id = $sm_id limit 1) ) 
                                 AND upper(product_code) LIKE '%REJECT%'
                         UNION ALL
                         SELECT *
@@ -150,7 +150,7 @@ class Sortir_bizhub extends Abstract_model {
                         ) as a
                     WHERE a.product_id not in (select distinct product_id
                                                         from sortir_bizhub_detail
-                                                            where sortir_bizhub_id = $sm_id )
+                                                            where sortir_bizhub_det_id = $sm_id )
                 ";
         }
         
