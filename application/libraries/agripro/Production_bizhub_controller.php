@@ -523,8 +523,6 @@ class Production_bizhub_controller {
 
             $table->setRecord($items);
 
-            $table->record['production_bizhub_date'] = $product_date;
-
             ####################################
             ### Step 1. Generate Production Code
             ####################################

@@ -100,42 +100,47 @@ class Production_bizhub extends Abstract_model
         $tStock = $ci->stock;
         $tStock->actionType = 'CREATE';
 
-        $ci->load->model('agripro/production_detail');
-        $prod_det = $ci->production_detail;
+        $ci->load->model('agripro/production_detail_bizhub');
+        $prod_det = $ci->production_detail_bizhub;
 
         $ci->load->model('agripro/stock_category');
         $tStockCategory = $ci->stock_category;
 
-        $prod_det->setCriteria('pd.production_id = ' . $prod['production_id']);
+        $prod_det->setCriteria('pd.production_bizhub_id = ' . $prod['production_bizhub_id']);
         $details = $prod_det->getAll();
 
+        try{
 
-        foreach ($details as $production_detail) {
-            $record = array();
-            $record['stock_tgl_keluar'] = $prod['production_bizhub_date'];
-            $record['stock_kg'] = $production_detail['production_bizhub_det_qty'];
-            $record['stock_ref_id'] = $production_detail['in_biz_det_id'];
-            $record['stock_ref_code'] = 'DRYING_OUT';
-            $record['sc_id'] = $tStockCategory->getIDByCode('DRYING_STOCK_BIZHUB');
-            $record['wh_id'] = $prod['warehouse_id'];
-            $record['product_id'] = $production_detail['product_id'];
-            $record['stock_description'] = 'Drying Stock has used for Production Detail';
-            $tStock->setRecord($record);
-            $tStock->create();
-        }
+            foreach ($details as $production_detail) {
+                $record = array();
+                $record['stock_tgl_keluar'] = $prod['production_bizhub_date'];
+                $record['stock_kg'] = $production_detail['production_bizhub_det_qty'];
+                $record['stock_ref_id'] = $production_detail['in_biz_det_id'];
+                $record['stock_ref_code'] = 'DRYING_OUT_BIZHUB';
+                $record['sc_id'] = $tStockCategory->getIDByCode('DRYING_STOCK_BIZHUB');
+                $record['wh_id'] = $prod['warehouse_id'];
+                $record['product_id'] = $production_detail['product_id'];
+                $record['stock_description'] = 'Drying Stock has used for Production Detail';
+                $tStock->setRecord($record);
+                $tStock->create();
+            }
 
 
-        ######################################
-        ### Update Raw Material Qty (Decrease)
-        ######################################
+            ######################################
+            ### Update Raw Material Qty (Decrease)
+            ######################################
 
-        foreach ($details as $pd_det) {
+            foreach ($details as $pd_det) {
 
-            $decrease_kg = (float)$pd_det['production_detail_qty'];
-            $sql = "UPDATE incoming_bizhub_detail SET 
-                      qty_netto = qty_netto - " . $decrease_kg . "
-                        WHERE in_biz_det_id = " . $pd_det['in_biz_det_id'];
-            $prod_det->db->query($sql);
+                $decrease_kg = (float)$pd_det['production_bizhub_det_qty'];
+                $sql = "UPDATE incoming_bizhub_detail SET 
+                          qty_netto = qty_netto - " . $decrease_kg . "
+                            WHERE in_biz_det_id = " . $pd_det['in_biz_det_id'];
+                $prod_det->db->query($sql);
+            }
+            return 'OK';
+        }catch(Exception $e){
+            return $e->getMessage();
         }
 
     }

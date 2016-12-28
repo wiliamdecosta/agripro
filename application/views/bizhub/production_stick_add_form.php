@@ -377,7 +377,7 @@
                         if (response.success != true) {
                             swal('Warning', response.message, 'warning');
                         } else {
-                            loadContentWithParams('agripro.production_stick', {});
+                            loadContentWithParams('bizhub.production_stick', {});
                         }
 
                     }

@@ -47,6 +47,7 @@ class Sortir_bizhub extends Abstract_model {
             //do something
             //example:
             $this->record['sortir_bizhub_tgl'] = date('Y-m-d');
+            $this->record['qty_netto_init'] = $userdata->username;
             //if false please throw new Exception
         }
         return true;
@@ -108,7 +109,7 @@ class Sortir_bizhub extends Abstract_model {
                             FROM product
                                 WHERE product_id = $product_id
                                 AND upper(product_code) NOT LIKE '%REJECT%'
-                                AND product_category_id = 2
+                                AND (product_category_id = 2 or product_category_id is null )
                         UNION ALL 
                         SELECT *
                             FROM product

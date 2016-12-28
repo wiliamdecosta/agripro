@@ -337,7 +337,7 @@
 		
 		$.ajax({
                     type: "POST",
-                    url: '<?php echo WS_JQGRID."agripro.incoming_goods_controller/update_detail"; ?>',
+                    url: '<?php echo WS_JQGRID."agripro.incoming_goods_detail_controller/update_detail"; ?>',
                     dataType : 'json',
                     data: {col:col, val:val, pkg_id:pkg_id, in_biz_det_id:in_biz_det_id,in_biz_id:in_biz_id },
                     success: function(response) {

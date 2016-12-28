@@ -71,34 +71,7 @@ class Drying_bizhub extends Abstract_model {
         return true;
     }
 	
-	function create_details($in_biz_id){
-		
-		$sql = "INSERT INTO incoming_bizhub_detail (in_biz_det_id ,
-													  in_biz_id ,
-													  in_packing_id ,
-													  packing_batch_number ,
-													  in_product_id ,
-													  qty_source,
-													  in_biz_det_status ,
-													  created_date )
-				SELECT nextval('incoming_bizhub_detail_in_biz_det_id_seq'::regclass),
-					   $in_biz_id,
-					   pkg.packing_id,
-					   pkg.packing_batch_number,
-					   pkg.product_id,
-					   pkg.packing_kg,
-					   'E',
-					   current_date
-					FROM incoming_bizhub i
-							join shipping_detail sh on i.in_shipping_id = sh.shipping_id
-							join packing pkg on sh.packing_id = pkg.packing_id
-					WHERE in_biz_id = $in_biz_id
-						
-				";
-        $this->db->query($sql, array($in_biz_id));
-		
-		
-	}
+	
 	
 	function get_pkg_info_by_id($packing_id){
 		
@@ -209,13 +182,25 @@ class Drying_bizhub extends Abstract_model {
     }
 
     function checkDryingQTY($record){
+       
         $this->db->select('qty_netto');
         $this->db->where('in_biz_det_id', $record['in_biz_det_id']);
         $query = $this->db->get('incoming_bizhub_detail');
 
         return $query->row()->qty_netto;
     }
+    
+    function IsStockExist($record){
+        
+        $this->db->select('count(*) as jumlah');
+        $this->db->where(array(
+            'stock_ref_id' => $record['in_biz_det_id'],
+            'stock_ref_code' => 'DRYING_IN_BIZHUB'
+        ));
+        $query = $this->db->get('stock');
 
+        return $query->row()->jumlah;
+    }
     function checkQtyUsedProd($record){
         $this->db->where('in_biz_det_id', $record['in_biz_det_id']);
         $query = $this->db->get('production_bizhub_detail');

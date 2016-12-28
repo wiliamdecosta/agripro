@@ -41,12 +41,12 @@ class Sortir_bizhub_detail extends Abstract_model {
             //do something
             // example :
             $this->record[$this->pkey] = $this->generate_id($this->table,$this->pkey);
-			$this->record['sortir_bizhub_det_qty_init'] = $this->record['sortir_bizhub_det_qty'];
+            $this->record['sortir_bizhub_det_qty_init'] = $this->record['sortir_bizhub_det_qty'];
         }else {
             //do something
             //example:
+            $this->record['sortir_bizhub_det_qty_init'] = $this->record['sortir_bizhub_det_qty'];
             //if false please throw new Exception
-			$this->record['sortir_bizhub_det_qty_init'] = $this->record['sortir_bizhub_det_qty'];
         }
         return true;
     }

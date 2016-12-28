@@ -327,6 +327,84 @@ class Incoming_goods_detail_controller {
         return $data;
     }
 
+
+    function update_detail() {
+
+        $ci = & get_instance();
+        $ci->load->model('agripro/incoming_goods_detail');
+        $table = $ci->incoming_goods_detail;
+        $table->actionType = 'UPDATE';
+        $data = array('success' => false, 'message' => '');
+
+        $val = getVarClean('val','str','');
+        $mode = getVarClean('col','str','');
+        $in_biz_det_id = getVarClean('in_biz_det_id','str',''); 
+        $in_biz_id = getVarClean('in_biz_id','str',''); 
+        $pkg_id = getVarClean('pkg_id','str','');
+       
+        
+        try{
+
+            $table->db->trans_begin(); //Begin Trans
+                
+                if($mode == 'in_biz_det_status'){
+                    
+                    $status = getVarClean('val','str','');
+                    if($status == 'L'){
+                        $items = array(
+                        'in_biz_det_id' => $in_biz_det_id,
+                        'in_biz_id' => $in_biz_id,
+                        'in_package_id' => $pkg_id,
+                        'in_biz_det_status' => $status,
+                        'qty_rescale' => 0,
+                        'qty_netto' => 0,
+                        'qty_bruto' => 0
+                        );
+                    }else{
+                        $items = array(
+                        'in_biz_det_id' => $in_biz_det_id,
+                        'in_biz_id' => $in_biz_id,
+                        'in_package_id' => $pkg_id,
+                        'in_biz_det_status' => $status,
+                        'qty_netto' => 0
+                        );
+                    }
+                    
+                    
+                }else{
+                    
+                    $qty = getVarClean('val','str','');
+                    
+                    $items = array(
+                    'in_biz_det_id' => $in_biz_det_id,
+                    'in_biz_id' => $in_biz_id,
+                    'in_package_id' => $pkg_id,
+                    'qty_rescale' => $qty,
+                    'qty_bruto' => $qty,
+                    'qty_netto' => $qty
+                    );
+                }
+                
+                $table->setRecord($items);
+                $table->update();
+                $table ->insertStock($in_biz_det_id, $val);
+            $table->db->trans_commit(); //Commit Trans
+
+            $data['success'] = true;
+            $data['message'] = 'Data updated successfully !';
+
+        }catch (Exception $e) {
+            $table->db->trans_rollback(); //Rollback Trans
+
+            $data['message'] = $e->getMessage();
+        }
+
+
+        echo json_encode($data);
+        exit;
+
+    }
+
 }
 
 /* End of file incoming_goods_detail_controller.php */

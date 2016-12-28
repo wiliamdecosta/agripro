@@ -168,13 +168,14 @@ class Drying_bizhub_controller {
 
 
                 $table->setRecord($items);
-                $is_null = $table->checkDryingQTY($table->record);
+                //$is_null = $table->checkDryingQTY($table->record);
+                $is_exist = $table->IsStockExist($table->record);
 
 
                 // Check  Drying QTY is null or not
                 // IF Null = Insert stock  else Update Stock
 
-                if($is_null == NULL){
+                if($is_exist < 1){
                     $table->InsertStock($items);
                 }else{
                     $table->UpdateStock($table->record);

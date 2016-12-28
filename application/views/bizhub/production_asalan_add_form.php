@@ -312,7 +312,7 @@
         });
 
         $("#btn-back").on('click', function (e) {
-            loadContentWithParams('agripro.production_asalan', {});
+            loadContentWithParams('bizhub.production_asalan', {});
         });
 
         $("#btn-add-source").on('click', function (e) {

@@ -331,7 +331,8 @@ class Sortir_controller
                 
 				$req_param['where'] = array("sr.sm_id is not null 
 											and sr.production_id is null 
-											and (sr.qty_detail - sr.qty_detail_init <> 0 or sr.total_detail = 0)");
+											and (  qty_detail <> 0 or sr.total_detail = 0)"
+                                            );
 				
             }
 

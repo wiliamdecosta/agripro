@@ -310,7 +310,7 @@
         });
 
         $("#btn-back").on('click', function (e) {
-            loadContentWithParams('agripro.production', {});
+            loadContentWithParams('bizhub.production', {});
         });
 
         $("#btn-add-source").on('click', function (e) {
@@ -382,7 +382,7 @@
                         if (response.success != true) {
                             swal('Warning', response.message, 'warning');
                         } else {
-                            loadContentWithParams('agripro.packing', {});
+                            loadContentWithParams('bizhub.production', {});
                         }
 
                     }

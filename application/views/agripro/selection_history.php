@@ -601,7 +601,7 @@
                 }, */
                 {
                     label: 'Quantity(Kg)',
-                    name: 'sortir_detail_qty',
+                    name: 'sortir_detail_qty_init',
                     index: 'sortir_detail_qty_init',
                     width: 120,
                     align: "right",
