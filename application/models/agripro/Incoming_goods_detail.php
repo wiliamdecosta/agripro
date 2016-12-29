@@ -150,6 +150,25 @@ class Incoming_goods_detail extends Abstract_model {
 	}
 
 
+	function checkIsUsedDet($in_biz_det_id){
+ 
+		 $sql = " SELECT 
+			        	(select count(*) 
+			        		from production_bizhub_detail 
+			            	where in_biz_det_id = '".$in_biz_det_id."'  
+			            ) +
+			            (select count(*) 
+			            	from sortir_bizhub 
+			            where in_biz_det_id = '".$in_biz_det_id."' 
+			            ) is_exist
+			            ";
+
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        $query->free_result();
+		return $row['is_exist'];
+	}
+
       function insertStock($in_biz_det_id, $val) {
         $ci = & get_instance();
 

@@ -344,7 +344,12 @@ class Incoming_goods_detail_controller {
        
         
         try{
-
+            
+            $checkUsed = $table->checkIsUsedDet($in_biz_det_id);
+            if ($checkUsed > 0){
+                throw new Exception('Sorry You Cant Edit This Data, It Has Been Used In Production Or Selection');
+            };
+            
             $table->db->trans_begin(); //Begin Trans
                 
                 if($mode == 'in_biz_det_status'){
