@@ -131,6 +131,38 @@ class Incoming_goods extends Abstract_model {
         return $items;
     }
 
+    function removeIncoming($in_biz_id){
+
+        $ci = &get_instance();
+
+        $ci->load->model('agripro/stock');
+        $tStock = $ci->stock;
+
+        $ci->load->model('agripro/incoming_goods_detail');
+        $tProdDetail = $ci->incoming_goods_detail;
+
+        /**
+         * Steps to Delete Production
+         * 1. Remove detail and stock 
+         * 2. remove master 
+         */
+         
+
+        $tProdDetail->setCriteria('incd.in_biz_id = ' . $in_biz_id);
+        $details = $tProdDetail->getAll();
+
+        $loop = 0;
+        foreach ($details as $prd_detail) {
+            $tProdDetail->remove($prd_detail['in_biz_det_id']);
+            $tStock->deleteByReference($prd_detail['in_biz_det_id'], 'RAW_MATERIAL_STOCK_BIZHUB');
+        }
+
+
+        /**
+         * Delete data master incoming
+         */
+        $this->remove($in_biz_id);
+    }
 
 	
 }

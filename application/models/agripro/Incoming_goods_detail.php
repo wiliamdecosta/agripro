@@ -32,7 +32,17 @@ class Incoming_goods_detail extends Abstract_model {
                             );
 
 
-    public $selectClause    = "incd.*, inc.in_biz_id, inc.in_biz_date, prd.product_code,prd.product_id, inc.in_shipping_id, inc.warehouse_id";
+    public $selectClause    = "incd.*, inc.in_biz_id, inc.in_biz_date, prd.product_code,prd.product_id, inc.in_shipping_id, inc.warehouse_id, case when (select count(*) 
+            							from production_bizhub_detail
+                                        where in_biz_det_id = incd.in_biz_det_id) > 0 then 
+                                        'Production'
+                                        when (select count(*) 
+            							from sortir_bizhub
+                                        where in_biz_det_id = incd.in_biz_det_id) > 0 then 
+                                        'Selection'
+                                        else 
+                                        ''
+                                        end used_by ";
     public $fromClause      = "incoming_bizhub_detail incd 
 								JOIN incoming_bizhub inc
 								ON inc.in_biz_id = incd.in_biz_id
@@ -116,6 +126,30 @@ class Incoming_goods_detail extends Abstract_model {
 		
 	}
 	
+	function checkIsUsed($in_biz_id){
+ 
+		 $sql = " SELECT 
+			        	(select count(*) 
+			        		from production_bizhub_detail 
+			            	where in_biz_det_id  in (select distinct in_biz_det_id 
+			            							from incoming_bizhub_detail 
+			            							where in_biz_id = '".$in_biz_id."' )  
+			            ) +
+			            (select count(*) 
+			            	from sortir_bizhub 
+			            where in_biz_det_id in (select distinct in_biz_det_id 
+			            							from incoming_bizhub_detail 
+			            							where in_biz_id = '".$in_biz_id."' ) 
+			            ) is_exist
+			            ";
+
+        $query = $this->db->query($sql);
+        $row = $query->row_array();
+        $query->free_result();
+		return $row['is_exist'];
+	}
+
+
       function insertStock($in_biz_det_id, $val) {
         $ci = & get_instance();
 

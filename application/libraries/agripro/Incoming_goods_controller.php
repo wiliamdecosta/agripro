@@ -297,6 +297,7 @@ class Incoming_goods_controller {
         $items = jsonDecode($jsonItems);
 
         try{
+           
             $table->db->trans_begin(); //Begin Trans
             $tableDet->db->trans_begin(); //Begin Trans
 
@@ -304,6 +305,11 @@ class Incoming_goods_controller {
             if (is_array($items)){
                 foreach ($items as $key => $value){
                     if (empty($value)) throw new Exception('Empty parameter');
+
+                    $checkUsed = $tableDet->checkIsUsed($value);
+                    if ($checkUsed > 0){
+                        throw new Exception('Sorry You Cant Remove This Data, It Has Been Used In Production Or Selection');
+                    };
 
                     $tableDet->delete_by_biz_id($value);
 					$tableDet->db->trans_commit(); //Commit Trans
@@ -316,6 +322,11 @@ class Incoming_goods_controller {
                 if (empty($items)){
                     throw new Exception('Empty parameter');
                 };
+
+                 $checkUsed = $tableDet->checkIsUsed($items);
+                    if ($checkUsed > 0){
+                        throw new Exception('Sorry You Cant Remove This Data, It Has Been Used In Production Or Selection');
+                    };
 
                 $tableDet->delete_by_biz_id($items);
 				$tableDet->db->trans_commit(); //Commit Trans

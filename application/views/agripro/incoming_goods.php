@@ -11,7 +11,7 @@
         </li>
         <li>
 
-            <span>Incoming Goods</span>
+            <span>Incoming Raw Material</span>
         </li>
     </ul>
 </div>
@@ -62,6 +62,7 @@
             shipping_notes : rowData.shipping_notes
         });
     }
+    
 </script>
 
 <script>
@@ -71,7 +72,12 @@
             loadContentWithParams('agripro.incoming_goods_add_form',{});
         });
     });
-
+    function status_item (cellvalue, options, rowObject){
+       if (cellvalue == 'L')
+        return "<span style='color:red;'>Lost</span>";
+       else if (cellvalue == 2)
+        return "<span style='color:green;'>Ok</span>";
+    }
     jQuery(function($) {
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
@@ -107,22 +113,23 @@
             multiboxonly: true,
             onSelectRow: function (rowid) {
                 /*do something when selected*/
-               /*  var celValue = $('#grid-table').jqGrid('getCell', rowid, 'shipping_id');
-                var celCode = $('#grid-table').jqGrid('getCell', rowid, 'shipping_date');
+                 var celValue = $('#grid-table').jqGrid('getCell', rowid, 'shipping_id');
+                var celCode = $('#grid-table').jqGrid('getCell', rowid, 'in_biz_date');
+                var wh_name = $('#grid-table').jqGrid('getCell', rowid, 'wh_shipping_name');
 
                 var grid_detail = jQuery("#grid-table-detail");
                 if (rowid != null) {
                     grid_detail.jqGrid('setGridParam', {
-                        url: '<?php echo WS_JQGRID."agripro.shipping_detail_controller/crud"; ?>',
-                        postData: {shipping_id: rowid}
+                        url: '<?php echo WS_JQGRID."agripro.incoming_goods_detail_controller/crud"; ?>',
+                        postData: {in_biz_id: rowid}
                     });
-                    var strCaption = 'Contains :: ' + celCode;
+                    var strCaption = 'Detail :: at ' + celCode + ' From : ' +wh_name ;
                     grid_detail.jqGrid('setCaption', strCaption);
                     $("#grid-table-detail").trigger("reloadGrid");
                     $("#detail_placeholder").show();
 
                     responsive_jqgrid('#grid-table-detail', '#grid-pager-detail');
-                } */
+                } 
             },
             sortorder:'',
             pager: '#grid-pager',
@@ -138,7 +145,7 @@
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID."agripro.incoming_goods_controller/crud"; ?>',
-            caption: "Receiving Goods"
+            caption: "Incoming Raw Material"
 
         });
 
@@ -276,12 +283,21 @@
             datatype: "json",
             mtype: "POST",
             colModel: [
-                {label: 'ID', key:true, name: 'shipdet_id', width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Product Code', name: 'product_code', width: 120, align: "left", editable: false},
-                {label: 'Serial', name: 'packing_batch_number', width: 200, align: "left", editable: false},
-                {label: 'Batch Number', name: 'packing_serial', width: 100, align: "left", editable: false},
-                {label: 'From Warehouse', name: 'wh_code', width: 120, align: "left", editable: false},
-                {label: 'Weight(Kg)', name: 'packing_kg', width: 120, align: "left", editable: false},
+                {label: 'ID', key:true, name: 'in_biz_det_id', width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'Packing Label', name: 'packing_batch_number', width: 120, align: "left", editable: false},
+                {label: 'Product Name', name: 'product_code', width: 200, align: "left", editable: false},
+                {label: 'Status', name: 'in_biz_det_status', width: 120, align: "left", editable: false,
+                     formatter:function(cellvalue, options, rowObject) {
+                         if (cellvalue == 'L')
+                            return "<span style='color:red;'><b>Lost</b></span>";
+                           else
+                            return "<span style='color:green;'><b>OK</b></span>";
+                    }
+                },
+                {label: 'Quantity(Kg)', name: 'qty_source', width: 100, align: "left", editable: false},
+                {label: 'New Quantity(Kg)', name: 'qty_rescale', width: 100, align: "left", editable: false},
+                {label: 'Differentiation', name: '', width: 100, align: "left", editable: false, hidden:true},
+                {label: 'Used By', name: 'used_by', width: 100, align: "left", editable: false},
 
             ],
             height: '100%',

@@ -10,11 +10,11 @@ class Incoming_goods_detail_controller {
 
         $page = getVarClean('page','int',1);
         $limit = getVarClean('rows','int',5);
-        $sidx = getVarClean('sidx','str','shipdet_id');
+        $sidx = getVarClean('sidx','str','in_biz_det_id');
         $sord = getVarClean('sord','str','asc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
-        $shipping_id = getVarClean('shipping_id','int',0);
+        $in_biz_id = getVarClean('in_biz_id','int',0);
 
         try {
 
@@ -37,7 +37,7 @@ class Incoming_goods_detail_controller {
             );
 
             // Filter Table
-            $req_param['where'] = array('shipdet.shipping_id = '.$shipping_id);
+            $req_param['where'] = array('incd.in_biz_id = '.$in_biz_id);
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();

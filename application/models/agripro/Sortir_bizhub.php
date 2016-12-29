@@ -137,7 +137,7 @@ class Sortir_bizhub extends Abstract_model {
                             FROM product
                                 WHERE product_id = $product_id
                                 AND upper(product_code) NOT LIKE '%REJECT%'
-                                AND product_category_id = 2
+                                AND product_category_id = 1
                         UNION ALL 
                         SELECT *
                             FROM product
