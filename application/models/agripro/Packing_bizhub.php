@@ -121,7 +121,7 @@ class Packing_bizhub extends Abstract_model {
         $record_stock['stock_kg'] = $packing_master['packing_bizhub_kg'];
         $record_stock['stock_ref_id'] = $packing_master['packing_bizhub_id'];
         $record_stock['stock_ref_code'] = 'PACKING_BIZHUB';
-        $record_stock['sc_id'] = $tStockCategory->getIDByCode('PACKING_STOCK');
+        $record_stock['sc_id'] = $tStockCategory->getIDByCode('PACKING_STOCK_BIZHUB');
         $record_stock['wh_id'] = $packing_master['warehouse_id'];
         $record_stock['product_id'] = $packing_master['product_id'];
         $tStock->setRecord($record_stock);
@@ -139,7 +139,7 @@ class Packing_bizhub extends Abstract_model {
             $record_stock['stock_kg'] = $packing_detail['pd_bizhub_kg'];
             $record_stock['stock_ref_id'] = $packing_detail['sortir_bizhub_det_id']; //sortir_detail id become reference on stock
             $record_stock['stock_ref_code'] = 'SORTIR_PACKING_BIZHUB';
-            $record_stock['sc_id'] = $tStockCategory->getIDByCode('SORTIR_STOCK');
+            $record_stock['sc_id'] = $tStockCategory->getIDByCode('SORTIR_STOCK_BIZHUB');
             $record_stock['wh_id'] = $packing_master['warehouse_id'];
             $record_stock['product_id'] = $packing_detail['product_id'];
             $record_stock['stock_description'] = 'sortir_bizhub_detail_qty has used for packing_bizhub_detail';
@@ -175,8 +175,8 @@ class Packing_bizhub extends Abstract_model {
         $ci->load->model('agripro/stock');
         $tStock = $ci->stock;
 
-        $ci->load->model('agripro/packing_detail');
-        $tPackingDetail = $ci->packing_detail;
+        $ci->load->model('agripro/packing_bizhub_detail');
+        $tPackingDetail = $ci->packing_bizhub_detail;
 
         /**
          * Steps to Delete Packing
@@ -194,7 +194,7 @@ class Packing_bizhub extends Abstract_model {
         $loop = 0;
         foreach($details as $packing_detail) {
             $data_sortir[$loop]['sortir_bizhub_det_id'] = $packing_detail['sortir_bizhub_det_id'];
-            $data_sortir[$loop]['restore_store_qty'] = $packing_detail['pd_kg'];
+            $data_sortir[$loop]['restore_store_qty'] = $packing_detail['pd_bizhub_kg'];
             $loop++;
 
             $tPackingDetail->remove($packing_detail['pd_bizhub_id']);

@@ -101,7 +101,6 @@ class Packing_bizhub_detail_controller {
                         <td>'.$no++.'</td>
                         <td><input type="hidden" name="pd_bizhub_id[]" value="'.$item['pd_bizhub_id'].'"> <input type="hidden" name="sortir_bizhub_det_id[]" value="'.$item['sortir_bizhub_det_id'].'"><input type="hidden" name="product_ids[]" value="'.$item['product_id'].'">'.$item['product_code'].'</td>
                         <td><input type="hidden" name="weight[]" value="'.$item['pd_bizhub_kg'].'">'.$item['pd_bizhub_kg'].'</td>
-                        <td>'.$item['fm_name'].'</td>
                     </tr>
                 ';
 

@@ -4,7 +4,7 @@
 * @class Shipping_detail_controller
 * @version 07/05/2015 12:18:00
 */
-class Shipping_detail_controller {
+class Shipping_bizhub_detail_controller {
 
     function read() {
 

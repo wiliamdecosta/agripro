@@ -133,6 +133,7 @@
                 if(response.success == false) {
                     swal({title: 'Attention', text: response.message, html: true, type: "warning"});
                 }
+                jQuery("#detail_placeholder").hide();
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID."agripro.packing_bizhub_controller/crud"; ?>',

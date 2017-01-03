@@ -158,9 +158,7 @@ class Packing_bizhub_controller {
             $table = $ci->packing_bizhub;
 
             $userdata = $ci->ion_auth->user()->row();
-            if($for_shipping == 'Y') {
-                $table->setCriteria('pack.packing_bizhub_id NOT IN (select packing_bizhub_id from shipping_detail)');
-            }
+             $table->setCriteria('pack.packing_bizhub_id NOT IN (select packing_bizhub_id from shipping_bizhub_detail)');
 
             $table->setCriteria('pack.warehouse_id = 999');
 
