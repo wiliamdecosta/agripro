@@ -13,6 +13,8 @@ class Incoming_goods_controller {
         $sidx = getVarClean('sidx','str','in_biz_id');
         $sord = getVarClean('sord','str','asc');
 
+        $is_report = getVarClean('report','int',0);
+
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
 
         try {
@@ -37,7 +39,10 @@ class Incoming_goods_controller {
             );
 
             // Filter Table
-            $req_param['where'] = array();
+            if($is_report == 1){
+
+                $req_param['where'] = array();
+            }
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
@@ -366,7 +371,7 @@ class Incoming_goods_controller {
         $incoming_goods_date = getVarClean('incoming_date','str','');
         $incoming_goods_shipping_id = getVarClean('shipping_id','str','');
         //$incoming_goods_whid = $this->session->userdata('wh_id');
-        $incoming_goods_whid = 1;
+        $incoming_goods_whid = 999;
 
 
         /**
