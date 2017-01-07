@@ -6,7 +6,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="#">Tracking</a>
+            <a href="#">Farmer & Plantation</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>

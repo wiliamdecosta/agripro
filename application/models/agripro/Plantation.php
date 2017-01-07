@@ -25,7 +25,7 @@ class Plantation extends Abstract_model {
                                 'plt_inspection_date'  => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Inspection Date'),
                                 'plt_inspector'     => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Inspector'),
                                 'plt_alamat'        => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Address'),
-
+//                                'plt_harvest_total' => array('nullable' => true, 'type' => 'float', 'unique' => false, 'display' => 'Harvest Total'),
                                 'created_date'       => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Created Date'),
                                 'created_by'         => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Created By'),
                                 'updated_date'       => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Updated Date'),

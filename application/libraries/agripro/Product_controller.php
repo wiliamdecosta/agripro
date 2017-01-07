@@ -10,7 +10,7 @@ class Product_controller {
 
         $page = getVarClean('page','int',1);
         $limit = getVarClean('rows','int',5);
-        $sidx = getVarClean('sidx','str','product_id');
+        $sidx = getVarClean('sidx','str','product_name');
         $sord = getVarClean('sord','str','desc');
 
         $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
@@ -127,10 +127,14 @@ class Product_controller {
             $ci->load->model('agripro/product');
             $table = $ci->product;
 
-            $table->setCriteria("prod.parent_id is null ");
+           // $table->setCriteria("prod.parent_id is null ");
+            $category = getVarClean('category','int',0);
+            if($category){
+                 $table->setCriteria("prod.product_category_id = ". $category);
+            }
 
             if(!empty($searchPhrase)) {
-                $table->setCriteria("(prod.product_id ilike '%".$searchPhrase."%' or prod.product_name ilike '%".$searchPhrase."%')");
+                $table->setCriteria("(prod.product_name ilike '%".$searchPhrase."%')");
             }
 
             $start = ($start-1) * $limit;
@@ -409,6 +413,8 @@ class Product_controller {
         }
         return $data;
     }
+
+
 
 }
 

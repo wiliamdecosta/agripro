@@ -7,11 +7,11 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="#">Drying</a>
+            <a href="#">Weigh</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Drying Raw Material</span>
+            <span>Weigh Raw Material</span>
         </li>
     </ul>
 </div>
@@ -129,7 +129,7 @@
                     editrules: {required: false, edithidden: true}
                 },
                 {
-                    label: 'Drying Qty (Kgs)', name: 'sm_qty_bersih', width: 120, align: "left", editable: true,
+                    label: 'Weigh Qty (Kgs)', name: 'sm_qty_bersih', width: 120, align: "left", editable: true,
                     editoptions: {
                         size: 10,
                         maxlength: 4
@@ -137,7 +137,7 @@
                     editrules: {required: true}
                 },
                 {
-                    label: 'Drying Date', name: 'sm_tgl_pengeringan', width: 120, editable: true,
+                    label: 'Weigh Date', name: 'sm_tgl_pengeringan', width: 120, editable: true,
                     edittype: "text",
                     editrules: {required: true},
                     editoptions: {
@@ -183,7 +183,7 @@
             },
             //memanggil controller jqgrid yang ada di controller crud
             editurl: '<?php echo WS_JQGRID . "agripro.drying_controller/crud"; ?>',
-            caption: "Drying Raw Material"
+            caption: "Weigh Raw Material"
 
         });
 
@@ -236,7 +236,7 @@
                 beforeSubmit: function (response, postdata) {
                     var bruto = $("#sm_qty_kotor_init").val();
                     var netto = $("#sm_qty_bersih").val();
-                    if (netto > bruto) {
+                    if (parseFloat(netto)  > parseFloat(bruto)) {
                         if (confirm('Netto greater then bruto, are you sure ?')) {
                             return [true, "", response.responseText];
                         } else {

@@ -4,11 +4,12 @@
             <!-- modal title -->
             <div class="modal-header no-padding">
                 <div class="table-header">
-                    <span class="form-add-edit-title"> Data Produk</span>
+                    <span class="form-add-edit-title">Product List</span>
                 </div>
             </div>
             <input type="hidden" id="modal_lov_product_id_val" value=""/>
             <input type="hidden" id="modal_lov_product_code_val" value=""/>
+            <input type="hidden" id="modal_lov_parent_id_val" value=""/>
 
             <!-- modal body -->
             <div class="modal-body">
@@ -20,12 +21,12 @@
                 <table id="modal_lov_product_grid_selection" class="table table-striped table-bordered table-hover">
                     <thead>
                     <tr>
-                        <th data-column-id="prod_id" data-sortable="false" data-visible="false">ID Produk</th>
+                        <th data-column-id="product_id" data-sortable="false" data-visible="false">ID Produk</th>
                         <th data-header-align="center" data-align="center" data-formatter="opt-edit"
                             data-sortable="false" data-width="100">Options
                         </th>
-                        <th data-column-id="product_id">Product Id</th>
-                        <th data-column-id="product_name">Product Name</th>
+                        <th data-column-id="product_code">Code</th>
+                        <th data-column-id="product_name">Name</th>
                     </tr>
                     </thead>
                 </table>
@@ -52,45 +53,44 @@
         $("#modal_lov_product_btn_blank").on('click', function () {
             $("#" + $("#modal_lov_product_id_val").val()).val("");
             $("#" + $("#modal_lov_product_code_val").val()).val("");
+            $("#" + $("#modal_lov_parent_id_val").val()).val("");
             $("#modal_lov_product").modal("toggle");
         });
     });
 
-    function modal_lov_product_show(the_id_field, the_code_field, category) {
-        modal_lov_product_set_field_value(the_id_field, the_code_field);
+    function modal_lov_product_show(the_id_field, the_code_field, parent_id, p_cat) {
+        modal_lov_product_set_field_value(the_id_field, the_code_field, parent_id);
         $("#modal_lov_product").modal({backdrop: 'static'});
-        modal_lov_product_prepare_table(category);
+        modal_lov_product_prepare_table(p_cat);
     }
 
-
-    function modal_lov_product_set_field_value(the_id_field, the_code_field) {
+    function modal_lov_product_set_field_value(the_id_field, the_code_field, parent_id) {
         $("#modal_lov_product_id_val").val(the_id_field);
         $("#modal_lov_product_code_val").val(the_code_field);
+        $("#modal_lov_parent_id_val").val(parent_id);
     }
 
-    function modal_lov_product_set_value(the_id_val, the_code_val) {
+    function modal_lov_product_set_value(the_id_val, the_code_val, parent_id) {
         $("#" + $("#modal_lov_product_id_val").val()).val(the_id_val);
         $("#" + $("#modal_lov_product_code_val").val()).val(the_code_val);
+        $("#" + $("#modal_lov_parent_id_val").val()).val(parent_id);
         $("#modal_lov_product").modal("toggle");
 
         $("#" + $("#modal_lov_product_id_val").val()).change();
         $("#" + $("#modal_lov_product_code_val").val()).change();
+        $("#" + $("#modal_lov_parent_id_val").val()).change();
     }
 
-
-    function modal_lov_product_prepare_table(category) {
+    function modal_lov_product_prepare_table(p_cat) {
         $("#modal_lov_product_grid_selection").bootgrid("destroy");
         $("#modal_lov_product_grid_selection").bootgrid({
             formatters: {
                 "opt-edit": function (col, row) {
-                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_product_set_value(\'' + row.product_id + '\', \'' + row.product_name + '\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
+                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_product_set_value(\'' + row.product_id + '\', \'' + row.product_name + '\',\'' + row.parent_id + '\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
                 }
             },
             rowCount: [5, 10],
             ajax: true,
-            post: {
-                category: category
-            },
             requestHandler: function (request) {
                 if (request.sort) {
                     var sortby = Object.keys(request.sort)[0];
@@ -107,10 +107,14 @@
                 }
                 return response;
             },
-            url: '<?php echo WS_BOOTGRID . "agripro.product_controller/readLov_parent"; ?>',
+            post: {
+                p_cat: p_cat
+            },
+            url: '<?php echo WS_BOOTGRID . "agripro.production_controller/readLovProductProduction"; ?>',
             selection: true,
             sorting: true
         });
+
 
         $('.bootgrid-header span.glyphicon-search').removeClass('glyphicon-search')
             .html('<i class="fa fa-search"></i>');

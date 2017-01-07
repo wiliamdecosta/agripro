@@ -111,8 +111,8 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Source Material</th>
                                         <th>Farmer</th>
+                                        <th>Transaction Code</th>
                                         <th>Weight(Kg)</th>
                                         <th>Action</th>
                                     </tr>

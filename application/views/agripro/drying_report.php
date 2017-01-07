@@ -7,11 +7,11 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="#">Drying</a>
+            <a href="#">Weigh</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Drying Report</span>
+            <span>Weigh Report</span>
         </li>
     </ul>
 </div>
@@ -93,7 +93,7 @@
                     }
                 },
                 {
-                    label: 'Drying Date', name: 'sm_tgl_pengeringan', width: 120, editable: true,
+                    label: 'Weigh Date', name: 'sm_tgl_pengeringan', width: 120, editable: true,
                     align: "right",
                     edittype: "text",
                     editrules: {required: true},
@@ -141,7 +141,7 @@
             },
             //memanggil controller jqgrid yang ada di controller crud
             //editurl: '<?php echo WS_JQGRID . "agripro.drying_controller/crud"; ?>',
-            caption: "Drying Report"
+            caption: "Weigh Report"
 
         });
 

@@ -26,7 +26,7 @@
     </div>
 
     <button type="button" class="btn btn-success" id="search">Search</button>
-<!--    <button type="button" class="btn btn-success" id="search" style="float: right">Download</button>-->
+    <button type="button" class="btn btn-success" id="download_sm" style="float: right" onclick="toExcel();">Download</button>
 </div>
 &nbsp;
 <div class="row">
@@ -58,6 +58,30 @@
     });
 </script>
 <script>
+
+    function toExcel() {
+        var url = '<?php echo WS_JQGRID . "agripro.stock_material_controller/exportExcel"; ?>';
+        var c = confirm('Export to Excel ?');
+        if(c == true){
+            $.ajax({
+                url: url,
+                data: {},
+                type: 'POST',
+                success: function (response) {
+                    var output = $.parseJSON(response);
+                    if (output.redirect !== undefined && output.redirect) {
+                        window.location.href = output.redirect_url;
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    // alert(errorThrown);
+                    $("#ajaxContent").html(errorThrown);
+                }
+            });
+
+        }
+    }
+
     $('.date-picker').datepicker({
         autoclose: true,
         format: 'yyyy-mm-dd',

@@ -6,7 +6,7 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <a href="#">Tracking</a>
+            <a href="#">Farmer & Plantation</a>
             <i class="fa fa-circle"></i>
         </li>
         <li>
@@ -102,7 +102,7 @@
                     }
                 },
 
-                {label: 'Total Width(Ha)', name: 'plt_luas_lahan', width: 150, align: "left", editable: true,
+                {label: 'Total Width(Ha)', name: 'plt_luas_lahan', width: 150, align: "right", editable: true,
                  editrules: {edithidden: true, required: true}
                 },
                 {label: 'Status',name: 'plt_status',width: 120, align: "left",editable: true, edittype: 'select', hidden:false,
@@ -143,6 +143,7 @@
                     editrules: {edithidden: true, required: false}
                 },
                 {label: 'Harvest Prediction(Kg)', name: 'plt_harvest_prediction', width: 200, align: "left", editable: true},
+//                {label: 'Harvest Accumulation/year', name: 'plt_harvest_total', width: 200, align: "left", editable: true},
                 {label: 'Contract Date', name: 'plt_date_contract', width: 120, editable: true, hidden:true,
                     edittype:"text",
                     editrules: {edithidden: true,required: false},
