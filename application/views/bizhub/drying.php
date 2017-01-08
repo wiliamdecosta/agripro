@@ -127,7 +127,7 @@
                     editrules: {required: false, edithidden:true}
                 },
                 {
-                    label: 'Drying Qty (Kgs)', name: 'qty_netto', width: 120, align: "left", editable: true,
+                    label: 'Drying Qty (Kgs)', name: 'qty_netto_init', width: 120, align: "left", editable: true,
                     editoptions: {
                         size: 10,
                         maxlength: 4

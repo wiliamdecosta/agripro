@@ -7,6 +7,85 @@
  */
 class Sortir_controller
 {
+     function read()
+    {
+
+        $page = getVarClean('page', 'int', 1);
+        $limit = getVarClean('rows', 'int', 5);
+        $sidx = getVarClean('sidx', 'str', 'sortir_id');
+        $sord = getVarClean('sord', 'str', 'desc');
+
+
+        $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
+
+        $sm_id = getVarClean('sm_id', 'int', 0);
+
+        try {
+
+            $ci = &get_instance();
+            $ci->load->model('agripro/sortir');
+            $table = $ci->sortir;
+
+            $req_param = array(
+                "sort_by" => $sidx,
+                "sord" => $sord,
+                "limit" => null,
+                "field" => null,
+                "where" => null,
+                "where_in" => null,
+                "where_not_in" => null,
+                "search" => $_REQUEST['_search'],
+                "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+                "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+                "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+            );
+
+            // Filter Table
+            $report = getVarClean('report', 'int', 0);
+            if ($report == 1) {
+                $req_param['where'][] = 'sr.sm_id is not null and sr.production_id is  null ';
+            }else{
+                
+                $req_param['where'] = array("sr.sm_id is not null 
+                                            and sr.production_id is null 
+                                            and (  qty_detail <> 0 or sr.total_detail = 0)"
+                                            );
+                
+            }
+
+            
+
+            $table->setJQGridParam($req_param);
+            $count = $table->countAll();
+
+            if ($count > 0) $total_pages = ceil($count / $limit);
+            else $total_pages = 1;
+
+            if ($page > $total_pages) $page = $total_pages;
+            $start = $limit * $page - ($limit); // do not put $limit*($page - 1)
+
+            $req_param['limit'] = array(
+                'start' => $start,
+                'end' => $limit
+            );
+
+            $table->setJQGridParam($req_param);
+
+            if ($page == 0) $data['page'] = 1;
+            else $data['page'] = $page;
+
+            $data['total'] = $total_pages;
+            $data['records'] = $count;
+
+            $data['rows'] = $table->getAll();
+            $data['success'] = true;
+
+        } catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+
+        return $data;
+    }
 
     function readLov()
     {
@@ -289,86 +368,7 @@ class Sortir_controller
         return $data;
     }
 
-    function read()
-    {
-
-        $page = getVarClean('page', 'int', 1);
-        $limit = getVarClean('rows', 'int', 5);
-        $sidx = getVarClean('sidx', 'str', 'sortir_id');
-        $sord = getVarClean('sord', 'str', 'desc');
-
-
-        $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
-
-        $sm_id = getVarClean('sm_id', 'int', 0);
-
-        try {
-
-            $ci = &get_instance();
-            $ci->load->model('agripro/sortir');
-            $table = $ci->sortir;
-
-            $req_param = array(
-                "sort_by" => $sidx,
-                "sord" => $sord,
-                "limit" => null,
-                "field" => null,
-                "where" => null,
-                "where_in" => null,
-                "where_not_in" => null,
-                "search" => $_REQUEST['_search'],
-                "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
-                "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
-                "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
-            );
-
-            // Filter Table
-			 // Filter Table
-			$report = getVarClean('report', 'int', 0);
-            if ($report == 1) {
-                $req_param['where'][] = 'sr.sm_id is not null and sr.production_id is  null ';
-            }else{
-                
-				$req_param['where'] = array("sr.sm_id is not null 
-											and sr.production_id is null 
-											and (  qty_detail <> 0 or sr.total_detail = 0)"
-                                            );
-				
-            }
-
-            
-
-            $table->setJQGridParam($req_param);
-            $count = $table->countAll();
-
-            if ($count > 0) $total_pages = ceil($count / $limit);
-            else $total_pages = 1;
-
-            if ($page > $total_pages) $page = $total_pages;
-            $start = $limit * $page - ($limit); // do not put $limit*($page - 1)
-
-            $req_param['limit'] = array(
-                'start' => $start,
-                'end' => $limit
-            );
-
-            $table->setJQGridParam($req_param);
-
-            if ($page == 0) $data['page'] = 1;
-            else $data['page'] = $page;
-
-            $data['total'] = $total_pages;
-            $data['records'] = $count;
-
-            $data['rows'] = $table->getAll();
-            $data['success'] = true;
-
-        } catch (Exception $e) {
-            $data['message'] = $e->getMessage();
-        }
-
-        return $data;
-    }
+   
 
     function get_availableqty()
     {

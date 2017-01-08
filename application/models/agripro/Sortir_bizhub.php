@@ -20,9 +20,14 @@ class Sortir_bizhub extends Abstract_model {
                                 'sortir_bizhub_qty'      => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'QTY')
                             );
 
-    public $selectClause    = "sr.sortir_bizhub_id, sr.product_id, sr.in_biz_det_id, sr.production_bizhub_id, sr.sortir_bizhub_tgl, sr.sortir_bizhub_qty,
+    public $selectClause    = "sr.*,
 								sm.packing_batch_number, sm.qty_source, sm.qty_rescale, sm.qty_bruto, sm.qty_netto, pr.product_name, pr.product_code, production_bizhub.production_bizhub_code";
-    public $fromClause      = "sortir_bizhub sr
+    public $fromClause      = "(select sr.*,  (select count(*) from sortir_bizhub_detail std 
+                                  where std.sortir_bizhub_id = sr.sortir_bizhub_id ) count_detail,
+                                  (select sum(sortir_bizhub_det_qty_init) from sortir_bizhub_detail std 
+                                  where std.sortir_bizhub_id = sr.sortir_bizhub_id) total_det_qty_init,
+                                  (select sum(sortir_bizhub_det_qty) from sortir_bizhub_detail std 
+                                  where std.sortir_bizhub_id = sr.sortir_bizhub_id) total_det_qty from sortir_bizhub sr ) sr
 								left join incoming_bizhub_detail sm on sr.in_biz_det_id = sm.in_biz_det_id
                                 left join production_bizhub on sr.production_bizhub_id = production_bizhub.production_bizhub_id
 								left join product pr on sr.product_id = pr.product_id

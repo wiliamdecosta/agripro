@@ -32,7 +32,8 @@ class Incoming_goods_detail extends Abstract_model {
                             );
 
 
-    public $selectClause    = "incd.*, inc.in_biz_id, inc.in_biz_date, prd.product_code,prd.product_id, inc.in_shipping_id, inc.warehouse_id, case when (select count(*) 
+    public $selectClause    = "incd.*, inc.in_biz_id, inc.in_biz_date, prd.product_code,prd.product_id, inc.in_shipping_id, inc.warehouse_id ";
+    public $fromClause      = " (select incd.*, case when (select count(*) 
             							from production_bizhub_detail
                                         where in_biz_det_id = incd.in_biz_det_id) > 0 then 
                                         'Production'
@@ -42,8 +43,7 @@ class Incoming_goods_detail extends Abstract_model {
                                         'Selection'
                                         else 
                                         ''
-                                        end used_by ";
-    public $fromClause      = "incoming_bizhub_detail incd 
+                                        end used_by from incoming_bizhub_detail incd ) incd 
 								JOIN incoming_bizhub inc
 								ON inc.in_biz_id = incd.in_biz_id
 								JOIN product prd 

@@ -11,13 +11,16 @@
             <i class="fa fa-circle"></i>
         </li>
         <li>
-            <span>Drying Report</span>
+            <span>Drying Raw Material</span>
         </li>
     </ul>
 </div>
 <!-- end breadcrumb -->
 <div class="space-4"></div>
-
+<!--<div class="alert alert-info">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+    <strong>Info!</strong> Proses pengeringan hanya menimbang ulang berat Raw Material!
+</div>-->
 <div class="row">
     <div class="col-md-12">
         <table id="grid-table"></table>
@@ -32,35 +35,99 @@
     </div>
 </div>
 
+<?php $this->load->view('lov/lov_farmer.php'); ?>
+<?php $this->load->view('lov/lov_raw_material.php'); ?>
+<?php $this->load->view('lov/lov_plantation.php'); ?>
+
 <script>
+
+    function showLovFarmer(id, code) {
+        modal_lov_farmer_show(id, code);
+    }
+
+    function clearLovFarmer() {
+        $('#form_fm_id').val('');
+        $('#form_fm_code').val('');
+    }
+
+
+    function showLovRawMaterial(id, code) {
+        modal_lov_raw_material_show(id, code);
+    }
+
+    function clearLovRawMaterial() {
+        $('#form_rm_id').val('');
+        $('#form_rm_code').val('');
+    }
+
+    function showLovPlantation(id, code) {
+
+        selRowId = $('#grid-table').jqGrid('getGridParam', 'selrow');
+        // fm_id = $('#grid-table').jqGrid('getCell', selRowId, 'fm_id');
+        if ($('#form_fm_id').val() == "") {
+            swal({title: 'Attention', text: 'Please choose farmer', html: true, type: "info"});
+            return;
+        }
+        modal_lov_plantation_show(id, code, $('#form_fm_id').val());
+    }
+
+    function clearLovPlantation() {
+        $('#form_plt_id').val('');
+        $('#form_plt_code').val('');
+    }
 
     jQuery(function ($) {
         var grid_selector = "#grid-table";
         var pager_selector = "#grid-pager";
 
         jQuery("#grid-table").jqGrid({
-            url: '<?php echo WS_JQGRID . "agripro.drying_controller/crud"; ?>',
+            url: '<?php echo WS_JQGRID . "agripro.drying_bizhub_controller/crud"; ?>',
             datatype: "json",
             mtype: "POST",
-            postData : {report: 1},
+            postData :{is_drying:0},
             colModel: [
-                {label: 'ID', name: 'sm_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'ID', name: 'in_biz_det_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'ID', name: 'in_packing_id',  width: 5, sorttype: 'number', editable: true, hidden: true},
+                {label: 'ID', name: 'wh_id', width: 5, sorttype: 'number', editable: true, hidden: true},
                 {
-                    label: 'Transaction Code', name: 'sm_no_trans', width: 250, align: "left", editable: true,
+                    label: 'Packing Label', name: 'packing_batch_number', width: 250, align: "left", editable: true,
                     editoptions: {
                         size: 30,
                         maxlength: 32,
-                        placeholder: 'Generate By Sistem'
+                        readonly:"readonly"
                     },
                     editrules: {required: false}
                 },
-                {label: 'Farmer Code', name: 'fm_code', width: 150, align: "left", editable: false},
-                {label: 'Farmer Name', name: 'fm_name', width: 170, align: "left", editable: false},
+                {
+                    label: 'product_id',
+                    name: 'product_id',
+                    width: 150,
+                    align: "left",
+                    editable: true,
+                    hidden: true,
+                    editrules: {required: false}
+                },
                 {
                     label: 'RM Name', name: 'product_code', width: 120, align: "left", editable: false
                 },
                 {
-                    label: 'Bruto (Kgs)', name: 'sm_qty_kotor_init', width: 120, align: "left", editable: true,
+                    label: 'Bruto Qty (Kgs)', name: 'qty_bruto', width: 120, align: "left", editable: true,hidden:true,
+                    editoptions: {
+                        size: 10,
+                        readonly:"readonly"
+                    },
+                    editrules: {required: false}
+                },
+                {
+                    label: 'Bruto Qty (Kgs)', name: 'qty_rescale', width: 120, align: "left", editable: true,hidden:false,
+                    editoptions: {
+                        size: 10,
+                        readonly:"readonly"
+                    },
+                    editrules: {required: false, edithidden:true}
+                },
+                {
+                    label: 'Drying Qty (Kgs)', name: 'qty_netto_init', width: 120, align: "left", editable: true,
                     editoptions: {
                         size: 10,
                         maxlength: 4
@@ -68,33 +135,7 @@
                     editrules: {required: true}
                 },
                 {
-                    label: 'Netto (Kgs)', name: 'sm_qty_bersih_init', width: 120, align: "left", editable: true,
-                    editoptions: {
-                        size: 10,
-                        maxlength: 4
-                    },
-                    editrules: {required: true}
-                },
-                {
-                    label: 'Lose %',
-                    name: '',
-                    width: 100,
-                    align: "right",
-                    editable: false,
-                    hidden: false,
-                    formatter: function (cellvalue, options, rowObject) {
-                        var bruto = rowObject.sm_qty_kotor_init;
-                        var netto = rowObject.sm_qty_bersih_init;
-                        var percentage =  ((bruto-netto)/bruto) * 100;
-                        var percen =  percentage.toFixed(2) + " %";
-                        //return percentage.toFixed(2) + "%";
-                        return '<b><span style="color:red"> ' +percen+ ' </span></b>';
-
-                    }
-                },
-                {
-                    label: 'Drying Date', name: 'sm_tgl_pengeringan', width: 120, editable: true,
-                    align: "right",
+                    label: 'Drying Date', name: 'in_biz_drying_date', width: 120, editable: true,
                     edittype: "text",
                     editrules: {required: true},
                     editoptions: {
@@ -133,15 +174,14 @@
                 id: 'id',
                 repeatitems: false
             },
-
             loadComplete: function (response) {
                 if (response.success == false) {
                     swal({title: 'Attention', text: response.message, html: true, type: "warning"});
                 }
             },
             //memanggil controller jqgrid yang ada di controller crud
-            //editurl: '<?php echo WS_JQGRID . "agripro.drying_controller/crud"; ?>',
-            caption: "Drying Report"
+            editurl: '<?php echo WS_JQGRID . "agripro.drying_bizhub_controller/crud"; ?>',
+            caption: "Drying"
 
         });
 
@@ -165,6 +205,7 @@
                 view: true,
                 viewicon: 'fa fa-search-plus grey bigger-120'
             },
+
             {
                 // options for the Edit Dialog
                 closeAfterEdit: true,
@@ -179,12 +220,30 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
+                    var bruto = $("#sm_qty_kotor_init");
+                    var netto = $("#sm_qty_bersih");
                     $("#sm_no_trans").prop("readonly", true);
-                    clearLovFarmer();
-                    clearLovPlantation();
+                    bruto.prop("readonly", true);
+                    netto.val(bruto.val());
+
                 },
+
                 afterShowForm: function (form) {
                     form.closest('.ui-jqdialog').center();
+                },
+                beforeSubmit: function (response, postdata) {
+                    var bruto = $("#sm_qty_kotor_init").val();
+                    var netto = $("#sm_qty_bersih").val();
+                    if (netto > bruto) {
+                        if (confirm('Netto greater then bruto, are you sure ?')) {
+                            return [true, "", response.responseText];
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return [true, "", response.responseText];
+                    }
+
                 },
                 afterSubmit: function (response, postdata) {
                     var response = jQuery.parseJSON(response.responseText);
@@ -210,7 +269,7 @@
                     var form = $(e[0]);
                     style_edit_form(form);
                     /*form.css({"height": 0.70 * screen.height + "px"});
-                    form.css({"width": 0.60 * screen.width + "px"});*/
+                     form.css({"width": 0.60 * screen.width + "px"});*/
 
                     $("#sm_no_trans").prop("readonly", true);
                     setTimeout(function () {

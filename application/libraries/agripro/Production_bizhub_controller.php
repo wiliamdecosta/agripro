@@ -42,6 +42,8 @@ class Production_bizhub_controller {
                 $req_param['where'] = array("b.product_category_id = 1 and a.production_bizhub_qty > 0");
             }elseif ($p_cat === 'asalan'){
                 $req_param['where'] = array("b.product_category_id = 2 and a.production_bizhub_qty > 0");
+            }else{
+                $req_param['where'] = array("a.production_bizhub_qty_init > 0 and (production_bizhub_qty = 0)");
             }
 
 

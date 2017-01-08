@@ -41,7 +41,7 @@ class Incoming_goods_controller {
             // Filter Table
             if($is_report == 1){
 
-                $req_param['where'] = array();
+               /// $req_param['where'] = array("incd.used_by <> ''");
             }
 
             $table->setJQGridParam($req_param);

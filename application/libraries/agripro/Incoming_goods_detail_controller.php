@@ -37,7 +37,12 @@ class Incoming_goods_detail_controller {
             );
 
             // Filter Table
-            $req_param['where'] = array('incd.in_biz_id = '.$in_biz_id);
+            $is_report = getVarClean('report','int',0);
+            if($is_report == 1){
+                $req_param['where'] = array("incd.in_biz_id = $in_biz_id and incd.used_by <> '' ");
+            }else{
+                $req_param['where'] = array("incd.in_biz_id = $in_biz_id and incd.used_by = '' ");
+            }
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();

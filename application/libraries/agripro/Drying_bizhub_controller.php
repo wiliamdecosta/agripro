@@ -39,9 +39,9 @@ class Drying_bizhub_controller {
 
             // Filter Table
 			if($is_drying == 1){
-				$req_param['where'] = array();
+                $req_param['where'] = array("(incd.qty_netto_init < 0 or incd.qty_netto_init is null)");
 			}else{
-				$req_param['where'] = array('shipdet.shipping_id = '.$shipping_id);
+                $req_param['where'] = array("incd.qty_netto_init > 0 ");
 			}
 
             $table->setJQGridParam($req_param);

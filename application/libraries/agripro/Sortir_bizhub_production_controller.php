@@ -323,10 +323,11 @@ class Sortir_bizhub_production_controller
             // Filter Table
 			$report = getVarClean('report', 'int', 0);
             if ($report == 1) {
-                $req_param['where'][] = 'sr.in_biz_det_id is null and sr.production_bizhub_id is not null ';
+                $req_param['where'][] = 'sr.in_biz_det_id is null and sr.production_bizhub_id is not null 
+                                         and ((sr.sortir_bizhub_qty - total_det_qty_init <> 0 and total_det_qty <> 0) 
+                                                                       or count_detail = 0)';
             }else{
-               /* $req_param['where'] = array("sr.in_biz_det_id is null and sr.production_bizhub_id is not null  and (sr.sortir_bizhub_qty - sr.qty_detail_init <> 0 or sr.total_detail = 0) 
-												");*/
+              
                    $req_param['where'][] = 'sr.in_biz_det_id is null and sr.production_bizhub_id is not null ';
             }
 
