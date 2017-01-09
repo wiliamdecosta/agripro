@@ -220,8 +220,8 @@
                 beforeShowForm: function (e, form) {
                     var form = $(e[0]);
                     style_edit_form(form);
-                    var bruto = $("#sm_qty_kotor_init");
-                    var netto = $("#sm_qty_bersih");
+                    var bruto = $("#qty_rescale");
+                    var netto = $("#qty_netto_init");
                     $("#sm_no_trans").prop("readonly", true);
                     bruto.prop("readonly", true);
                     netto.val(bruto.val());
@@ -232,8 +232,8 @@
                     form.closest('.ui-jqdialog').center();
                 },
                 beforeSubmit: function (response, postdata) {
-                    var bruto = $("#sm_qty_kotor_init").val();
-                    var netto = $("#sm_qty_bersih").val();
+                    var bruto = $("#qty_rescale").val();
+                    var netto = $("#qty_netto_init").val();
                     if (netto > bruto) {
                         if (confirm('Netto greater then bruto, are you sure ?')) {
                             return [true, "", response.responseText];
