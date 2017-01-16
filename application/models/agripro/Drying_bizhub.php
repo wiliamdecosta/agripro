@@ -20,6 +20,7 @@ class Drying_bizhub extends Abstract_model {
                                 'qty_rescale'        => array('nullable' => true, 'type' => 'float', 'unique' => false, 'display' => 'qty rescale'),
                                 'qty_bruto'        => array('nullable' => true, 'type' => 'float', 'unique' => false, 'display' => 'bruto'),
                                 'qty_netto'        => array('nullable' => true, 'type' => 'float', 'unique' => false, 'display' => 'netto'),
+                                'qty_netto_init'        => array('nullable' => true, 'type' => 'float', 'unique' => false, 'display' => 'netto'),
 								'in_biz_det_status'            => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Created By'),
 								'in_biz_drying_date'            => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Drying Date'),
                                 
@@ -65,7 +66,7 @@ class Drying_bizhub extends Abstract_model {
             //example:
             $this->record['updated_date'] = date('Y-m-d');
             $this->record['updated_by'] = $userdata->username;
-			$this->record['qty_netto_init'] = $this->record['qty_netto'];
+			$this->record['qty_netto'] = $this->record['qty_netto_init'];
             //if false please throw new Exception
         }
         return true;

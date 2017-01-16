@@ -135,6 +135,14 @@
                     editrules: {required: true}
                 },
                 {
+                    label: 'Drying Qty (Kgs)', name: 'qty_netto', width: 120, align: "left", editable: true, hidden:true,
+                    editoptions: {
+                        size: 10,
+                        maxlength: 4
+                    },
+                    editrules: {required: true}
+                },
+                {
                     label: 'Drying Date', name: 'in_biz_drying_date', width: 120, editable: true,
                     edittype: "text",
                     editrules: {required: true},
@@ -222,9 +230,11 @@
                     style_edit_form(form);
                     var bruto = $("#qty_rescale");
                     var netto = $("#qty_netto_init");
+                    var netto2 = $("#qty_netto");
                     $("#sm_no_trans").prop("readonly", true);
                     bruto.prop("readonly", true);
                     netto.val(bruto.val());
+                    netto2.val(bruto.val());
 
                 },
 

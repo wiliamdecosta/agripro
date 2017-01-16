@@ -39,7 +39,7 @@ class Drying_bizhub_controller {
 
             // Filter Table
 			if($is_drying == 1){
-                $req_param['where'] = array("(incd.qty_netto_init < 0 or incd.qty_netto_init is null)");
+                $req_param['where'] = array("(incd.in_biz_drying_date is null or incd.qty_netto_init is null)");
 			}else{
                 $req_param['where'] = array("incd.qty_netto_init > 0 ");
 			}
