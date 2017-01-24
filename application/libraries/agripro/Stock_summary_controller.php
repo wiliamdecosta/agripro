@@ -40,6 +40,71 @@ class Stock_summary_controller {
         exit;
     }
 
+    function getFullSummary() {
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/stock_summary');
+            $tStockSummary = $ci->stock_summary;
+
+            $sql = "select * from product";
+            $query = $tStockSummary->db->query($sql);
+            $items = $query->result_array();
+
+            $output = '';
+            $no = 1;
+            foreach($items as $item) {
+                $output .= '
+                    <tr>
+                        <td>'.$no++.'</td>
+                        <td>'.$item['product_code'].'</td>
+                        <td align="right">'.($tStockSummary->getSummaryPerProduct("'RAW_MATERIAL_STOCK'", $item['product_id'])).'</td>
+                        <td align="right">'.($tStockSummary->getSummaryPerProduct("'DRYING_STOCK,SORTIR_STOCK,PRODUCTION_STOCK'", $item['product_id'])).'</td>
+                        <td align="right">'.($tStockSummary->getSummaryPerProduct("'SORTIR_STOCK'", $item['product_id'])).'</td>
+                    </tr>
+                ';
+            }
+
+        }catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+        echo $output;
+        exit;
+    }
+
+    function getFullSummaryBizhub() {
+        try {
+
+            $ci = & get_instance();
+            $ci->load->model('agripro/stock_summary');
+            $tStockSummary = $ci->stock_summary;
+
+            $sql = "select * from product";
+            $query = $tStockSummary->db->query($sql);
+            $items = $query->result_array();
+
+            $output = '';
+            $no = 1;
+            foreach($items as $item) {
+                $output .= '
+                    <tr>
+                        <td>'.$no++.'</td>
+                        <td>'.$item['product_code'].'</td>
+                        <td align="right">'.($tStockSummary->getSummaryPerProduct("'RAW_MATERIAL_STOCK_BIZHUB'", $item['product_id'])).'</td>
+                        <td align="right">'.($tStockSummary->getSummaryPerProduct("'DRYING_STOCK_BIZHUB,SORTIR_STOCK_BIZHUB,PRODUCTION_STOCK_BIZHUB'", $item['product_id'])).'</td>
+                        <td align="right">'.($tStockSummary->getSummaryPerProduct("'SORTIR_STOCK_BIZHUB'", $item['product_id'])).'</td>
+                    </tr>
+                ';
+            }
+
+        }catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+        echo $output;
+        exit;
+    }
 }
 
 /* End of file Warehouse_controller.php */

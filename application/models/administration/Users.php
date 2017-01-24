@@ -28,6 +28,7 @@ class Users extends Abstract_model {
                                 'last_name'         => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Last Name'),
                                 'company'           => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Company'),
                                 'phone'             => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Phone'),
+                                'wh_id'             => array('nullable' => true, 'type' => 'int', 'unique' => false, 'display' => 'Warehouse')
 
                             );
 
@@ -36,8 +37,9 @@ class Users extends Abstract_model {
                                     coalesce(usr.active,0) active, usr.first_name, usr.last_name, usr.company, usr.phone,
                                     CASE coalesce(usr.active,0) WHEN 0 THEN 'Not Active'
                                         WHEN 1 THEN 'Active'
-                                    END as status_active";
-    public $fromClause      = "users usr";
+                                    END as status_active, usr.wh_id, warehouse.wh_code";
+    public $fromClause      = "users usr
+                                left join warehouse on usr.wh_id = warehouse.wh_id";
 
     public $refs            = array('users_groups' => 'user_id');
 

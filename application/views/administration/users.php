@@ -31,7 +31,18 @@
     </div>
 </div>
 
+<?php $this->load->view('lov/lov_warehouse.php'); ?>
+
 <script>
+
+    function showLovWarehouse(id, code) {
+        modal_lov_warehouse_show(id, code);
+    }
+
+    function clearLovWarehouse() {
+        $('#form_wh_id').val('');
+        $('#form_wh_code').val('');
+    }
 
     jQuery(function($) {
 
@@ -83,6 +94,51 @@
                             if(response.success == false) {
                                 swal({title: 'Attention', text: response.message, html: true, type: "warning"});
                                 return "";
+                            }
+                        }
+                    }
+                },
+                {label: 'Warehouse', name: 'wh_code', width: 120, align: "left", editable: false},
+                {label: 'Warehouse',
+                    name: 'wh_id',
+                    width: 200,
+                    sortable: true,
+                    editable: true,
+                    hidden: true,
+                    editrules: {edithidden: true, number:true, required:true},
+                    edittype: 'custom',
+                    editoptions: {
+                        "custom_element":function( value  , options) {
+                            var elm = $('<span></span>');
+
+                            // give the editor time to initialize
+                            setTimeout( function() {
+                                elm.append('<input id="form_wh_id" type="text"  style="display:none;">'+
+                                        '<input id="form_wh_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Choose Warehouse">'+
+                                        '<button class="btn btn-success" type="button" onclick="showLovWarehouse(\'form_wh_id\',\'form_wh_code\')">'+
+                                        '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
+                                        '</button>');
+                                $("#form_wh_id").val(value);
+                                elm.parent().removeClass('jqgrid-required');
+                            }, 100);
+
+                            return elm;
+                        },
+                        "custom_value":function( element, oper, gridval) {
+
+                            if(oper === 'get') {
+                                return $("#form_wh_id").val();
+                            } else if( oper === 'set') {
+                                $("#form_wh_id").val(gridval);
+                                var gridId = this.id;
+                                // give the editor time to set display
+                                setTimeout(function(){
+                                    var selectedRowId = $("#"+gridId).jqGrid ('getGridParam', 'selrow');
+                                    if(selectedRowId != null) {
+                                        var code_display = $("#"+gridId).jqGrid('getCell', selectedRowId, 'wh_code');
+                                        $("#form_wh_code").val( code_display );
+                                    }
+                                },100);
                             }
                         }
                     }
@@ -224,6 +280,9 @@
                     form.css({"width": 0.60*screen.width+"px"});*/
 
                     $("#tr_password", form).show();
+                    setTimeout(function() {
+                        clearLovWarehouse();
+                    },100);
                 },
                 afterShowForm: function(form) {
                     form.closest('.ui-jqdialog').center();
@@ -237,6 +296,8 @@
                     $(".tinfo").html('<div class="ui-state-success">' + response.message + '</div>');
                     var tinfoel = $(".tinfo").show();
                     tinfoel.delay(3000).fadeOut();
+
+                    clearLovWarehouse();
 
                     return [true,"",response.responseText];
                 }

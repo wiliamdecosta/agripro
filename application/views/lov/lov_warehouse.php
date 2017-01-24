@@ -1,28 +1,28 @@
-<div id="modal_lov_provinsi" class="modal fade" tabindex="-1" style="overflow-y: scroll;">
+<div id="modal_lov_warehouse" class="modal fade" tabindex="-1" style="overflow-y: scroll;">
     <div class="modal-dialog" style="width:700px;">
         <div class="modal-content">
             <!-- modal title -->
             <div class="modal-header no-padding">
                 <div class="table-header">
-                    <span class="form-add-edit-title"> Data Province</span>
+                    <span class="form-add-edit-title"> Data Warehouse</span>
                 </div>
             </div>
-            <input type="hidden" id="modal_lov_provinsi_id_val" value="" />
-            <input type="hidden" id="modal_lov_provinsi_code_val" value="" />
+            <input type="hidden" id="modal_lov_warehouse_id_val" value="" />
+            <input type="hidden" id="modal_lov_warehouse_code_val" value="" />
 
             <!-- modal body -->
             <div class="modal-body">
                 <div>
-                  <button type="button" class="btn btn-sm btn-success" id="modal_lov_provinsi_btn_blank">
+                  <button type="button" class="btn btn-sm btn-success" id="modal_lov_warehouse_btn_blank">
                     <span class="fa fa-pencil-square-o" aria-hidden="true"></span> BLANK
                   </button>
                 </div>
-                <table id="modal_lov_provinsi_grid_selection" class="table table-striped table-bordered table-hover">
+                <table id="modal_lov_warehouse_grid_selection" class="table table-striped table-bordered table-hover">
                 <thead>
                   <tr>
-                     <th data-column-id="prov_id" data-sortable="false" data-visible="false">ID Propinsi</th>
+                     <th data-column-id="wh_id" data-sortable="false" data-visible="false">ID Warehouse</th>
                      <th data-header-align="center" data-align="center" data-formatter="opt-edit" data-sortable="false" data-width="100">Options</th>
-                     <th data-column-id="prov_code">Province Code</th>
+                     <th data-column-id="wh_code">Warehouse Code</th>
                   </tr>
                 </thead>
                 </table>
@@ -46,39 +46,39 @@
 <script>
 
     jQuery(function($) {
-        $("#modal_lov_provinsi_btn_blank").on('click', function() {
-            $("#"+ $("#modal_lov_provinsi_id_val").val()).val("");
-            $("#"+ $("#modal_lov_provinsi_code_val").val()).val("");
-            $("#modal_lov_provinsi").modal("toggle");
+        $("#modal_lov_warehouse_btn_blank").on('click', function() {
+            $("#"+ $("#modal_lov_warehouse_id_val").val()).val("");
+            $("#"+ $("#modal_lov_warehouse_code_val").val()).val("");
+            $("#modal_lov_warehouse").modal("toggle");
         });
     });
 
-    function modal_lov_provinsi_show(the_id_field, the_code_field) {
-        modal_lov_provinsi_set_field_value(the_id_field, the_code_field);
-        $("#modal_lov_provinsi").modal({backdrop: 'static'});
-        modal_lov_provinsi_prepare_table();
+    function modal_lov_warehouse_show(the_id_field, the_code_field) {
+        modal_lov_warehouse_set_field_value(the_id_field, the_code_field);
+        $("#modal_lov_warehouse").modal({backdrop: 'static'});
+        modal_lov_warehouse_prepare_table();
     }
 
 
-    function modal_lov_provinsi_set_field_value(the_id_field, the_code_field) {
-         $("#modal_lov_provinsi_id_val").val(the_id_field);
-         $("#modal_lov_provinsi_code_val").val(the_code_field);
+    function modal_lov_warehouse_set_field_value(the_id_field, the_code_field) {
+         $("#modal_lov_warehouse_id_val").val(the_id_field);
+         $("#modal_lov_warehouse_code_val").val(the_code_field);
     }
 
-    function modal_lov_provinsi_set_value(the_id_val, the_code_val) {
-         $("#"+ $("#modal_lov_provinsi_id_val").val()).val(the_id_val);
-         $("#"+ $("#modal_lov_provinsi_code_val").val()).val(the_code_val);
-         $("#modal_lov_provinsi").modal("toggle");
+    function modal_lov_warehouse_set_value(the_id_val, the_code_val) {
+         $("#"+ $("#modal_lov_warehouse_id_val").val()).val(the_id_val);
+         $("#"+ $("#modal_lov_warehouse_code_val").val()).val(the_code_val);
+         $("#modal_lov_warehouse").modal("toggle");
 
-         $("#"+ $("#modal_lov_provinsi_id_val").val()).change();
-         $("#"+ $("#modal_lov_provinsi_code_val").val()).change();
+         $("#"+ $("#modal_lov_warehouse_id_val").val()).change();
+         $("#"+ $("#modal_lov_warehouse_code_val").val()).change();
     }
 
-    function modal_lov_provinsi_prepare_table() {
-        $("#modal_lov_provinsi_grid_selection").bootgrid({
+    function modal_lov_warehouse_prepare_table() {
+        $("#modal_lov_warehouse_grid_selection").bootgrid({
              formatters: {
                 "opt-edit" : function(col, row) {
-                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_provinsi_set_value(\''+ row.prov_id +'\', \''+ row.prov_code +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
+                    return '<a href="javascript:;" title="Set Value" onclick="modal_lov_warehouse_set_value(\''+ row.wh_id +'\', \''+ row.wh_code +'\')" class="blue"><i class="fa fa-pencil-square-o bigger-130"></i></a>';
                 }
              },
              rowCount:[5,10],
@@ -99,7 +99,7 @@
                 }
                 return response;
              },
-             url: '<?php echo WS_BOOTGRID."agripro.provinsi_controller/readLov"; ?>',
+             url: '<?php echo WS_BOOTGRID."agripro.warehouse_controller/readLov"; ?>',
              selection: true,
              sorting:true
         });
