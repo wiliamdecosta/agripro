@@ -12,9 +12,9 @@ class Farmer extends Abstract_model {
 
     public $fields          = array(
                                 'fm_id'             => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Farmer'),
-                                'prov_id'            => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Prov ID'),
-                                'kota_id'            => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Kota ID'),
-                                'fm_code'           => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Kode'),
+                                'prov_id'            => array('nullable' => true, 'type' => 'int', 'unique' => false, 'display' => 'Prov ID'),
+                                'kota_id'            => array('nullable' => true, 'type' => 'int', 'unique' => false, 'display' => 'Kota ID'),
+                                'fm_code'           => array('nullable' => true, 'type' => 'str', 'unique' => true, 'display' => 'Kode'),
                                 'fm_name'           => array('nullable' => false, 'type' => 'str', 'unique' => true, 'display' => 'Nama'),
                                 'fm_jk'             => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Jenis Kelamin'),
                                 'fm_address'        => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Alamat'),
@@ -62,6 +62,12 @@ class Farmer extends Abstract_model {
 
             if(empty($this->record['fm_tgl_lahir']))
                 unset($this->record['fm_tgl_lahir']);
+
+            if(empty($this->record['kota_id']))
+                unset($this->record['kota_id']);
+
+            if(empty($this->record['prov_id']))
+                unset($this->record['prov_id']);
         }else {
             //do something
             //example:
@@ -71,6 +77,16 @@ class Farmer extends Abstract_model {
             if(empty($this->record['fm_tgl_lahir'])) {
                 $this->db->set('fm_tgl_lahir',null,false);
                 unset($this->record['fm_tgl_lahir']);
+            }
+
+            if(empty($this->record['kota_id'])) {
+                $this->db->set('kota_id',null,false);
+                unset($this->record['kota_id']);
+            }
+
+            if(empty($this->record['prov_id'])) {
+                $this->db->set('prov_id',null,false);
+                unset($this->record['prov_id']);
             }
         }
         return true;

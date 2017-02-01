@@ -132,7 +132,7 @@
                     label: 'Weigh Qty (Kgs)', name: 'sm_qty_bersih', width: 120, align: "left", editable: true,
                     editoptions: {
                         size: 10,
-                        maxlength: 4
+                        maxlength: 6
                     },
                     editrules: {required: true}
                 },

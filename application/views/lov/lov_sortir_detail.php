@@ -78,14 +78,14 @@
 
          $("#"+ $("#modal_lov_sortir_detail_id_val").val()).val(the_id_val);
          $("#"+ $("#modal_lov_product_code_val").val()).val(the_code_val);
-         $("#"+ $("#modal_lov_sortir_detail_qty_val").val()).val(the_qty_field);
+         //$("#"+ $("#modal_lov_sortir_detail_qty_val").val()).val(the_qty_field);
          $("#"+ $("#modal_lov_sortir_detail_product_id_val").val()).val(the_source_product_id_field);
 
          $("#modal_lov_sortir_detail").modal("toggle");
 
          $("#"+ $("#modal_lov_sortir_detail_id_val").val()).change();
          $("#"+ $("#modal_lov_product_code_val").val()).change();
-         $("#"+ $("#modal_lov_sortir_detail_qty_val").val()).change();
+        // $("#"+ $("#modal_lov_sortir_detail_qty_val").val()).change();
          $("#"+ $("#modal_lov_sortir_detail_product_id_val").val()).change();
 
     }

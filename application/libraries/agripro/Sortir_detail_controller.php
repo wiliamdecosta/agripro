@@ -43,7 +43,8 @@ class Sortir_detail_controller
             );
 
             // Filter Table
-            $req_param['where'] = array("sort_det.sortir_id = $sortir_id ");
+            $req_param['where'] = array("sort_det.sortir_id = $sortir_id and sort_det.sortir_detail_qty > 0");
+           // $req_param['where'] = array("sort_det.sortir_detail_qty > 0 ");
 
             $table->setJQGridParam($req_param);
             $count = $table->countAll();
@@ -105,6 +106,8 @@ class Sortir_detail_controller
             if (!empty($searchPhrase)) {
                 $table->setCriteria("(pr.product_name ilike '%" . $searchPhrase . "%' or pr.product_code ilike '%" . $searchPhrase . "%')");
             }
+
+            $table->setCriteria("sort_det.sortir_detail_qty != 0 ");
 
             $start = ($start - 1) * $limit;
             $items = $table->getAll($start, $limit, $sort, $dir);

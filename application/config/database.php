@@ -79,7 +79,7 @@ $db['default']['hostname'] ='localhost';
 
 $db['default']['username'] = 'agripro';
 $db['default']['password'] = 'agripro2016';
-$db['default']['database'] = 'agripro_db2';
+$db['default']['database'] = 'agripro_db3';
 $db['default']['port']     = 5432;
 $db['default']['dbdriver'] = 'postgre';
 $db['default']['dbprefix'] = '';

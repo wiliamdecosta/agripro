@@ -26,7 +26,7 @@ class Production_planning extends Abstract_model
         'basis_prepare_qty' => array('nullable' => true, 'type' => 'float', 'unique' => false, 'display' => 'Basis Prepare QTY'),
         'basis_real_qty' => array('nullable' => true, 'type' => 'float', 'unique' => false, 'display' => 'Basis Real QTY'),
         'basis_real_arrived' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Basis Real Arrived'),
-        'prod_prepare_date' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Production Prepare Date'),
+        'prod_prepare_date' => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Production Prepare Date'),
         'prod_prepare_qty' => array('nullable' => true, 'type' => 'float', 'unique' => false, 'display' => 'Production Prepare QTY'),
         'prep_performa_inv' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Performa Inv'),
         'planning_shipping_start_date' => array('nullable' => true, 'type' => 'date', 'unique' => false, 'display' => 'Shipping Date Period From'),
@@ -64,7 +64,7 @@ class Production_planning extends Abstract_model
             $this->record['updated_date'] = date('Y-m-d');
             $this->record['updated_by'] = $userdata->username;
 
-            if(empty($this->record['planning_start_date'])) {
+            /*if(empty($this->record['planning_start_date'])) {
                 unset($this->record['planning_start_date']);
             }
 
@@ -98,7 +98,7 @@ class Production_planning extends Abstract_model
 
             if(empty($this->record['loading_date'])) {
                 unset($this->record['loading_date']);
-            }
+            }*/
 
 
         } else {

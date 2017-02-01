@@ -144,7 +144,7 @@
                     sortable: true,
                     editable: true,
                     hidden: true,
-                    editrules: {edithidden: true, number: true, required: true},
+                    editrules: {edithidden: true, number: true, required: false},
                     edittype: 'custom',
                     editoptions: {
                         "custom_element": function (value, options) {
@@ -153,7 +153,7 @@
                             // give the editor time to initialize
                             setTimeout(function () {
                                 elm.append('<input id="form_plt_id" type="text"  style="display:none;">' +
-                                    '<input size="30" id="form_plt_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Choose Plantation">' +
+                                    '<input size="30" id="form_plt_code" disabled type="text" class="FormElement" placeholder="Choose Plantation">' +
                                     '<button class="btn btn-success" type="button" onclick="showLovPlantation(\'form_plt_id\',\'form_plt_code\')">' +
                                     '   <span class="fa fa-search icon-on-right bigger-110"></span>' +
                                     '</button>');
@@ -186,17 +186,19 @@
                     label: 'Raw Material Name', name: 'product_code', width: 150, align: "left", editable: false
                 },
                 {
-                    label: 'Product ID',
+                    label: 'Product',
                     name: 'product_id',
-                    width: 150,
+                    width: 250,
                     align: "left",
                     editable: true,
                     edittype: 'select',
                     hidden: true,
                     editrules: {edithidden: true, required: true},
-                    editoptions: {dataUrl: '<?php echo site_url('raw_material_controller/listRawMaterial');?>',
+                    editoptions: {
+                        //dataUrl: '<?php echo site_url('raw_material_controller/listRawMaterial');?>',
+                        value: "29:RAW MATERIAL CASSIA",
                         dataInit: function (elem) {
-                            $(elem).width(240);  // set the width which you need
+                            $(elem).width(250);  // set the width which you need
                         }
                     }
                 },
@@ -236,7 +238,7 @@
                     hidden: false,
                     editrules: {edithidden: true, required: false},
                     editoptions: {
-                        value: "DP:DP;Tunai:Tunai",
+                        value: "Tunai:Tunai;DP:DP",
                         dataInit: function (elem) {
                             $(elem).width(150);  // set the width which you need
                         }
@@ -390,7 +392,7 @@
             },
             {
                 //new record form
-                closeAfterAdd: true,
+                closeAfterAdd: false,
                 clearAfterAdd: true,
                 closeOnEscape: true,
                 recreateForm: true,

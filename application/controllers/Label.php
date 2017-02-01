@@ -55,14 +55,14 @@ class Label extends CI_Controller
         $pdf->Cell(5,6,'','',0,'C');
         $pdf->Cell(40,6,'ORIGIN','',0,'L');
         $pdf->Cell(5,6,':','',0,'C');
-        $pdf->Cell(70,6,'Jakarta','',0,'L');
+        $pdf->Cell(70,6,'KERINCI','',0,'L');
 
         $pdf->Ln();
         $pdf->Cell(120,6,'','',0,'C');
         $pdf->Ln();
 
         $pdf->Cell(5,6,'','',0,'C');
-        $pdf->Cell(40,6,'PRODUCTION DATE','',0,'L');
+        $pdf->Cell(40,6,'PACKAGING DATE','',0,'L');
         $pdf->Cell(5,6,':','',0,'C');
         $pdf->Cell(70,6,$item['packing_tgl'],'',0,'L');
 

@@ -14,7 +14,7 @@ class Stock_material extends Abstract_model
     public $fields = array(
         'sm_id' => array('pkey' => true, 'type' => 'int', 'nullable' => true, 'unique' => true, 'display' => 'ID Stock Material'),
         'fm_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Warehouse'),
-        'plt_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Plantation'),
+        'plt_id' => array('nullable' => true, 'type' => 'int', 'unique' => false, 'display' => 'Plantation'),
         'product_id' => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product ID'),
         'sm_qty_kotor' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Total Weight Init (KGs)'),
         'sm_harga_per_kg' => array('nullable' => false, 'type' => 'float', 'unique' => false, 'display' => 'Price / Kgs'),
@@ -43,7 +43,7 @@ class Stock_material extends Abstract_model
     public $fromClause = "stock_material sm
                                 inner join farmer as fm on sm.fm_id = fm.fm_id
                                 inner join product as pr on sm.product_id = pr.product_id
-                                inner join plantation as plt on sm.plt_id = plt.plt_id";
+                                left join plantation as plt on sm.plt_id = plt.plt_id";
 
     public $refs = array();
 
@@ -72,6 +72,12 @@ class Stock_material extends Abstract_model
             if($this->record['sm_tgl_panen'] == ""){
                 $this->record['sm_tgl_panen'] = NULL;
             }
+            if($this->record['plt_id'] == ""){
+                $this->record['plt_id'] = NULL;
+            }
+            if($this->record['sm_jml_karung'] == ""){
+                $this->record['sm_jml_karung'] = NULL;
+            }
         } else {
             //do something
             //example:
@@ -82,6 +88,13 @@ class Stock_material extends Abstract_model
             if($this->record['sm_tgl_panen'] == ""){
                 $this->record['sm_tgl_panen'] = NULL;
             }
+            if($this->record['plt_id'] == ""){
+                $this->record['plt_id'] = NULL;
+            }
+            if($this->record['sm_jml_karung'] == ""){
+                $this->record['sm_jml_karung'] = NULL;
+            }
+
             if($this->checkSMIDProduction($this->record['sm_id']) > 0){
                 throw new Exception('Can not edit this record ! This record has been used in the production.');
             }

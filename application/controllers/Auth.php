@@ -139,7 +139,7 @@ class Auth extends CI_Controller
 
         // redirect them to the login page
         $this->session->set_flashdata('message', $this->ion_auth->messages());
-        redirect('auth/index', 'refresh');
+        redirect('auth', 'refresh');
     }
 
     // reset password - final step for forgotten password

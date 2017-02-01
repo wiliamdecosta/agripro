@@ -259,6 +259,8 @@
                         }, size: 25
                     }
                 },
+                {label: 'Farmer', name: 'fm_name', width: 250, align: "left", editable: false, editoptions: { size: 25}},
+                {label: 'Code', name: 'fm_code', width: 250, align: "left", editable: false, editoptions: { size: 25}},
                 {
                     label: 'Product Name',
                     name: 'product_id',
@@ -348,7 +350,7 @@
                 },
                 {label: 'Quantity (Kg)', name: 'sortir_qty', width: 170, align: "left", editable: false},
                 {
-                    label: 'Selection Date', name: 'sortir_tgl', width: 120, editable: true,
+                    label: 'Selection Date', name: 'sortir_tgl', width: 150, editable: true,
                     edittype: "text",
                     editrules: {required: true},
                     editoptions: {

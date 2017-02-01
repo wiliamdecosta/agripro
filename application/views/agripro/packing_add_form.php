@@ -48,7 +48,7 @@
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="packing_kg">Weight(Kg)</label>
                             <div class="col-md-3">
-                                <input type="text" name="packing_kg" id="packing_kg" class="form-control required">
+                                <input type="text" name="packing_kg" id="packing_kg" class="form-control required" onkeyup="setSourceQty(this.value)">
                             </div>
                         </div>
 
@@ -138,6 +138,10 @@
 <?php $this->load->view('lov/lov_sortir_detail.php'); ?>
 
 <script>
+    function setSourceQty(qty){
+        $("#source_product_weight").val(qty);
+    }
+
     function showLovProduct(id, code) {
         modal_lov_product_show(id,code);
     }

@@ -15,6 +15,7 @@ class Sortir extends Abstract_model {
                                 'product_id'    => array('nullable' => false, 'type' => 'int', 'unique' => false, 'display' => 'Product ID'),
                                 'sm_id'         => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Stock Material ID'),
                                 'production_id' => array('nullable' => true, 'type' => 'str', 'unique' => false, 'display' => 'Production ID'),
+
                                 'sortir_tgl'      => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'Tanggal'),
                                 'sortir_qty'      => array('nullable' => false, 'type' => 'str', 'unique' => false, 'display' => 'QTY')
 
@@ -44,12 +45,12 @@ class Sortir extends Abstract_model {
         if($this->actionType == 'CREATE') {
             //do something
             // example :
-           // $this->record['sortir_tgl'] = date('Y-m-d');
+            $this->record['sortir_tgl'] = date('Y-m-d');
 
         }else {
             //do something
             //example:
-           // $this->record['sortir_tgl'] = date('Y-m-d');
+            $this->record['sortir_tgl'] = date('Y-m-d');
         }
         return true;
     }
@@ -144,9 +145,9 @@ class Sortir extends Abstract_model {
 				FROM (
 						SELECT *
 							FROM product
-								WHERE  upper(product_code) NOT LIKE '%REJECT%'
+								WHERE product_id = $product_id
+								AND upper(product_code) NOT LIKE '%REJECT%'
 								AND (product_category_id = 2 or product_category_id is null)
-								AND parent_id is not NULL 
 						UNION ALL 
 						SELECT *
 							FROM product
@@ -155,7 +156,7 @@ class Sortir extends Abstract_model {
 						UNION ALL
 						SELECT *
 							FROM product
-								WHERE product_code IN ('LOST','STICK')
+								WHERE product_code IN ('LOST')
 						) as a
 					WHERE a.product_id not in (select distinct product_id
 														from sortir_detail

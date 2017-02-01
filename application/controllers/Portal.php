@@ -50,7 +50,6 @@ class Portal extends CI_Controller
                 $detail[$i] = $this->getDetailTracebility($sm_ids[$i]);
             }
             $data['details'] = $detail;
-
             $this->load->view('portal/detail_tracking',$data);
         }else{
             echo json_encode('Data not found');
@@ -105,7 +104,7 @@ class Portal extends CI_Controller
                 pr.product_code
                 from stock_material sm
                 inner join farmer fm ON sm.fm_id = fm.fm_id
-                inner join plantation plt ON sm.plt_id = plt.plt_id
+                left join plantation plt ON sm.plt_id = plt.plt_id
                 inner join product pr ON sm.product_id = pr.product_id
                 where sm.sm_id = $sm_id
         ";

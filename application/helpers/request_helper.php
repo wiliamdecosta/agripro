@@ -36,7 +36,7 @@ function getVarClean($name, $type = '', $defaultValue = NULL)
 
     if (isset($defaultValue)) return $defaultValue;
 
-    return '';
+    return null;
 }
 
 function cleanVar($var)

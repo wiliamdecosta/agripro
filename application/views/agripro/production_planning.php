@@ -57,19 +57,31 @@
             colModel: [
                 {
                     label: 'ID',
-                    name: 'production_planning_id',
+                    name: 'planning_id',
                     key: true,
                     width: 5,
                     sorttype: 'number',
                     editable: true,
                     hidden: true
                 },
-                {label: 'PO Number', name: 'po_number', width: 120, align: "left", editable: true, hidden: false},
-                {label: 'Client', name: 'client_name', width: 120, align: "left", editable: true, hidden: false},
-                {label: 'Start Date', name: 'planning_start_date', width: 80, align: "right", editable: true},
-                {label: 'End Date', name: 'planning_end_date', width: 80, align: "right", editable: true},
-                {label: 'Send Type', name: 'sending_type', width: 80, align: "left", editable: true},
-                {label: 'Status', name: 'planning_status', width: 80, align: "left", editable: true}
+                {label: 'PO Number', name: 'po_number', width: 150, align: "left", editable: true, hidden: false},
+                {label: 'Client', name: 'client_name', width: 150, align: "left", editable: true, hidden: false},
+                {label: 'Start Date', name: 'planning_start_date', width: 120, align: "right", editable: true},
+                {label: 'End Date', name: 'planning_end_date', width: 120, align: "right", editable: true},
+                {label: 'Send Type', name: 'sending_type', width: 100, align: "left", editable: true},
+                {label: 'Status', name: 'planning_status', width: 100, align: "left", editable: true},
+                {label: 'Base Prepare Date', name: 'basis_prepare_date', width: 150, align: "left", editable: true},
+                {label: 'Base Prepare QTY', name: 'basis_prepare_qty_init', width: 150, align: "left", editable: true},
+                {label: 'Base Real QTY Arrived', name: 'basis_real_qty', width: 150, align: "left", editable: true},
+                {label: 'Base Real Arrived', name: 'basis_real_arrived', width: 150, align: "left", editable: true},
+                {label: 'Production Prep Date', name: 'prod_prepare_date', width: 150, align: "left", editable: true},
+                {label: 'Production Prep QTY', name: 'prod_prepare_qty', width: 150, align: "left", editable: true},
+                {label: 'Prep Performa Inv', name: 'prep_performa_inv', width: 150, align: "left", editable: true},
+                {label: 'Shipping Start Date', name: 'shipping_start_date', width: 150, align: "left", editable: true},
+                {label: 'Shipping End Date', name: 'shipping_end_date', width: 150, align: "left", editable: true},
+                {label: 'Vessel Feeder Name', name: 'vessel_feeder_name', width: 150, align: "left", editable: true},
+                {label: 'Stuffing Date', name: 'stuffing_date', frozen:true, width: 150, align: "left", editable: true},
+                {label: 'Loading Date', name: 'loading_date', frozen:true, width: 150, align: "left", editable: true}
 
             ],
             height: '100%',
@@ -80,8 +92,20 @@
             rownumbers: true, // show row numbers
             rownumWidth: 35, // the width of the row numbers columns
             altRows: true,
-            shrinkToFit: true,
+            shrinkToFit: false,
             multiboxonly: true,
+            subGrid: true, // set the subGrid property to true to show expand buttons for each row
+            subGridRowExpanded: showChildGrid, // javascript function that will take care of showing the child grid
+            subGridOptions: {
+                // load the subgrid data only once
+                // and the just show/hide
+                reloadOnExpand: false,
+                // select the row when the expand column is clicked
+                selectOnExpand: true,
+                plusicon: "ace-icon fa fa-plus center bigger-110 blue",
+                minusicon: "ace-icon fa fa-minus center bigger-110 blue"
+                // openicon : "ace-icon fa fa-chevron-right center orange"
+            },
             onSelectRow: function (rowid) {
                 /*do something when selected*/
                 var celValue = $('#grid-table').jqGrid('getCell', rowid, 'production_id');
@@ -118,6 +142,56 @@
             caption: "Production Planning"
 
         });
+
+
+
+        function showChildGrid(parentRowID, parentRowKey) {
+            var childGridID = parentRowID + "_table";
+            var childGridPagerID = parentRowID + "_pager";
+
+            // send the parent row primary key to the server so that we know which grid to show
+            var childGridURL = "<?php echo WS_JQGRID . "agripro.production_planning_controller/showProductList"; ?>/" + encodeURIComponent(parentRowKey)
+
+            // add a table and pager HTML elements to the parent grid row - we will render the child grid here
+            $('#' + parentRowID).append('<table id=' + childGridID + '></table><div id=' + childGridPagerID + ' class=scroll></div>');
+
+            $("#" + childGridID).jqGrid({
+                url: childGridURL,
+                mtype: "POST",
+                datatype: "json",
+                page: 1,
+                rownumbers: true, // show row numbers
+                rownumWidth: 35,
+                shrinkToFit: false,
+//              scrollbar : true,
+                postData: {planning_id: encodeURIComponent(parentRowKey)},
+                colModel: [
+                    {
+                        label: 'id',
+                        name: 'product_planning_id',
+                        key: true,
+                        width: 10,
+                        sorttype: 'number',
+                        editable: false,
+                        hidden: true
+                    },
+                    {label: 'Product Name', name: 'product_name', width: 225, align: "left", editable: false},
+                    {label: 'Weight (Kg)', name: 'weight', width: 205, align: "right", editable: false}
+                ],
+//              loadonce: true,
+                width: '100%',
+                height: '100%',
+                jsonReader: {
+                    root: 'rows',
+                    id: 'id',
+                    repeatitems: false
+                }
+//            pager: "#" + childGridPagerID
+            });
+
+        }
+
+        jQuery("#grid-table").jqGrid('setFrozenColumns');
 
         jQuery('#grid-table').jqGrid('navGrid', '#grid-pager',
             {   //navbar options

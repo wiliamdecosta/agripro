@@ -74,6 +74,7 @@ class Production_planning_controller
 
         return $data;
     }
+
     function crud() {
 
         $data = array();
@@ -309,8 +310,8 @@ class Production_planning_controller
 
         $po_number = getVarClean('inPONumber','str');
         $client_name = getVarClean('inClientName','str');
-        $planning_start_date = getVarClean('inStartDate','str');
-        $planning_end_date = getVarClean('inEndDate','str');
+        $planning_start_date = ($ci->input->post('inStartDate'))? $ci->input->post('inStartDate') : null;
+        $planning_end_date = ($ci->input->post('inEndDate'))? $ci->input->post('inEndDate') : null;
         //$planning_qty_init = getVarClean('inPONumber','str');
         //$planning_qty = getVarClean('inPONumber','str');
         $sending_type = getVarClean('slSendingType','str');
@@ -318,16 +319,16 @@ class Production_planning_controller
         //$basis_prepare_date = getVarClean('rbStatus','int');
         //$basis_prepare_qty_init = getVarClean('inPONumber','str');
         //$basis_prepare_qty = getVarClean('inPONumber','str');
-        $basis_real_qty = getVarClean('inBasisRealQTY','float',0);
-        $basis_real_arrived = getVarClean('inBasisRealDate','str');
-        $prod_prepare_date = getVarClean('inProdPrepDate','str');
-        $prod_prepare_qty = getVarClean('inProdPrepQTY','float',0);
+        $basis_real_qty = getVarClean('inBasisRealQTY','float');
+        $basis_real_arrived = ($ci->input->post('inBasisRealDate'))? $ci->input->post('inBasisRealDate') : null;
+        $prod_prepare_date = ($ci->input->post('inProdPrepDate'))? $ci->input->post('inProdPrepDate') : null;
+        $prod_prepare_qty = getVarClean('inProdPrepQTY','float');
         $prep_performa_inv = getVarClean('inPrepPerformaInv','str');
-        $shipping_start_date = getVarClean('inShippingStartDate','str');
-        $shipping_end_date = getVarClean('inPlannedShippingTo','str');
+        $shipping_start_date = ($ci->input->post('inShippingStartDate')) ? $ci->input->post('inShippingStartDate') : null;
+        $shipping_end_date = ($ci->input->post('inPlannedShippingTo')) ? $ci->input->post('inPlannedShippingTo') : null;
         $vessel_feeder_name = getVarClean('inVesselName','str');
-        $stuffing_date = getVarClean('inStuffingDate','str');
-        $loading_date = getVarClean('inLoadingDate','str');
+        $stuffing_date = ($ci->input->post('inStuffingDate')) ? $ci->input->post('inStuffingDate') : null;
+        $loading_date = ($ci->input->post('inLoadingDate'))? $ci->input->post('inLoadingDate') : null;
 
 
         $array_product = (array)$ci->input->post('row_product_id');
@@ -360,6 +361,8 @@ class Production_planning_controller
                 'stuffing_date' => $stuffing_date,
                 'loading_date' => $loading_date,
             );
+
+
 
             $table->setRecord($items);
 
@@ -401,6 +404,76 @@ class Production_planning_controller
         echo json_encode($data);
         exit;
 
+    }
+
+    function showProductList(){
+
+        $page = getVarClean('page', 'int', 1);
+        $limit = getVarClean('rows', 'int', 5);
+        $sidx = getVarClean('sidx', 'str', 'product_planning_id');
+        $sord = getVarClean('sord', 'str', 'desc');
+
+        $data = array('rows' => array(), 'page' => 1, 'records' => 0, 'total' => 1, 'success' => false, 'message' => '');
+
+
+
+
+        try {
+
+            $ci = &get_instance();
+            $ci->load->model('agripro/product_planning');
+            $table = $ci->product_planning;
+
+            $req_param = array(
+                "sort_by" => $sidx,
+                "sord" => $sord,
+                "limit" => null,
+                "field" => null,
+                "where" => null,
+                "where_in" => null,
+                "where_not_in" => null,
+                "search" => $_REQUEST['_search'],
+                "search_field" => isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : null,
+                "search_operator" => isset($_REQUEST['searchOper']) ? $_REQUEST['searchOper'] : null,
+                "search_str" => isset($_REQUEST['searchString']) ? $_REQUEST['searchString'] : null
+            );
+
+            $planning_id = $ci->input->post('planning_id');
+            if($planning_id){
+                $req_param['where'] = array("pp.planning_id =". $planning_id);
+            }
+
+            $table->setJQGridParam($req_param);
+            $count = $table->countAll();
+
+
+            if ($count > 0) $total_pages = ceil($count / $limit);
+            else $total_pages = 1;
+
+            if ($page > $total_pages) $page = $total_pages;
+            $start = $limit * $page - ($limit); // do not put $limit*($page - 1)
+
+            $req_param['limit'] = array(
+                'start' => $start,
+                'end' => $limit
+            );
+
+            $table->setJQGridParam($req_param);
+
+            if ($page == 0) $data['page'] = 1;
+            else $data['page'] = $page;
+
+            $data['total'] = $total_pages;
+            $data['records'] = $count;
+
+            $data['rows'] = $table->getAll();
+            $data['success'] = true;
+
+        } catch (Exception $e) {
+            $data['message'] = $e->getMessage();
+        }
+
+        return $data;
     }
 
 }

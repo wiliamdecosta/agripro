@@ -43,7 +43,7 @@ class Drying extends Abstract_model
     public $fromClause = "stock_material sm
                                 inner join farmer as fm on sm.fm_id = fm.fm_id
                                 inner join product as pr on sm.product_id = pr.product_id
-                                inner join plantation as plt on sm.plt_id = plt.plt_id";
+                                left join plantation as plt on sm.plt_id = plt.plt_id";
 
     public $refs = array();
 

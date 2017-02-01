@@ -24,6 +24,9 @@
                     Farmer
                 </th>
                 <th>
+                    Code
+                </th>
+                <th>
                     Lahan
                 </th>
                 <th>
@@ -44,7 +47,10 @@
             <?php foreach($details as $detail){;?>
             <tr>
                 <td>
-                    <?php echo $detail->fm_name;?> ( <?php echo $detail->fm_code;?>  )
+                    <?php echo $detail->fm_name;?>
+                </td>
+                <td>
+                     <?php echo $detail->fm_code;?>
                 </td>
 
                 <td>

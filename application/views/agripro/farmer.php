@@ -67,19 +67,22 @@
             mtype: "POST",
             colModel: [
                 {label: 'ID', name: 'fm_id', key: true, width: 5, sorttype: 'number', editable: true, hidden: true},
-                {label: 'Code',name: 'fm_code',width: 150, align: "left",editable: true,
-                    editoptions: {
-                        size: 30,
-                        maxlength:32
-                    },
-                    editrules: {required: true}
-                },
                 {label: 'Name',name: 'fm_name',width: 150, align: "left",editable: true,
                     editoptions: {
                         size: 30,
                         maxlength:32
                     },
                     editrules: {required: true}
+                },
+                {label: 'Code',name: 'fm_code',width: 150, align: "left",editable: true,
+                    editoptions: {
+                        size: 30,
+                        maxlength:32
+                    },
+                    editrules: {required: false},
+                    formoptions: {
+                        elmsuffix:'<span data-placement="left" class="orange"> (*) Organic Only</span>'
+                    }
                 },
                 {label: 'Gender',name: 'fm_jk',width: 120, align: "left",editable: true, edittype: 'select', hidden:true,
                     editrules: {edithidden: true, required: false},
@@ -112,7 +115,7 @@
                     sortable: true,
                     editable: true,
                     hidden: true,
-                    editrules: {edithidden: true, number:true, required:true},
+                    editrules: {edithidden: true, number:true, required:false},
                     edittype: 'custom',
                     editoptions: {
                         "custom_element":function( value  , options) {
@@ -121,7 +124,7 @@
                             // give the editor time to initialize
                             setTimeout( function() {
                                 elm.append('<input id="form_prov_id" type="text"  style="display:none;" onchange="clearLovKota();">'+
-                                        '<input id="form_prov_code" disabled type="text" class="FormElement jqgrid-required" placeholder="Choose Province">'+
+                                        '<input id="form_prov_code" disabled type="text" class="FormElement" placeholder="Choose Province">'+
                                         '<button class="btn btn-success" type="button" onclick="showLovProvinsi(\'form_prov_id\',\'form_prov_code\')">'+
                                         '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
                                         '</button>');
@@ -157,7 +160,7 @@
                     sortable: true,
                     editable: true,
                     hidden: true,
-                    editrules: {edithidden: true, number:true, required:true},
+                    editrules: {edithidden: true, number:true, required:false},
                     edittype: 'custom',
                     editoptions: {
                         "custom_element":function( value  , options) {
@@ -166,7 +169,7 @@
                             // give the editor time to initialize
                             setTimeout( function() {
                                 elm.append('<input id="form_kota_id" type="text"  style="display:none;">'+
-                                        '<input id="form_kota_name" disabled type="text" class="FormElement jqgrid-required" placeholder="Choose City">'+
+                                        '<input id="form_kota_name" disabled type="text" class="FormElement" placeholder="Choose City">'+
                                         '<button class="btn btn-success" type="button" onclick="showLovKota(\'form_kota_id\',\'form_kota_name\')">'+
                                         '   <span class="fa fa-search icon-on-right bigger-110"></span>'+
                                         '</button>');
@@ -207,7 +210,10 @@
                         size: 30,
                         maxlength:32
                     },
-                    editrules: {required: false}
+                    editrules: {required: false},
+                    formoptions: {
+                        elmsuffix:'<span data-placement="left" class="orange"> (*) Organic Only</span>'
+                    }
                 },
                 {label: 'Phone Number',name: 'fm_no_hp',width: 150, align: "left",editable: true,
                     editoptions: {
