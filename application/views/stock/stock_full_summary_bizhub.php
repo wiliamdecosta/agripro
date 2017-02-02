@@ -27,7 +27,7 @@
                     <th>Product Code</th>
                     <th>Raw Material (Kg)</th>
                     <th>In Progress (Kg)</th>
-                    <th>Sortir (Kg)</th>
+                    <th>Packing (Kg)</th>
                 </tr>
             </thead>
             <tbody id="tbody-summary">
