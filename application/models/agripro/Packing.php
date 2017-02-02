@@ -214,6 +214,7 @@ class Packing extends Abstract_model {
         /**
          * Delete data stock by packing_id
          */
+        $itemPacking = $this->get($packing_id);
         $tStock->deleteByReference($packing_id, 'PACKING');
 
         /**
@@ -221,7 +222,7 @@ class Packing extends Abstract_model {
          */
         foreach($data_sortir as $sortir) {
             //delete data stock by sortir_detail_id
-            $tStock->deleteByReference($sortir['sortir_detail_id'], 'SORTIR_PACKING');
+            $tStock->deleteByReferenceComplete($sortir['sortir_detail_id'], 'SORTIR_PACKING', 'OUT', $itemPacking['packing_tgl'], $sortir['restore_store_qty']);
 
             //restore store qty
             $increase_kg = (float) $sortir['restore_store_qty'];

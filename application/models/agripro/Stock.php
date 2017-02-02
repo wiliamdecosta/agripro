@@ -70,7 +70,19 @@ class Stock extends Abstract_model {
         $sql = "delete from stock where stock_ref_id = ".$ref_id."
                     and upper(stock_ref_code) = '".strtoupper($ref_code)."'";
         $this->db->query($sql);
+    }
 
+    public function deleteByReferenceComplete($ref_id, $ref_code, $tgl_in_out, $tgl_ref, $kg) {
+        $tgl_status = $tgl_in_out == 'IN' ? 'stock_tgl_masuk' : 'stock_tgl_keluar';
+        $sql = "delete from stock where stock_id in (
+                    select MAX(stock_id) from stock
+                    where stock_ref_id = ?
+                    and stock_ref_code = ?
+                    and $tgl_status = ?
+                    and stock_kg = ?
+                )";
+
+        $this->db->query($sql, array($ref_id, $ref_code, $tgl_ref, $kg));
     }
 
     public function deleteByReference2($ref) {
