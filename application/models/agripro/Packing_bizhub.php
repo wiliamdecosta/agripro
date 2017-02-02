@@ -203,6 +203,7 @@ class Packing_bizhub extends Abstract_model {
         /**
          * Delete data stock by packing_bizhub_id
          */
+        $itemPacking = $this->get($packing_bizhub_id);
         $tStock->deleteByReference($packing_bizhub_id, 'PACKING_BIZHUB');
 
         /**
@@ -210,7 +211,7 @@ class Packing_bizhub extends Abstract_model {
          */
         foreach($data_sortir as $sortir) {
             //delete data stock by sortir_bizhub_det_id
-            $tStock->deleteByReference($sortir['sortir_bizhub_det_id'], 'SORTIR_PACKING_BIZHUB');
+            $tStock->deleteByReferenceComplete($sortir['sortir_bizhub_det_id'], 'SORTIR_PACKING_BIZHUB', 'OUT', $itemPacking['packing_bizhub_date'], $sortir['restore_store_qty']);
 
             //restore store qty
             $increase_kg = (float) $sortir['restore_store_qty'];
