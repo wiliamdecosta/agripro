@@ -58,9 +58,9 @@ class Stock_summary_controller {
                     <tr>
                         <td>'.$no++.'</td>
                         <td>'.$item['product_code'].'</td>
-                        <td align="right">'.($tStockSummary->getSummaryPerProduct("'RAW_MATERIAL_STOCK'", $item['product_id'])).'</td>
-                        <td align="right">'.($tStockSummary->getSummaryPerProduct("'DRYING_STOCK','SORTIR_STOCK','PRODUCTION_STOCK' ", $item['product_id'])).'</td>
-                        <td align="right">'.($tStockSummary->getSummaryPerProduct("'PACKING_STOCK'", $item['product_id'])).'</td>
+                        <td align="right">'.($tStockSummary->getSummaryPerProductKerinci("'RAW_MATERIAL_STOCK'", $item['product_id'])).'</td>
+                        <td align="right">'.($tStockSummary->getSummaryPerProductKerinci("'DRYING_STOCK','SORTIR_STOCK','PRODUCTION_STOCK' ", $item['product_id'])).'</td>
+                        <td align="right">'.($tStockSummary->getSummaryPerProductKerinci("'PACKING_STOCK'", $item['product_id'])).'</td>
                     </tr>
                 ';
             }
@@ -105,6 +105,8 @@ class Stock_summary_controller {
         echo $output;
         exit;
     }
+
+
 }
 
 /* End of file Warehouse_controller.php */
